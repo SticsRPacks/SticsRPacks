@@ -47,8 +47,8 @@ Imports:
     SticsOptimizR,
     SticsRFiles
 Remotes: 
-    github::SticsRPacks/SticsOnR
-    github::SticsRPacks/SticsOptimizR
+    github::SticsRPacks/SticsOnR,
+    github::SticsRPacks/SticsOptimizR,
     github::SticsRPacks/SticsRFiles
 VignetteBuilder:
     knitr
