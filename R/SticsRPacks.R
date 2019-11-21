@@ -2,7 +2,6 @@
 "_PACKAGE"
 
 # Suppress R CMD check note
-#' @importFrom broom tidy
 NULL
 
 

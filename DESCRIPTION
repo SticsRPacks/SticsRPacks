@@ -41,7 +41,11 @@ Imports:
     grDevices,
     SticsRFiles,
     SticsOptimizR,
-    SticsOnR
+    SticsOnR,
+    magrittr,
+    knitr,
+    rstudioapi,
+    testthat
 VignetteBuilder:
     knitr
 Encoding: UTF-8
