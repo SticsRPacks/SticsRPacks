@@ -50,7 +50,7 @@ SticsRPacks_attach <- function() {
 }
 
 package_version <- function(x) {
-  version <- as.character(unclass(utils::packageVersion(x))[[1]])
+  version <- try(as.character(unclass(utils::packageVersion(x))[[1]]))
 
   if (length(version) > 3) {
     version[4:length(version)] <- crayon::red(as.character(version[4:length(version)]))

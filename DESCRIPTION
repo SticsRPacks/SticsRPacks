@@ -39,13 +39,17 @@ Imports:
     tibble,
     rlang,
     grDevices,
-    SticsRFiles,
-    SticsOptimizR,
-    SticsOnR,
     magrittr,
     knitr,
     rstudioapi,
-    testthat
+    testthat,
+    SticsOnR,
+    SticsOptimizR,
+    SticsRFiles
+Remotes: 
+    github::SticsRPacks/SticsOnR
+    github::SticsRPacks/SticsOptimizR
+    github::SticsRPacks/SticsRFiles
 VignetteBuilder:
     knitr
 Encoding: UTF-8

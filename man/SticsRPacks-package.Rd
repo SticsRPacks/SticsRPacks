@@ -6,7 +6,7 @@
 \alias{SticsRPacks-package}
 \title{SticsRPacks: Easily Install and Load 'SticsRPacks' packages}
 \description{
-\if{html}{\figure{logo.png}{options: align='right'}}
+\if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
 
 'SticsRPacks' is a set of packages that work in
     harmony because they share common data representations and 'API'
