@@ -37,6 +37,8 @@ If you'd like to learn how to use the SticsRPacks packages, the best place to st
 devtools::install_github("SticsRPacks/SticsRPacks")
 ```
 
+It this does not work, follow the instructions given [here](https://github.com/SticsRPacks/SticsRPacks/issues/1#event-2864068985).
+
 ## Usage
 
 `library(SticsRPacks)` will load the core SticsRPacks packages: 

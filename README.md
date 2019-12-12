@@ -36,6 +36,9 @@ available from each websites (Article sections).
 devtools::install_github("SticsRPacks/SticsRPacks")
 ```
 
+It this does not work, follow the instructions given
+[here](https://github.com/SticsRPacks/SticsRPacks/issues/1#event-2864068985).
+
 ## Usage
 
 `library(SticsRPacks)` will load the core SticsRPacks packages:
@@ -52,26 +55,18 @@ have loaded:
 
 ``` r
 library(SticsRPacks)
-#> -- Attaching packages ---------------------------------------------------------- SticsRPacks 0.0.1.9000 --
-#> v SticsRFiles   0.0.0.9000     v SticsOnR      1.1.0     
-#> v SticsOptimizR 0.0.0.9000
-#> -- Conflicts ------------------------------------------------------------------ SticsRPacks_conflicts() --
-#> x SticsOptimizR::get_params_names() masks SticsRFiles::get_params_names()
-#> x SticsOnR::set_file()              masks SticsRFiles::set_file()
-#> x SticsOnR::set_param()             masks SticsRFiles::set_param()
-#> x SticsOnR::set_soil()              masks SticsRFiles::set_soil()
+#> -- Attaching packages ------------------------------------------------------------ SticsRPacks 0.0.1.9000 --
+#> <U+2713> SticsRFiles   0.0.0.9000     <U+2713> SticsOnR      0.0.0.9000
+#> <U+2713> SticsOptimizR 0.0.0.9000
+#> 
 ```
 
 You can see conflicts created later with `SticsRPacks_conflicts()`:
 
 ``` r
 library(MASS)
+#> Warning: package 'MASS' was built under R version 3.5.1
 SticsRPacks_conflicts()
-#> -- Conflicts ------------------------------------------------------------------ SticsRPacks_conflicts() --
-#> x SticsOptimizR::get_params_names() masks SticsRFiles::get_params_names()
-#> x SticsOnR::set_file()              masks SticsRFiles::set_file()
-#> x SticsOnR::set_param()             masks SticsRFiles::set_param()
-#> x SticsOnR::set_soil()              masks SticsRFiles::set_soil()
 ```
 
 And you can check that all SticsRPacks packages are up-to-date with
