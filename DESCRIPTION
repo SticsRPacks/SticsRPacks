@@ -44,11 +44,11 @@ Imports:
     rstudioapi,
     testthat,
     SticsOnR,
-    SticsOptimizR,
+    CroptimizR,
     SticsRFiles
 Remotes: 
     github::SticsRPacks/SticsOnR,
-    github::SticsRPacks/SticsOptimizR,
+    github::SticsRPacks/CroptimizR,
     github::SticsRPacks/SticsRFiles
 VignetteBuilder:
     knitr

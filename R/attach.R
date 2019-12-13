@@ -1,4 +1,4 @@
-core <- c("SticsRFiles", "SticsOptimizR", "SticsOnR")
+core <- c("SticsRFiles", "CroptimizR", "SticsOnR")
 
 core_unloaded <- function() {
   search <- paste0("package:", core)

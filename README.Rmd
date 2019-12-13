@@ -45,7 +45,7 @@ It this does not work, follow the instructions given [here](https://github.com/S
 
 * [SticsRFiles](https://github.com/SticsRPacks/SticsRFiles), for files manipulation.  
 * [SticsOnR](https://github.com/SticsRPacks/SticsOnR), for STICS simulation management.  
-* [SticsOptimizR](https://github.com/SticsRPacks/SticsOptimizR), for parameter optimisation.  
+* [CroptimizR](https://github.com/SticsRPacks/CroptimizR), for parameter optimisation.  
 
 You also get a condensed summary of conflicts with other packages you have loaded:
 
@@ -66,7 +66,7 @@ And you can check that all SticsRPacks packages are up-to-date with `SticsRPacks
 SticsRPacks_update()
 #> The following packages are out of date:
 #>  * SticsRFiles (0.4.0 -> 0.4.1)
-#>  * SticsOptimizR (0.4.1 -> 0.5)
+#>  * CroptimizR (0.4.1 -> 0.5)
 #> Update now?
 #> 
 #> 1: Yes
