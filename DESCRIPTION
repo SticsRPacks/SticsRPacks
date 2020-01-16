@@ -47,9 +47,9 @@ Imports:
     CroptimizR,
     SticsRFiles
 Remotes: 
-    github::SticsRPacks/SticsOnR,
-    github::SticsRPacks/CroptimizR,
-    github::SticsRPacks/SticsRFiles
+    github::SticsRPacks/SticsOnR@*release,
+    github::SticsRPacks/CroptimizR@*release,
+    github::SticsRPacks/SticsRFiles@*release
 VignetteBuilder:
     knitr
 Encoding: UTF-8
