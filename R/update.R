@@ -1,34 +1,59 @@
 #' Update SticsRPacks packages
 #'
-#' This will check to see if all SticsRPacks packages (and optionally, their
-#' dependencies) are up-to-date, and will install after an interactive
-#' confirmation.
+#' This will check to see if all SticsRPacks packages are up-to-date, and install the desired version if not.
 #'
-#' @inheritParams SticsRPacks_deps
+#' @param ref The desired git reference. Could be a commit, tag, or branch name. Defaults to NULL
+#' for the last release of the package.
+#'
 #' @export
 #' @examples
 #' \dontrun{
+#' # Use the last release:
 #' SticsRPacks_update()
+#'
+#' # Using a particular commit for one:
+#' SticsRPacks_update(ref = list(SticsRFiles= "42f9333e1b1c336cf431e2e33dc13caa994a3ae9")
+#' # Or a version:
+#' SticsRPacks_update(ref = list(SticsRFiles= "v0.1.0.9003")
+#'
 #' }
-SticsRPacks_update <- function(recursive = FALSE, repos = getOption("repos")) {
+SticsRPacks_update <- function(ref = list(SticsRFiles= NULL, CroptimizR= NULL,
+                                          SticsOnR= NULL)) {
 
-  deps <- SticsRPacks_deps(recursive, repos)
-  behind <- dplyr::filter(deps, behind)
-
-  if (nrow(behind) == 0) {
-    cli::cat_line("All SticsRPacks packages up-to-date")
-    return(invisible())
+  if(!is.list(ref)){
+    stop("ref must be a list")
   }
 
-  cli::cat_line("The following packages are out of date:")
-  cli::cat_line()
-  cli::cat_bullet(format(behind$package), " (", behind$local, " -> ", behind$cran, ")")
 
-  cli::cat_line()
-  cli::cat_line("Start a clean R session then run:")
+  default_ref= list(SticsRFiles= NULL, CroptimizR= NULL, SticsOnR= NULL)
 
-  pkg_str <- paste0(deparse(behind$package), collapse = "\n")
-  cli::cat_line("install.packages(", pkg_str, ")")
+  missing_vals= setdiff(names(default_ref),
+                        match.arg(names(ref), names(default_ref), several.ok= TRUE))
+
+  ref[missing_vals]= default_ref[missing_vals]
+
+  # Find the last release if ref== NULL
+  ref=
+    mapply(function(x,y){
+    if(is.null(x)){
+      meta <- remotes:::parse_git_repo(file.path("SticsRPacks",y))
+      meta <- remotes:::github_resolve_ref(remotes::github_release(), meta, host = "api.github.com")
+      meta$ref
+    }
+  },x= ref, y= names(ref), SIMPLIFY = FALSE)
+
+  repos= file.path("SticsRPacks",names(ref))
+  mapply(function(x,y){
+    remote= remotes:::github_remote(repo = x, ref = y)
+    package_name= remotes:::remote_package_name(remote)
+    local_sha= remotes:::local_sha(package_name)
+    remote_sha= remotes:::remote_sha(remote, local_sha)
+    if (!remotes:::different_sha(remote_sha = remote_sha, local_sha = local_sha)){
+        message("Package ",crayon::red(package_name), " is already up-to-date")
+    }else{
+      remotes::install_github(repo = x, ref = y)
+    }
+  }, x= repos, y = unlist(ref), SIMPLIFY = FALSE)
 
   invisible()
 }
@@ -64,43 +89,16 @@ SticsRPacks_sitrep <- function() {
 
 #' List all SticsRPacks dependencies
 #'
-#' @param recursive If \code{TRUE}, will also list all dependencies of
-#'   SticsRPacks packages.
-#' @param repos The repositories to use to check for updates.
-#'   Defaults to \code{getOptions("repos")}.
 #' @export
-SticsRPacks_deps <- function(recursive = FALSE, repos = getOption("repos")) {
-  pkgs <- utils::available.packages(repos = repos)
-  deps <- tools::package_dependencies("SticsRPacks", pkgs, recursive = recursive)
-
-  pkg_deps <- unique(sort(unlist(deps)))
-
-  base_pkgs <- c(
-    "base", "compiler", "datasets", "graphics", "grDevices", "grid",
-    "methods", "parallel", "stats","tools", "utils"
-  )
-  pkg_deps <- setdiff(pkg_deps, base_pkgs)
-
-  tool_pkgs <- c("cli", "crayon", "rstudioapi")
-  pkg_deps <- setdiff(pkg_deps, tool_pkgs)
-
-  cran_version <- lapply(pkgs[pkg_deps, "Version"], base::package_version)
-  local_version <- lapply(pkg_deps, packageVersion)
-
-  behind <- purrr::map2_lgl(cran_version, local_version, `>`)
-
-  tibble::tibble(
-    package = pkg_deps,
-    cran = cran_version %>% purrr::map_chr(as.character),
-    local = local_version %>% purrr::map_chr(as.character),
-    behind = behind
-  )
+SticsRPacks_deps <- function() {
+  pkgs= utils::installed.packages()
+  SticsRPacks_deps_info= pkgs[match("SticsRPacks",pkgs[,1]),2]
+  remotes::dev_package_deps(file.path(SticsRPacks_deps_info,"SticsRPacks"))
 }
 
-packageVersion <- function(pkg) {
-  if (rlang::is_installed(pkg)) {
-    utils::packageVersion(pkg)
-  } else {
-    0
-  }
+#' Update all SticsRPacks dependencies
+#'
+#' @export
+SticsRPacks_update_deps <- function() {
+  update(SticsRPacks_deps())
 }

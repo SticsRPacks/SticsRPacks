@@ -4,22 +4,26 @@
 \alias{SticsRPacks_update}
 \title{Update SticsRPacks packages}
 \usage{
-SticsRPacks_update(recursive = FALSE, repos = getOption("repos"))
+SticsRPacks_update(
+  ref = list(SticsRFiles = NULL, CroptimizR = NULL, SticsOnR = NULL)
+)
 }
 \arguments{
-\item{recursive}{If \code{TRUE}, will also list all dependencies of
-SticsRPacks packages.}
-
-\item{repos}{The repositories to use to check for updates.
-Defaults to \code{getOptions("repos")}.}
+\item{ref}{The desired git reference. Could be a commit, tag, or branch name. Defaults to NULL
+for the last release of the package.}
 }
 \description{
-This will check to see if all SticsRPacks packages (and optionally, their
-dependencies) are up-to-date, and will install after an interactive
-confirmation.
+This will check to see if all SticsRPacks packages are up-to-date, and install the desired version if not.
 }
 \examples{
 \dontrun{
+# Use the last release:
 SticsRPacks_update()
+
+# Using a particular commit for one:
+SticsRPacks_update(ref = list(SticsRFiles= "42f9333e1b1c336cf431e2e33dc13caa994a3ae9")
+# Or a version:
+SticsRPacks_update(ref = list(SticsRFiles= "v0.1.0.9003")
+
 }
 }

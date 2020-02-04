@@ -4,14 +4,7 @@
 \alias{SticsRPacks_deps}
 \title{List all SticsRPacks dependencies}
 \usage{
-SticsRPacks_deps(recursive = FALSE, repos = getOption("repos"))
-}
-\arguments{
-\item{recursive}{If \code{TRUE}, will also list all dependencies of
-SticsRPacks packages.}
-
-\item{repos}{The repositories to use to check for updates.
-Defaults to \code{getOptions("repos")}.}
+SticsRPacks_deps()
 }
 \description{
 List all SticsRPacks dependencies
