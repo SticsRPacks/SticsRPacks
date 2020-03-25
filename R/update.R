@@ -33,14 +33,17 @@ SticsRPacks_update <- function(ref = list(SticsRFiles= NULL, CroptimizR= NULL,
   ref[missing_vals]= default_ref[missing_vals]
 
   # Find the last release if ref== NULL
-  ref=
-    mapply(function(x,y){
-    if(is.null(x)){
-      meta <- remotes:::parse_git_repo(file.path("SticsRPacks",y))
-      meta <- remotes:::github_resolve_ref(remotes::github_release(), meta, host = "api.github.com")
+  ref = mapply(function(x, y) {
+    if (is.null(x)) {
+      meta <- remotes:::parse_git_repo(file.path("SticsRPacks",
+                                                 y))
+      meta <- remotes:::github_resolve_ref(remotes::github_release(),
+                                           meta, host = "api.github.com")
       meta$ref
+    }else{
+      x
     }
-  },x= ref, y= names(ref), SIMPLIFY = FALSE)
+  }, x = ref, y = names(ref), SIMPLIFY = FALSE)
 
   repos= file.path("SticsRPacks",names(ref))
   mapply(function(x,y){
