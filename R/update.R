@@ -54,7 +54,7 @@ SticsRPacks_update <- function(ref = list(SticsRFiles= NULL, CroptimizR= NULL,
     if (!remotes:::different_sha(remote_sha = remote_sha, local_sha = local_sha)){
         message("Package ",crayon::red(package_name), " is already up-to-date")
     }else{
-      remotes::install_github(repo = x, ref = y)
+      remotes::install_github(repo = x, ref = y, dependencies = FALSE)
     }
   }, x= repos, y = unlist(ref), SIMPLIFY = FALSE)
 
