@@ -47,6 +47,8 @@ It this does not work, follow the instructions given
     manipulation.  
   - [SticsOnR](https://github.com/SticsRPacks/SticsOnR), for STICS
     simulation management.  
+  - [CroPlotR](https://github.com/SticsRPacks/CroPlotR), for
+    plotting and statistics.  
   - [CroptimizR](https://github.com/SticsRPacks/CroptimizR), for
     parameter optimisation.
 

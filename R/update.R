@@ -17,15 +17,15 @@
 #' SticsRPacks_update(ref = list(SticsRFiles= "v0.1.0.9003")
 #'
 #' }
-SticsRPacks_update <- function(ref = list(SticsRFiles= NULL, CroptimizR= NULL,
-                                          SticsOnR= NULL)) {
+SticsRPacks_update <- function(ref = list(SticsRFiles = NULL, CroptimizR = NULL,
+                                          SticsOnR = NULL, CroPlotR = NULL)) {
 
   if(!is.list(ref)){
     stop("ref must be a list")
   }
 
 
-  default_ref= list(SticsRFiles= NULL, CroptimizR= NULL, SticsOnR= NULL)
+  default_ref= list(SticsRFiles = NULL, CroptimizR = NULL, SticsOnR = NULL, CroPlotR = NULL)
 
   missing_vals= setdiff(names(default_ref),
                         match.arg(names(ref), names(default_ref), several.ok= TRUE))
