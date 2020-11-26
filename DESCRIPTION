@@ -1,5 +1,5 @@
 Package: SticsRPacks
-Title: Easily Install and Load 'SticsRPacks' packages
+Title: Easily Install and Load 'SticsRPacks' Packages
 Version: 0.0.1.9000
 Authors@R:
     c(person(given = "Rémi",
@@ -20,7 +20,7 @@ Authors@R:
             email = "michel.giner@cirad.fr"),
      person(given = "SticsRPacks",
              role = c("cph", "fnd")))
-Description: 'SticsRPacks' is a set of packages that work in
+Description: A set of packages that work in
     harmony because they share common data representations and 'API'
     design. This package is designed to make it easy to install and load
     multiple 'SticsRPacks' packages in a single step. Learn more about
@@ -45,7 +45,8 @@ Imports:
     CroptimizR,
     SticsRFiles,
     CroPlotR,
-    remotes
+    remotes,
+    utils
 Remotes: 
     github::SticsRPacks/SticsOnR@*release,
     github::SticsRPacks/CroptimizR@*release,
@@ -57,4 +58,5 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 Suggests: 
-    knitr
+    knitr,
+    testthat

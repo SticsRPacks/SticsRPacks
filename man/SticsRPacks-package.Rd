@@ -4,11 +4,11 @@
 \name{SticsRPacks-package}
 \alias{SticsRPacks}
 \alias{SticsRPacks-package}
-\title{SticsRPacks: Easily Install and Load 'SticsRPacks' packages}
+\title{SticsRPacks: Easily Install and Load 'SticsRPacks' Packages}
 \description{
 \if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
 
-'SticsRPacks' is a set of packages that work in
+A set of packages that work in
     harmony because they share common data representations and 'API'
     design. This package is designed to make it easy to install and load
     multiple 'SticsRPacks' packages in a single step. Learn more about

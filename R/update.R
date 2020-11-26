@@ -24,7 +24,6 @@ SticsRPacks_update <- function(ref = list(SticsRFiles = NULL, CroptimizR = NULL,
     stop("ref must be a list")
   }
 
-
   default_ref= list(SticsRFiles = NULL, CroptimizR = NULL, SticsOnR = NULL, CroPlotR = NULL)
 
   missing_vals= setdiff(names(default_ref),
@@ -32,31 +31,18 @@ SticsRPacks_update <- function(ref = list(SticsRFiles = NULL, CroptimizR = NULL,
 
   ref[missing_vals]= default_ref[missing_vals]
 
-  # Find the last release if ref== NULL
-  ref = mapply(function(x, y) {
-    if (is.null(x)) {
-      meta <- remotes:::parse_git_repo(file.path("SticsRPacks",
-                                                 y))
-      meta <- remotes:::github_resolve_ref(remotes::github_release(),
-                                           meta, host = "api.github.com")
-      meta$ref
-    }else{
-      x
-    }
-  }, x = ref, y = names(ref), SIMPLIFY = FALSE)
-
   repos= file.path("SticsRPacks",names(ref))
   mapply(function(x,y){
-    remote= remotes::github_remote(repo = x, ref = y)
-    package_name= remotes::remote_package_name(remote)
-    local_sha= remotes:::local_sha(package_name)
-    remote_sha= remotes::remote_sha(remote, local_sha)
-    if (!remotes:::different_sha(remote_sha = remote_sha, local_sha = local_sha)){
-        message("Package ",crayon::red(package_name), " is already up-to-date")
+    if(is.null(y)){
+      # If the user does not give anything, we take the last release:
+      out = utils::capture.output(remotes::install_github(repo = paste0(x,"@*release"), ref = y, dependencies = FALSE), type = "message")
+      if(any(grepl("Skipping install",out))){
+        message("Package ",crayon::red(gsub("SticsRPacks/","",x)), " is already up-to-date")
+      }
     }else{
       remotes::install_github(repo = x, ref = y, dependencies = FALSE)
     }
-  }, x= repos, y = unlist(ref), SIMPLIFY = FALSE)
+  }, x = repos, y = unlist(ref), SIMPLIFY = FALSE)
 
   invisible()
 }
@@ -96,12 +82,18 @@ SticsRPacks_sitrep <- function() {
 SticsRPacks_deps <- function() {
   pkgs= utils::installed.packages()
   SticsRPacks_deps_info= pkgs[match("SticsRPacks",pkgs[,1]),2]
-  remotes::dev_package_deps(file.path(SticsRPacks_deps_info,"SticsRPacks"))
+  df = remotes::dev_package_deps(file.path(SticsRPacks_deps_info,"SticsRPacks"))
+
+  df$behind =
+    base::package_version(df$available, strict = FALSE) <
+    base::package_version(df$installed, strict = FALSE)
+
+  df
 }
 
 #' Update all SticsRPacks dependencies
 #'
 #' @export
 SticsRPacks_update_deps <- function() {
-  remotes::update_packages(SticsRPacks_deps())
+  remotes::update_packages(SticsRPacks_deps()$package)
 }
