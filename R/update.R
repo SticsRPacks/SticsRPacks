@@ -14,7 +14,7 @@
 #' # Using a particular commit for one:
 #' SticsRPacks_update(ref = list(SticsRFiles= "42f9333e1b1c336cf431e2e33dc13caa994a3ae9")
 #' # Or a version:
-#' SticsRPacks_update(ref = list(SticsRFiles= "v0.1.0.9003")
+#' SticsRPacks_update(ref = list(SticsRFiles= "v0.1.0.9003"))
 #'
 #' }
 SticsRPacks_update <- function(ref = list(SticsRFiles = NULL, CroptimizR = NULL,
@@ -32,17 +32,18 @@ SticsRPacks_update <- function(ref = list(SticsRFiles = NULL, CroptimizR = NULL,
   ref[missing_vals]= default_ref[missing_vals]
 
   repos= file.path("SticsRPacks",names(ref))
-  mapply(function(x,y){
-    if(is.null(y)){
+
+  for(i in seq_along(ref)){
+    if(is.null(ref[[i]])){
       # If the user does not give anything, we take the last release:
-      out = utils::capture.output(remotes::install_github(repo = paste0(x,"@*release"), ref = y, dependencies = FALSE), type = "message")
+      out = utils::capture.output(remotes::install_github(repo = paste0(repos[i],"@*release"), dependencies = FALSE), type = "message")
       if(any(grepl("Skipping install",out))){
-        message("Package ",crayon::red(gsub("SticsRPacks/","",x)), " is already up-to-date")
+        message("Package ",crayon::red(gsub("SticsRPacks/","",names(ref)[i])), " is already up-to-date")
       }
     }else{
-      remotes::install_github(repo = x, ref = y, dependencies = FALSE)
+      remotes::install_github(repo = repos[i], ref = ref[[i]], dependencies = FALSE)
     }
-  }, x = repos, y = unlist(ref), SIMPLIFY = FALSE)
+  }
 
   invisible()
 }
