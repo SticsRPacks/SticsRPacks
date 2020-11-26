@@ -5,10 +5,8 @@
 
 <!-- badges: start -->
 
-[![Travis build
-status](https://travis-ci.org/SticsRPacks/SticsRPacks.svg?branch=master)](https://travis-ci.org/SticsRPacks/SticsRPacks)
-[![Codecov test
-coverage](https://codecov.io/gh/SticsRPacks/SticsRPacks/branch/master/graph/badge.svg)](https://codecov.io/gh/SticsRPacks/SticsRPacks?branch=master)
+[![R build
+status](https://github.com/SticsRPacks/SticsRPacks/workflows/R-CMD-check/badge.svg)](https://github.com/SticsRPacks/SticsRPacks/actions)
 <!-- badges: end -->
 
 ## Overview
@@ -47,19 +45,19 @@ It this does not work, follow the instructions given
     manipulation.  
   - [SticsOnR](https://github.com/SticsRPacks/SticsOnR), for STICS
     simulation management.  
-  - [CroPlotR](https://github.com/SticsRPacks/CroPlotR), for
-    plotting and statistics.  
+  - [CroPlotR](https://github.com/SticsRPacks/CroPlotR), for plotting
+    and statistics.  
   - [CroptimizR](https://github.com/SticsRPacks/CroptimizR), for
-    parameter optimisation.
+    parameter optimization.
 
 You also get a condensed summary of conflicts with other packages you
 have loaded:
 
 ``` r
 library(SticsRPacks)
-#> -- Attaching packages ------------------------------------------------------------ SticsRPacks 0.0.1.9000 --
-#> <U+2713> SticsRFiles   0.0.0.9000     <U+2713> SticsOnR      0.0.0.9000
-#> <U+2713> CroptimizR 0.0.0.9000
+#> -- Attaching packages -------------------------------- SticsRPacks 0.0.1.9000 --
+#> v SticsRFiles 0.1.0.9004     v SticsOnR    0.1.0.9005
+#> v CroptimizR  0.2.0.9000     v CroPlotR    0.5.0
 #> 
 ```
 
@@ -67,7 +65,6 @@ You can see conflicts created later with `SticsRPacks_conflicts()`:
 
 ``` r
 library(MASS)
-#> Warning: package 'MASS' was built under R version 3.5.1
 SticsRPacks_conflicts()
 ```
 

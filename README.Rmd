@@ -14,8 +14,7 @@ knitr::opts_chunk$set(
 # SticsRPacks <a href='https://sticsrpacks.github.io/SticsRPacks/'><img src='man/figures/logo.png' align="right" height="138.5" /></a>
 
 <!-- badges: start -->
-[![Travis build status](https://travis-ci.org/SticsRPacks/SticsRPacks.svg?branch=master)](https://travis-ci.org/SticsRPacks/SticsRPacks)
-[![Codecov test coverage](https://codecov.io/gh/SticsRPacks/SticsRPacks/branch/master/graph/badge.svg)](https://codecov.io/gh/SticsRPacks/SticsRPacks?branch=master)
+[![R build status](https://github.com/SticsRPacks/SticsRPacks/workflows/R-CMD-check/badge.svg)](https://github.com/SticsRPacks/SticsRPacks/actions)
 <!-- badges: end -->
 
 ## Overview
