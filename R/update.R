@@ -47,10 +47,10 @@ SticsRPacks_update <- function(ref = list(SticsRFiles = NULL, CroptimizR = NULL,
 
   repos= file.path("SticsRPacks",names(ref))
   mapply(function(x,y){
-    remote= remotes:::github_remote(repo = x, ref = y)
-    package_name= remotes:::remote_package_name(remote)
+    remote= remotes::github_remote(repo = x, ref = y)
+    package_name= remotes::remote_package_name(remote)
     local_sha= remotes:::local_sha(package_name)
-    remote_sha= remotes:::remote_sha(remote, local_sha)
+    remote_sha= remotes::remote_sha(remote, local_sha)
     if (!remotes:::different_sha(remote_sha = remote_sha, local_sha = local_sha)){
         message("Package ",crayon::red(package_name), " is already up-to-date")
     }else{
@@ -103,5 +103,5 @@ SticsRPacks_deps <- function() {
 #'
 #' @export
 SticsRPacks_update_deps <- function() {
-  update(SticsRPacks_deps())
+  remotes::update_packages(SticsRPacks_deps())
 }

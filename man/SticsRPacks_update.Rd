@@ -5,7 +5,7 @@
 \title{Update SticsRPacks packages}
 \usage{
 SticsRPacks_update(
-  ref = list(SticsRFiles = NULL, CroptimizR = NULL, SticsOnR = NULL)
+  ref = list(SticsRFiles = NULL, CroptimizR = NULL, SticsOnR = NULL, CroPlotR = NULL)
 )
 }
 \arguments{
