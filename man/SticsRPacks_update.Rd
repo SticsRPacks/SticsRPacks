@@ -21,9 +21,9 @@ This will check to see if all SticsRPacks packages are up-to-date, and install t
 SticsRPacks_update()
 
 # Using a particular commit for one:
-SticsRPacks_update(ref = list(SticsRFiles= "42f9333e1b1c336cf431e2e33dc13caa994a3ae9")
+SticsRPacks_update(ref = list(SticsRFiles= "42f9333e1b1c336cf431e2e33dc13caa994a3ae9"))
 # Or a version:
-SticsRPacks_update(ref = list(SticsRFiles= "v0.1.0.9003")
+SticsRPacks_update(ref = list(SticsRFiles= "v0.1.0.9003"))
 
 }
 }

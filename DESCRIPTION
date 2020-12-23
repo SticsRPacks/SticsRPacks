@@ -41,16 +41,16 @@ Imports:
     grDevices,
     magrittr,
     rstudioapi,
+    SticsRFiles,
     SticsOnR,
     CroptimizR,
-    SticsRFiles,
     CroPlotR,
     remotes,
     utils
 Remotes: 
+    github::SticsRPacks/SticsRFiles@*release,
     github::SticsRPacks/SticsOnR@*release,
     github::SticsRPacks/CroptimizR@*release,
-    github::SticsRPacks/SticsRFiles@*release,
     github::SticsRPacks/CroPlotR@*release
 VignetteBuilder:
     knitr
