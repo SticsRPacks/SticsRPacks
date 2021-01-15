@@ -7,6 +7,7 @@
 
 [![R build
 status](https://github.com/SticsRPacks/SticsRPacks/workflows/R-CMD-check/badge.svg)](https://github.com/SticsRPacks/SticsRPacks/actions)
+[![DOI](https://zenodo.org/badge/223148621.svg)](https://zenodo.org/badge/latestdoi/223148621)
 <!-- badges: end -->
 
 ## Overview
@@ -56,8 +57,8 @@ have loaded:
 ``` r
 library(SticsRPacks)
 #> -- Attaching packages -------------------------------- SticsRPacks 0.0.1.9000 --
-#> v SticsRFiles 0.1.0.9004     v SticsOnR    0.1.0.9005
-#> v CroptimizR  0.2.0.9000     v CroPlotR    0.5.0
+#> v SticsRFiles 0.2.0          v SticsOnR    0.2.0     
+#> v CroptimizR  0.2.0.9000     v CroPlotR    0.6.0
 #> 
 ```
 
