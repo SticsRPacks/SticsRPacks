@@ -1,5 +1,6 @@
 Package: SticsRPacks
 Title: Easily Install and Load 'SticsRPacks' Packages
+Date: 2020-01-15
 Version: 0.2.0
 Authors@R:
     c(person(given = "Rémi",
