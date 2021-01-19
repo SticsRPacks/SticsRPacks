@@ -2,7 +2,7 @@ pandoc: 2.7.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles: {}
-last_built: 2021-01-16T11:54Z
+last_built: 2021-01-19T07:02Z
 urls:
   reference: https://sticsrpacks.github.io/sticsrpacks//reference
   article: https://sticsrpacks.github.io/sticsrpacks//articles
