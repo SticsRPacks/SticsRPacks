@@ -1,0 +1,123 @@
+---
+title: "Tutorial for SticsRpacks"
+output: 
+  learnr::tutorial:
+    theme: cerulean
+    #theme: united
+    ace_theme: merbivore
+    anchor_sections: FALSE
+
+# output:
+#   slidy_presentation:
+#     font_adjustment: -2
+#     footer: "SticsRPacks Team, 2020."
+runtime: shiny_prerendered
+params:
+  gen_help: TRUE
+  javastics: JavaSTICS-1.41-stics-9.1
+  workspace_xml: JavaSTICS-1.41-stics-9.1/example
+  workspace_txt: example
+  use_default: TRUE
+  work_dir: !r file.path(tempdir(), "SticsRpacks")
+---
+
+
+## TP Stics
+
+
+## A simple example
+
+vignette CroptimizR ou encore plus simple (1 seul param) pour réduire le temps d’exécution …
+
+
+## Exploring the content of Stics files 
+ 
+	get_usms_list() ?
+ 
+ 
+	get_param_xml
+ 
+		Récupérer les valeurs de XXX et XXX pour tout les sols
+		Faire un plot des valeurs (histogramme ou argi vs Norg)
+ 
+		Récupérer les valeurs de XX et XXX pour les sols XXX et XXX
+ 
+get_param_txt()
+Récupérer les valeurs de argi et Norg pour les sols des USMs ... (même question que get_param_xml)
+		ou alors simplement expliquer qu’on peut le faire, mais sans faire d’exercice ?
+ 
+ 
+## Running simulations from R
+ 
+	run_javaStics
+		Run d’un sous-ensemble des USMs
+ 
+	see also: gen_varmod
+ 
+ 
+## Exploring and Evaluating the Stics results
+
+	get_daily_results
+Récupérer tous les résultats simulés
+Récupérer les résultats pour la variable XXX et les USMs XXX et XXX
+
+	plot stics results
+		Tracer les dynamiques des variables XXX et XXX indépendamment ou superposées
+	
+	get_obs
+
+	Evaluate
+		dynamiques avec des obs
+		scatter_plots basiques
+		scatter_plots avec gestion des symboles : demander de mettre des symboles différents selon des groupes d’USMs
+		stats et graphiques associés
+
+
+## Estimating parameters
+
+estim_param
+	méthode par défaut
+	Afficher résultats produits et plots
+	forcage des paramètres
+
+## Advanced use
+ 
+### Modifying Stics files
+ 
+ 
+ 
+
+
+### Generating Stics input Files
+
+Generate JavaStics Input files (XML format)
+
+Generate Stics Input files (Text format)
+
+Generate obs
+### Running simulations from R using stics_wrapper
+ 
+	stics_wrapper
+		run sur un lot d’USMs et sélection des variables à renvoyer
+		forçage de paramètre, y compris par USMs
+		parallélisation
+	
+### Succession culturales
+ 
+	stics_wrapper
+	CroPlotR : dynamique sur succession
+estim_param
+	
+### Intercrop
+	
+	get_daily_results
+CroPlotR : plot + stats ?	
+ 
+### Advanced parameter estimation 
+
+plus avancé :
+	contraintes inégalités
+	paramètres par groupe (varietal / spécifique)
+méthode bayesienne
+transfo des sim et obs ???
+
