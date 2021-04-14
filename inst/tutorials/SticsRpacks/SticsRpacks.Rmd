@@ -18,21 +18,87 @@ params:
 
 ```{r setup, include=FALSE}
 library(learnr)
+library(SticsRPacks)
+knitr::opts_chunk$set(echo = FALSE)
+tutorial_options(exercise.lines = 5)
 ```
 
-## TP Stics
+```{r set_var, echo=FALSE, results='hide'}
+# Add checking JavaStics path
+
+work_dir <- params$work_dir
+work_dir <- gsub(pattern = "\\\\", replacement="/", x=work_dir)
+
+# Creating work_dir if needed
+if (!dir.exists(work_dir)) dir.create(work_dir)
+
+javastics <- file.path(work_dir, params$javastics, fsep ="/")
+
+if (!dir.exists(javastics)) dir.create(javastics)
+
+if(!any(grepl("JavaStics.exe",list.files(javastics)))) {
+  zip_path <- file.path(work_dir,paste0(params$javastics,".zip"))
+  system(paste0("curl -u stics_user:w10lptr6405 https://w3.avignon.inra.fr/forge/attachments/download/2402/",params$javastics,".zip --output ", zip_path))
+  unzip(zip_path, exdir = javastics)
+}
+
+workspace_xml <- file.path(work_dir, params$workspace_xml, fsep ="/")
+workspace_txt <- file.path(work_dir, params$workspace_txt, fsep ="/")
+```
+
+```{r, echo=FALSE, warning=FALSE}
+
+# Generating html help files, one for each function
+if(params$gen_help) {
+  help_dir <- file.path(work_dir, "SticsRFiles_help")
+  if (!dir.exists(help_dir)) dir.create(help_dir)
+  SticsRFiles:::static_help(pkg = "SticsRFiles", 
+                            overwrite = FALSE, 
+                            out_dir = help_dir)
+}
+
+```
+
+## Foretaste of SticsRpacks 
 
 
-## A simple example
+### TP Stics
+
+
+### A simple example
 
 vignette CroptimizR ou encore plus simple (1 seul param) pour réduire le temps d’exécution …
 
-
 ## Exploring the content of Stics files 
  
-	get_usms_list() ?
- 
- 
+### Get usm names
+
+`get_usms_list`
+
+```{r, results="asis"}
+lines <- SticsRFiles:::get_from_help(file.path(help_dir,"get_usms_list.html"))
+cat( paste( lines , collapse="\n" ) )
+```
+
+Test.
+
+```{r get_usms_list1, exercise=TRUE}
+# Get the list of USMs included in the JavaStics distribution Example directory
+```
+
+```{r get_usms_list1-solution}
+
+```
+
+```{r get_usms_list2, exercise=TRUE}
+# Get the list of cover-crops USMs (their name starts with « cc_ »)
+```
+
+```{r get_usms_list2-solution}
+
+```
+
+
 	get_param_xml
  
 		Récupérer les valeurs de XXX et XXX pour tout les sols
