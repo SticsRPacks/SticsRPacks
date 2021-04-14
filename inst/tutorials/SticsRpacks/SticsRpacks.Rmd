@@ -3,8 +3,9 @@ title: "Tutorial for SticsRpacks"
 output: 
   learnr::tutorial:
     theme: cerulean
-    ace_theme: merbivore
+    ace_theme: pastel_on_dark
     anchor_sections: FALSE
+    progressive: true
 description: "A tutorial to learn SticsRpacks"
 runtime: shiny_prerendered
 params:
@@ -59,7 +60,7 @@ if(params$gen_help) {
 
 ```
 
-## Foretaste of SticsRpacks 
+## A foretaste of SticsRpacks 
 
 
 ### TP Stics
@@ -80,26 +81,34 @@ lines <- SticsRFiles:::get_from_help(file.path(help_dir,"get_usms_list.html"))
 cat( paste( lines , collapse="\n" ) )
 ```
 
-Test.
+#### Exercises
 
 ```{r get_usms_list1, exercise=TRUE}
-# Get the list of USMs included in the JavaStics distribution Example directory
+# Get the list of USMs included in the JavaStics distribution Example directory (which path is stored in workspace_xml)
 ```
 
 ```{r get_usms_list1-solution}
-
+get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"))
 ```
 
 ```{r get_usms_list2, exercise=TRUE}
-# Get the list of cover-crops USMs (their name starts with « cc_ »)
+# Get the list of cover-crops USMs (their name starts with "cc_")
 ```
+
+<div id="get_usms_list2-hint">
+**Hint:** The argument name is particularly useful in this case ...
+</div>
 
 ```{r get_usms_list2-solution}
-
+get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"), name = "cc_")
 ```
 
 
-	get_param_xml
+
+`get_param_xml`
+
+**TO BE CONTINUED ...**
+	
  
 		Récupérer les valeurs de XXX et XXX pour tout les sols
 		Faire un plot des valeurs (histogramme ou argi vs Norg)
