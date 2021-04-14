@@ -3,24 +3,22 @@ title: "Tutorial for SticsRpacks"
 output: 
   learnr::tutorial:
     theme: cerulean
-    #theme: united
     ace_theme: merbivore
     anchor_sections: FALSE
-
-# output:
-#   slidy_presentation:
-#     font_adjustment: -2
-#     footer: "SticsRPacks Team, 2020."
+description: "A tutorial to learn SticsRpacks"
 runtime: shiny_prerendered
 params:
   gen_help: TRUE
-  javastics: JavaSTICS-1.41-stics-9.1
-  workspace_xml: JavaSTICS-1.41-stics-9.1/example
+  javastics: JavaSTICS-1.41-stics-9.2
+  workspace_xml: JavaSTICS-1.41-stics-9.2/example
   workspace_txt: example
   use_default: TRUE
   work_dir: !r file.path(tempdir(), "SticsRpacks")
 ---
 
+```{r setup, include=FALSE}
+library(learnr)
+```
 
 ## TP Stics
 
@@ -120,4 +118,8 @@ plus avancé :
 	paramètres par groupe (varietal / spécifique)
 méthode bayesienne
 transfo des sim et obs ???
+This code computes the answer to one plus one, change it so it computes two plus two:
 
+```{r addition, exercise=TRUE}
+1 + 1
+```
