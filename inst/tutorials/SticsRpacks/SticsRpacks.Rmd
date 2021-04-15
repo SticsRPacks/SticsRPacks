@@ -101,56 +101,71 @@ vignette CroptimizR ou encore plus simple (1 seul param) pour réduire le temps 
 
 ## Finding names of STICS variables
 
-Names of STICS variables can be retrieved using the `get_var_info` function from partial name or keywords.
+Names of STICS variables can be retrieved from partial name or keywords using the `get_var_info` function of the [SticsRFiles package](https://sticsrpacks.github.io/SticsRFiles/index.html).
 
-**Function** `get_var_info` from the [SticsRFiles package](https://sticsrpacks.github.io/SticsRFiles/index.html)
+Here's its description as given in the R help panel (`? get_var_info`) and the [SticsRFiles package website](https://sticsrpacks.github.io/SticsRFiles/reference/get_var_info.html):
+
+<blockquote>
 
 ```{r, results="asis"}
 lines <- SticsRFiles:::get_from_help(file.path(help_dir,"get_var_info.html"))
 cat( paste( lines , collapse="\n" ) )
 ```
 
+</blockquote>
+
+
 #### Exercises
 
+* Find all STICS variables characterizing roots
+
+```{r get_var_info1, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r get_var_info1-hint-1}
+# Use argument keyword="roots"! 
+```
+
+```{r get_var_info1-solution}
+# SOLUTION:
+get_var_info(keyword = "roots")
+```
 
 
-
-
-
-
-
-
-
-## Exploring the content of Stics files 
+## Exploring the content of STICS files 
 
 We're going to see in this section how to retrieve information from STICS input files.
  
 ### Get usm names
 
-**Function** `get_usms_list` from the [SticsRFiles package](https://sticsrpacks.github.io/SticsRFiles/index.html)
+The function `get_usms_list` from the [SticsRFiles package](https://sticsrpacks.github.io/SticsRFiles/index.html) returns the list of USMs included in a usms.xml file.
+
+Here's its description as given in the R help panel (`? get_usms_list`) and on the [SticsRFiles package website](https://sticsrpacks.github.io/SticsRFiles/reference/get_usms_list.html):
+
+<blockquote>
 
 ```{r, results="asis"}
 lines <- SticsRFiles:::get_from_help(file.path(help_dir,"get_usms_list.html"))
 cat( paste( lines , collapse="\n" ) )
 ```
 
+</blockquote>
+
 #### Exercises
 
-* Get the list of USMs included in the Example workspace of the JavaStics distribution, which path is stored in workspace_xml.
+* Get the list of USMs included in the Example workspace of the JavaStics distribution, which path is stored in the R object `workspace_xml`.
 
 ```{r get_usms_list1, exercise=TRUE}
 # Insert your R code here!
 ```
 
 ```{r get_usms_list1-hint-1}
-# The list of USMs is included in the usms.xml file ...
-```
-
-```{r get_usms_list1-hint-2}
 # Use file.path function to build full path to a file from directory names and filenames: file.path(path,filename) 
 ```
 
 ```{r get_usms_list1-solution}
+# SOLUTION:
 get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"))
 ```
 
@@ -160,7 +175,7 @@ get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"))
 <!-- ) -->
 <!-- ``` -->
 
-* Get the list of cover-crops USMs (their name starts with "cc_").
+* Get the list of cover-crops USMs (their name starts with `"cc_"`).
 
 ```{r get_usms_list2, exercise=TRUE}
 # Insert your R code here!
@@ -175,18 +190,22 @@ get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"))
 get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"), name = "cc_")
 ```
 
-### Get information from STICS input files
+### Get parameters values from STICS input files
 
-**Function** `get_param_xml` from the [SticsRFiles package](https://sticsrpacks.github.io/SticsRFiles/index.html)
+Parameters values included in STICS input files can be retrieved using the function `get_param_xml` from the [SticsRFiles package](https://sticsrpacks.github.io/SticsRFiles/index.html):
+
+<blockquote>
 
 ```{r, results="asis"}
 lines <- SticsRFiles:::get_from_help(file.path(help_dir,"get_param_xml.html"))
 cat( paste( lines , collapse="\n" ) )
 ```
 
+</blockquote>
+
 #### Exercises
 
-* Get the values of clay content after decarbonation (argi) for all soils defined in the Example workspace of the JavaStics distribution. Store the result of the function in a variable called result and print it.
+* Get the values of clay content after decarbonation (argi) for all soils defined in the Example workspace of the JavaStics distribution.
 
 ```{r get_param_xml1, exercise=TRUE}
 # Insert your R code here!
@@ -196,21 +215,16 @@ cat( paste( lines , collapse="\n" ) )
 # Soils are defined in the "sols.xml" file ...
 ```
 
-```{r get_param_xml1-hint-2}
-# Use print function to print a variable ...
-```
-
 ```{r get_param_xml1-solution}
 #SOLUTION:
-result <- get_param_xml(file.path(workspace_xml,"sols.xml"), c("argi"))
-print(result)
+get_param_xml(file.path(workspace_xml,"sols.xml"), c("argi"))
 ```
 
 ```{r get_param_xml2-setup}
 result <- get_param_xml(file.path(workspace_xml,"sols.xml"), c("argi"))
 ```
 
-* Plot an histogram of these values
+* Plot an histogram of these values that we stored in an R object called `result`
 
 ```{r get_param_xml2, exercise=TRUE}
 # Insert your R code here!
@@ -221,7 +235,7 @@ result <- get_param_xml(file.path(workspace_xml,"sols.xml"), c("argi"))
 ```
 
 ```{r get_param_xml2-hint-2}
-# result is a list: argi is stored in result$sols.xml$argi
+# Be careful, result is a list: argi is stored in result$sols.xml$argi
 ```
 
 ```{r get_param_xml2-solution}
@@ -229,14 +243,14 @@ result <- get_param_xml(file.path(workspace_xml,"sols.xml"), c("argi"))
 hist(result$sols.xml$argi)
 ```
 
-* Compute the Available Water Capacity of soil solmais in mm
+* Compute the Available Water Capacity of soil `"solmais"` in mm
 
 ```{r get_param_xml3, exercise=TRUE}
 # Insert your R code here!
 ```
 
 ```{r get_param_xml3-hint-1}
-# Equation of Available Water Capacity in mm from STICS inputs is: AWC=sum[(HCCF-HMINF)*epc*DAF/10]
+# Equation of Available Water Capacity in mm from STICS inputs is: AWC=sum((HCCF-HMINF)*epc*DAF/10)
 ```
 
 ```{r get_param_xml3-hint-2}
@@ -249,25 +263,64 @@ result <- get_param_xml(file.path(workspace_xml,"sols.xml"), c("HCCF","HMINF","e
 sum((result$sols.xml$HCCF-result$sols.xml$HMINF)*result$sols.xml$epc*result$sols.xml$DAF/10)
 ```
 
-<div class="note">
-See also: 
+### Get weather variables from STICS input files
 
-* `get_param_txt` to get values from STICS text input files 
-* `get_climate_txt` to STICS input weather file.
-</div>
+Weather variables defined in STICS input weather files can be retrieved using the function `get_climate_txt` from the [SticsRFiles package](https://sticsrpacks.github.io/SticsRFiles/index.html):
 
+<blockquote>
 
-**ILLUSTRER get_climate_txt ? (calculer cumul de pluie entre 2 dates?)**
+```{r, results="asis"}
+lines <- SticsRFiles:::get_from_help(file.path(help_dir,"get_climate_txt.html"))
+cat( paste( lines , collapse="\n" ) )
+```
 
+</blockquote>
+
+#### Exercises
+
+* Compute the total amount of precipitation that has fallen in Auzeville in 2013 from the file `"Auzeville.2013"` of the Javastics Example workspace.
+
+```{r get_climate_txt1, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r get_climate_txt1-hint-1}
+# Precipitation is stored in the column named ttrr 
+```
+
+```{r get_climate_txt1-solution}
+#SOLUTION:
+result <- get_climate_txt(dirpath=workspace_xml,filename="Auzeville.2013")
+sum(result$ttrr)
+```
+
+* Compute the amount of precipitation that has fallen between dates "2013-03-21" and "2013-09-20".
+
+```{r get_climate_txt2, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r get_climate_txt2-hint-1}
+# Use dplyr::filter(result,Date>"2013-03-21", Date<"2013-09-20") to filter the results wrt the Dates.
+```
+
+```{r get_climate_txt2-solution}
+#SOLUTION:
+result <- get_climate_txt(dirpath=workspace_xml,filename="Auzeville.2013")
+filtered_result <- dplyr::filter(result,Date>"2013-03-21", Date<"2013-09-20")
+sum(filtered_result$ttrr)
+```
 
 
 ## Running simulations from R
 
-**Function** `run_javaStics` from the [SticsOnR package](https://sticsrpacks.github.io/SticsOnR/index.html)
+Let see now how to run STICS simulations directly from R using the function `run_javaStics` from the [SticsOnR package](https://sticsrpacks.github.io/SticsOnR/index.html).
+
+From now on we will no longer display function help in the tutorial. Use `? function_name` or explore the packages websites (in particular the Reference tab) to display it.
 
 ### Exercises
 
-* Run all the USMs defined in the Example workspace of the JavaStics distribution. Path to JavaStics is stored in the javastics variable.
+* Run all the USMs defined in the Example workspace of the JavaStics distribution. Path to JavaStics is stored in the `javastics` R object.
 
 ```{r run_javaStics1, exercise=TRUE}
 # Insert your R code here!
@@ -299,11 +352,11 @@ run_javastics(javastics_path=javastics,  workspace_path = workspace_xml)
 run_javastics(javastics_path=javastics,  workspace_path = workspace_xml, usms_list = c("banana","Turmeric"))
 ```
 
+<div class="alert alert-info">
+  See also: `gen_varmod` function to modify var.mod file in case STICS does not simulate the variables you are interested in.
+</div>
 
-**see also: gen_varmod ?**
- 
- 
- 
+
 ## Exploring and Evaluating the Stics results
 PATRICE
 
@@ -327,22 +380,37 @@ Récupérer les résultats pour la variable XXX et les USMs XXX et XXX
 
 
 ## Advanced use
- 
-### Modifying Stics files
-SAMUEL-REMI 
 
-Leur faire trouver les noms de fonction dans le REFERENCE du site web ... 
- 
+You have learned so far how to use very useful but quite basic features of SticsRpacks packages.
+Let's go now deeper into the packages functionnalities.
 
 
-### Generating Stics input Files
+### Generating STICS input Files
 SAMUEL
 
 Generate JavaStics Input files (XML format)
 
 Generate Stics Input files (Text format)
 
-Generate obs
+#### Generating observation files 
+
+Observation files can be generated from a data.frame using the function `gen_obs` of the [SticsRFiles package](https://sticsrpacks.github.io/SticsRFiles/index.html).
+
+They are not used by the STICS model but can be used to plot comparison between observed and simulated variables and to optimize STICS parameters both in JavaStics and in [CroPlotR](https://sticsrpacks.github.io/CroPlotR/index.html) and [CroptimizR](https://sticsrpacks.github.io/CroptimizR/index.html) packages.
+ 
+##### Exercises
+
+**Pré-remplir un tableau de données avec des Dates en POSIXct et leur faire ajouter les colonnes ian, mo, jo + usm_name**
+**Ou mieux: modifier gen_obs pour qu'il prenne en entrée la colonne Date plutot que ian, mo, jo ...)**
+ 
+ 
+ 
+### Modifying STICS files
+SAMUEL-REMI 
+
+Leur faire trouver les noms de fonction dans le REFERENCE du site web ... 
+ 
+
 
 ### Running simulations from R using stics_wrapper
 REMI
