@@ -313,14 +313,108 @@ Generate obs
 ### Running simulations from R using stics_wrapper
 REMI
 
-  
+#### The need of a wrapper
+
+We saw earlier how to make a simulation using `run_javastics()`. This function simply call javastics from the command line to make simulations, which does the same as running an usm by opening the javastics user interface, but from R. 
+
+You are probably familiar with the xml files used as inputs for javastics (*e.g.* `sols.xml` or `usms.xml`). These files list all the parameter values for one or several usms, whith potentially several soils, management practices and climate. Then when we run a usm, javastics reads the parameters values from the xml files, and writes new text files with only the values associated to this particular usm. Then it calls the stics model that reads those text files, make the simulation, and writes the outputs. 
+
+So when we run a usm from javastics we have four different steps:
+
+1. javastics reads the parameter values for the usm from the xml files
+1. javastics writes text files with the parameter values that only describe this usm
+1. javastics calls the stics model (*i.e* the stics executable)
+1. the stics model reads the parameter values from the text files, make a simulation, and writes the output files (*i.e.* `mod_bXXX.sti` and `mod_sXXX.sti`)
+
+This method is simpler for the user because it hides the technical details, but it has some downsides: it is slow because we have to create the text files each time we make a simulation, and we cannot parallelize the simulations because we share the same text files.
+
+But no worries, SticsRPacks provides a solution to this!
+
+Instead of creating the text files one usm at a time, we create them for all usms once into one folder for each, and then we directly call the stics model (*i.e* without using javastics) on these files. Using this method we are now able to run the simulations way faster, and in parallel! 
+
+So how do we do that? Well, we use three steps:
+
+- create the text files (`gen_usms_xml2txt()`)
+- set-up our modeling environment (`stics_wrapper_options()`)
+- run the simulations and import the results (`stics_wrapper()`)
+
+#### Creating the text files
+
+The first step is to create the text files for each usms in a separate directory. To do so, we use `gen_usms_xml2txt()`.
+
+This tutorial stores a javastics installation in the `javastics` variable, and an example workspace in the `workspace_xml` variable.
+
+Use `gen_usms_xml2txt()` with those variables to generate the text files for the usms "wheat", "banana" and "soybean":
+
+```{r gen_usms_xml2txt, exercise=TRUE}
+# Generate text files for usms "wheat" and "banana" and "soybean"
+```
+
+```{r gen_usms_xml2txt-hint-1}
+# Use `javastics_path = javastics` and `workspace_path = workspace_xml`
+```
+
+```{r gen_usms_xml2txt-solution}
+#SOLUTION:
+gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("wheat","banana","soybean"))
+```
+
+#### Setting-up the modeling environment
+
+Before running the simulations using stics, we have to define some information about our modeling environment. This is done using `stics_wrapper_options()`. This function helps us define where is our installation of javastics, which stics executable to use (*e.g.* if you are using an executable from a research branch), which usms to simulate, etc...
+
+Use `stics_wrapper_options()` to set-up our modeling environment using a parallel computation over the usms:
+
+```{r stics_wrapper_options1, exercise=TRUE}
+# Set-up the modeling environment
+```
+
+```{r stics_wrapper_options1-hint-1}
+# Use `javastics_path = javastics` and `data_dir = workspace_xml`
+```
+
+```{r stics_wrapper_options1-solution}
+#SOLUTION:
+stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
+```
+
+#### Running the simulations
+
+Now everything is set-up to make our simulations! The model options we will use here are stored in the `wrapper_options` object with the options we just set up in the previous section. 
+
+```{r stics_wrapper1-setup, echo=FALSE}
+wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
+```
+
+Here is its output:
+```{r}
+wrapper_options
+```
+
+Now use `stics_wrapper()` to simulate the usms "wheat" and "banana" only (not "soybean") using the model options stored in `wrapper_options`, and return the leaf area index and the above-ground biomass:
+
+```{r stics_wrapper1, exercise=TRUE}
+# Simulate "wheat" and "banana"
+```
+
+```{r stics_wrapper1-hint-1}
+# The sit_names argument is used to choose the usms.
+```
+
+```{r stics_wrapper1-hint-2}
+# Use get_var_info() to search for a variable name
+```
+
+```{r stics_wrapper1-solution}
+#SOLUTION:
+stics_wrapper(model_options = wrapper_options, sit_names = c("wheat","banana"), var_names = c("lai(n)", "masec(n)"))
+```
+
 	stics_wrapper
 		run sur un lot d’USMs et sélection des variables à renvoyer
 		forçage de paramètre, y compris par USMs
 		parallélisation
 
-La difference avec runJavaStics
-	
 ### Estimating parameters
 REMI
 
