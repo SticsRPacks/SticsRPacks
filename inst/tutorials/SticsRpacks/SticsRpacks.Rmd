@@ -73,6 +73,8 @@ Detailed documentation on the different packages can be found at:
 * [https://sticsrpacks.github.io/CroptimizR/]
 * [https://sticsrpacks.github.io/CroPlotR/]
 
+**Expliquer aussi comment trouver de l'aide sur les fonctions: ? + reference, ...**
+
 
 ## A foretaste of SticsRpacks 
 
@@ -84,12 +86,14 @@ Detailed documentation on the different packages can be found at:
 vignette CroptimizR ou encore plus simple (1 seul param) pour réduire le temps d’exécution …
 
 
+## Finding names of STICS variables
+
 
 ## Exploring the content of Stics files 
  
 ### Get usm names
 
-**Function** `get_usms_list`
+**Function** `get_usms_list` from the [SticsRFiles package](https://sticsrpacks.github.io/SticsRFiles/index.html)
 
 ```{r, results="asis"}
 lines <- SticsRFiles:::get_from_help(file.path(help_dir,"get_usms_list.html"))
@@ -98,8 +102,10 @@ cat( paste( lines , collapse="\n" ) )
 
 #### Exercises
 
+* Get the list of USMs included in the Example workspace of the JavaStics distribution, which path is stored in workspace_xml.
+
 ```{r get_usms_list1, exercise=TRUE}
-# Get the list of USMs included in the JavaStics distribution Example directory (which path is stored in workspace_xml)
+# Insert your R code here!
 ```
 
 ```{r get_usms_list1-hint-1}
@@ -120,8 +126,10 @@ get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"))
 <!-- ) -->
 <!-- ``` -->
 
+* Get the list of cover-crops USMs (their name starts with "cc_").
+
 ```{r get_usms_list2, exercise=TRUE}
-# Get the list of cover-crops USMs (their name starts with "cc_")
+# Insert your R code here!
 ```
 
 ```{r get_usms_list2-hint-1}
@@ -133,9 +141,9 @@ get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"))
 get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"), name = "cc_")
 ```
 
-### Get information from Stics XML files
+### Get information from STICS input files
 
-**Function** `get_param_xml`
+**Function** `get_param_xml` from the [SticsRFiles package](https://sticsrpacks.github.io/SticsRFiles/index.html)
 
 ```{r, results="asis"}
 lines <- SticsRFiles:::get_from_help(file.path(help_dir,"get_param_xml.html"))
@@ -144,44 +152,122 @@ cat( paste( lines , collapse="\n" ) )
 
 #### Exercises
 
+* Get the values of clay content after decarbonation (argi) for all soils defined in the Example workspace of the JavaStics distribution. Store the result of the function in a variable called result and print it.
+
 ```{r get_param_xml1, exercise=TRUE}
-# Get the values of clay content after decarbonation (argi) for all soils defined in the JavaStics distribution Example directory
+# Insert your R code here!
 ```
 
 ```{r get_param_xml1-hint-1}
 # Soils are defined in the "sols.xml" file ...
 ```
 
-```{r get_param_xml1-solution}
-get_param_xml(file.path(workspace,"sols.xml"), c("norg"))
+```{r get_param_xml1-hint-2}
+# Use print function to print a variable ...
 ```
 
+```{r get_param_xml1-solution}
+#SOLUTION:
+result <- get_param_xml(file.path(workspace_xml,"sols.xml"), c("argi"))
+print(result)
+```
+
+```{r get_param_xml2-setup}
+result <- get_param_xml(file.path(workspace_xml,"sols.xml"), c("argi"))
+```
+
+* Plot an histogram of these values
 
 ```{r get_param_xml2, exercise=TRUE}
-# Plot an histogram of these values
+# Insert your R code here!
 ```
 
-```{r get_param_xml1-hint-1}
-# 
+```{r get_param_xml2-hint-1}
+# Use hist function to plot an histogram
 ```
 
-		Récupérer les valeurs de XXX et XXX pour tout les sols
-		Faire un plot des valeurs (histogramme ou argi vs Norg)
- 
-		Récupérer les valeurs de XX et XXX pour les sols XXX et XXX
- 
-get_param_txt()
-Récupérer les valeurs de argi et Norg pour les sols des USMs ... (même question que get_param_xml)
-		ou alors simplement expliquer qu’on peut le faire, mais sans faire d’exercice ?
- 
- 
+```{r get_param_xml2-hint-2}
+# result is a list: argi is stored in result$sols.xml$argi
+```
+
+```{r get_param_xml2-solution}
+#SOLUTION:
+hist(result$sols.xml$argi)
+```
+
+* Compute the Available Water Capacity of soil solmais in mm
+
+```{r get_param_xml3, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r get_param_xml3-hint-1}
+# Equation of Available Water Capacity in mm from STICS inputs is: AWC=sum[(HCCF-HMINF)*epc*DAF/10]
+```
+
+```{r get_param_xml3-hint-2}
+# Use select and value arguments of get_param_xml to extract information for a given soil
+```
+
+```{r get_param_xml3-solution}
+# SOLUTION:
+result <- get_param_xml(file.path(workspace_xml,"sols.xml"), c("HCCF","HMINF","epc","DAF"),select="sol",value="solmais")
+sum((result$sols.xml$HCCF-result$sols.xml$HMINF)*result$sols.xml$epc*result$sols.xml$DAF/10)
+```
+
+<div class="note">
+See also: 
+
+* `get_param_txt` to get values from STICS text input files 
+* `get_climate_txt` to STICS input weather file.
+</div>
+
+
+**ILLUSTRER get_climate_txt ? (calculer cumul de pluie entre 2 dates?)**
+
+
+
 ## Running simulations from R
-SAMUEL
 
-	run_javaStics
-		Run d’un sous-ensemble des USMs
+**Function** `run_javaStics` from the [SticsOnR package](https://sticsrpacks.github.io/SticsOnR/index.html)
+
+### Exercises
+
+* Run all the USMs defined in the Example workspace of the JavaStics distribution. Path to JavaStics is stored in the javastics variable.
+
+```{r run_javaStics1, exercise=TRUE}
+# Insert your R code here!
+```
+
+
+```{r run_javaStics1-hint-1}
+# No need to use the usms_list argument!
+```
+
+```{r run_javaStics1-solution}
+# SOLUTION:
+run_javastics(javastics_path=javastics,  workspace_path = workspace_xml)
+```
+
+* Run only the USMs banana and Turmeric.
+
+```{r run_javaStics2, exercise=TRUE}
+# Insert your R code here!
+```
+
+
+```{r run_javaStics2-hint-1}
+# Use the usms_list argument!
+```
+
+```{r run_javaStics2-solution}
+# SOLUTION:
+run_javastics(javastics_path=javastics,  workspace_path = workspace_xml, usms_list = c("banana","Turmeric"))
+```
+
+
+**see also: gen_varmod ?**
  
-	see also: gen_varmod
  
  
 ## Exploring and Evaluating the Stics results
