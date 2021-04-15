@@ -89,7 +89,7 @@ vignette CroptimizR ou encore plus simple (1 seul param) pour réduire le temps 
  
 ### Get usm names
 
-`get_usms_list`
+**Function** `get_usms_list`
 
 ```{r, results="asis"}
 lines <- SticsRFiles:::get_from_help(file.path(help_dir,"get_usms_list.html"))
@@ -100,6 +100,14 @@ cat( paste( lines , collapse="\n" ) )
 
 ```{r get_usms_list1, exercise=TRUE}
 # Get the list of USMs included in the JavaStics distribution Example directory (which path is stored in workspace_xml)
+```
+
+```{r get_usms_list1-hint-1}
+# The list of USMs is included in the usms.xml file ...
+```
+
+```{r get_usms_list1-hint-2}
+# Use file.path function to build full path to a file from directory names and filenames: file.path(path,filename) 
 ```
 
 ```{r get_usms_list1-solution}
@@ -125,14 +133,38 @@ get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"))
 get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"), name = "cc_")
 ```
 
+### Get information from Stics XML files
+
+**Function** `get_param_xml`
+
+```{r, results="asis"}
+lines <- SticsRFiles:::get_from_help(file.path(help_dir,"get_param_xml.html"))
+cat( paste( lines , collapse="\n" ) )
+```
+
+#### Exercises
+
+```{r get_param_xml1, exercise=TRUE}
+# Get the values of clay content after decarbonation (argi) for all soils defined in the JavaStics distribution Example directory
+```
+
+```{r get_param_xml1-hint-1}
+# Soils are defined in the "sols.xml" file ...
+```
+
+```{r get_param_xml1-solution}
+get_param_xml(file.path(workspace,"sols.xml"), c("norg"))
+```
 
 
-`get_param_xml`
+```{r get_param_xml2, exercise=TRUE}
+# Plot an histogram of these values
+```
 
-**TO BE CONTINUED ...**
-SAMUEL
+```{r get_param_xml1-hint-1}
+# 
+```
 
- 
 		Récupérer les valeurs de XXX et XXX pour tout les sols
 		Faire un plot des valeurs (histogramme ou argi vs Norg)
  
