@@ -155,8 +155,46 @@ SAMUEL
 ## Exploring and Evaluating the Stics results
 PATRICE
 
-	get_sim
-Récupérer tous les résultats simulés
+### Get simulations results
+
+`get_sim`
+
+```{r, results="asis"}
+lines <- SticsRFiles:::get_from_help(file.path(help_dir,"get_sim.html"))
+cat( paste( lines , collapse="\n" ) )
+```
+
+#### Exercises
+
+> Get simulations outputs of USMs from the JavaStics distribution `example` directory
+
+<!-- Récupérer tous les résultats simulés -->
+```{r get_sim1, exercise=TRUE}
+# Get all outputs
+```
+```{r get_sim1-hint-1}
+# Path of the results is stored in workspace_xml
+```
+
+```{r get_sim1-solution}
+get_sim(workspace = workspace_xml)
+```
+
+<!-- Récupérer tous les résultats simulés pour les les USMs XXX -->
+
+```{r get_sim2, exercise=TRUE}
+# Get outputs for USMs named : SugarBeet, wheat, maize, ...
+```
+
+```{r get_sim2-hint-1}
+# The argument usm_name is particularly useful in this case ...
+```
+
+```{r get_sim2-solution}
+#SOLUTION:
+get_sim(workspace = workspace_xml, usm_name = c("SugarBeet, wheat"))
+```
+
 Récupérer les résultats pour la variable XXX et les USMs XXX et XXX
 
 	plot stics results
