@@ -88,8 +88,29 @@ vignette CroptimizR ou encore plus simple (1 seul param) pour réduire le temps 
 
 ## Finding names of STICS variables
 
+Names of STICS variables can be retrieved using the `get_var_info` function from partial name or keywords.
+
+**Function** `get_var_info` from the [SticsRFiles package](https://sticsrpacks.github.io/SticsRFiles/index.html)
+
+```{r, results="asis"}
+lines <- SticsRFiles:::get_from_help(file.path(help_dir,"get_var_info.html"))
+cat( paste( lines , collapse="\n" ) )
+```
+
+#### Exercises
+
+
+
+
+
+
+
+
+
 
 ## Exploring the content of Stics files 
+
+We're going to see in this section how to retrieve information from STICS input files.
  
 ### Get usm names
 
