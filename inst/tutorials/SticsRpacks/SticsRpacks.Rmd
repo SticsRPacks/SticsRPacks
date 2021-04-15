@@ -95,11 +95,12 @@ get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"))
 # Get the list of cover-crops USMs (their name starts with "cc_")
 ```
 
-<div id="get_usms_list2-hint">
-**Hint:** The argument name is particularly useful in this case ...
-</div>
+```{r get_usms_list2-hint-1}
+# The argument name is particularly useful in this case ...
+```
 
 ```{r get_usms_list2-solution}
+#SOLUTION:
 get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"), name = "cc_")
 ```
 
