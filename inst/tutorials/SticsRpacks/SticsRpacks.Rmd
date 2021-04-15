@@ -66,6 +66,19 @@ if(params$gen_help) {
 
 **Décrire ici en 2 mots ce que font les paquets**
 
+<div class="alert alert-danger">
+  Test danger 2
+</div>
+
+<div class="alert alert-warning">
+  Test warning
+</div>
+
+<div class="alert alert-info">
+  Test info
+</div>
+
+
 Detailed documentation on the different packages can be found at:
 
 * [https://sticsrpacks.github.io/SticsRFiles/]
@@ -431,10 +444,80 @@ Now use `stics_wrapper()` to simulate the usms "wheat" and "banana" only (not "s
 stics_wrapper(model_options = wrapper_options, sit_names = c("wheat","banana"), var_names = c("lai(n)", "masec(n)"))
 ```
 
-	stics_wrapper
-		run sur un lot d’USMs et sélection des variables à renvoyer
-		forçage de paramètre, y compris par USMs
-		parallélisation
+#### Parameter forcing
+
+Sometimes it is useful to compare the outputs of the model with a different value for one or several parameters to better understand its impact or check if it is used. 
+
+`stics_wrapper()` provides an easy way to do so with the `param_values` argument. This argument is given as a named vector.
+
+> Make a simulation on the "wheat" usm and output just the lai, but this time with `dlaimax = 0.005` and `durvieF = 80`:
+
+```{r stics_wrapper2, exercise=TRUE, exercise.setup = "prepare-wrapper"}
+# Insert your R code here!
+```
+
+```{r stics_wrapper2-hint-1}
+# `param_values` is given as a named vector, e.g. c("bdens" = 5, "hautmax" = 1.1)
+```
+
+```{r stics_wrapper2-solution, exercise.setup = "prepare-wrapper"}
+#SOLUTION:
+stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = "lai(n)", param_values = c("dlaimax" = 0.005, "durvieF" = 80))
+```
+
+#### Plot the comparison
+
+Now we can plot the output of the two simulations using `plot()` and adding the simulation objects as arguments (optionally named). The results of both simulations are accessible in the `res1` and `res2` objects. The results of the simulations are stored in the `sim_list` field of each object. For example to get the results of the simulation for `res1`, we would do: `res1$sim_list`. 
+
+```{r prepare-wrapper-plot, echo=FALSE}
+wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
+
+res1 = stics_wrapper(model_options = wrapper_options, sit_names = c("wheat","banana"), var_names = c("lai(n)", "masec(n)"))
+res2 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = "lai_n", param_values = c("dlaimax" = 0.005, "durvieF" = 80))
+```
+
+Then, to plot a simulation result, we would do:
+
+```{r stics_wrapperplot, exercise=TRUE, exercise.setup = "prepare-wrapper-plot"}
+# Execute the code below to create a plot of the results:
+plot(res1$sim_list)
+```
+
+It is also possible to compare two simulation results by listing them as arguments to the function one after the other.
+
+> Plot the outputs of both simulations:
+
+```{r stics_wrapper3, exercise=TRUE, exercise.setup = "prepare-wrapper-plot"}
+# Insert your R code here!
+```
+
+```{r stics_wrapper3-hint-1}
+# The simulation results can be listed one after the other in `plot()` for comparison
+```
+
+```{r stics_wrapper3-solution, exercise.setup = "prepare-wrapper-plot"}
+#SOLUTION:
+plot(res1$sim_list,res2$sim_list)
+```
+
+As you can see the second simulation is only showed for the lai on the wheat usm. This is because we only did a simulation for this one.
+
+We can also name the simulations in our plot by naming them when passed as arguments to `plot()`.
+
+> Plot the outputs of both simulations, and name the first simulation "original" and the second simulation "dlaimax=0.005, durvieF=80":
+
+```{r stics_wrapper4, exercise=TRUE, exercise.setup = "prepare-wrapper-plot"}
+# Insert your R code here!
+```
+
+```{r stics_wrapper4-hint-1}
+# Name the arguments of the plot function, e.g. plot("sim1" = res1) would name the simulation "sim1" (but would not output it on the plot because there is only one)
+```
+
+```{r stics_wrapper4-solution, exercise.setup = "prepare-wrapper-plot"}
+#SOLUTION:
+plot("original" = res1$sim_list,"dlaimax=0.005, durvieF=80" = res2$sim_list)
+```
 
 ### Estimating parameters
 REMI
