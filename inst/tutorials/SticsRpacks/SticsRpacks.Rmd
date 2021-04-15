@@ -403,18 +403,18 @@ stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, para
 
 Now everything is set-up to make our simulations! The model options we will use here are stored in the `wrapper_options` object with the options we just set up in the previous section. 
 
-```{r stics_wrapper1-setup, echo=FALSE}
+```{r prepare-wrapper, echo=FALSE}
 wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
 ```
 
-Here is its output:
-```{r}
-wrapper_options
-```
+<!-- Here is its output: -->
+<!-- ```{r wrapper_options_print, exercise.setup = "prepare-wrapper"} -->
+<!-- wrapper_options -->
+<!-- ``` -->
 
 Now use `stics_wrapper()` to simulate the usms "wheat" and "banana" only (not "soybean") using the model options stored in `wrapper_options`, and return the leaf area index and the above-ground biomass:
 
-```{r stics_wrapper1, exercise=TRUE}
+```{r stics_wrapper1, exercise=TRUE, exercise.setup = "prepare-wrapper"}
 # Simulate "wheat" and "banana"
 ```
 
@@ -426,7 +426,7 @@ Now use `stics_wrapper()` to simulate the usms "wheat" and "banana" only (not "s
 # Use get_var_info() to search for a variable name
 ```
 
-```{r stics_wrapper1-solution}
+```{r stics_wrapper1-solution, exercise.setup = "prepare-wrapper"}
 #SOLUTION:
 stics_wrapper(model_options = wrapper_options, sit_names = c("wheat","banana"), var_names = c("lai(n)", "masec(n)"))
 ```
