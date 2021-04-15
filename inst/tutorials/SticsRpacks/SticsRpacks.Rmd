@@ -20,8 +20,10 @@ params:
 ```{r setup, include=FALSE}
 library(learnr)
 library(SticsRPacks)
+# library(gradethis)
 knitr::opts_chunk$set(echo = FALSE)
 tutorial_options(exercise.lines = 5)
+# gradethis::gradethis_setup()
 ```
 
 ```{r set_var, echo=FALSE, results='hide'}
@@ -60,8 +62,19 @@ if(params$gen_help) {
 
 ```
 
-## A foretaste of SticsRpacks 
+## Introduction
 
+**Décrire ici en 2 mots ce que font les paquets**
+
+Detailed documentation on the different packages can be found at:
+
+* [https://sticsrpacks.github.io/SticsRFiles/]
+* [https://sticsrpacks.github.io/SticsOnR/]
+* [https://sticsrpacks.github.io/CroptimizR/]
+* [https://sticsrpacks.github.io/CroPlotR/]
+
+
+## A foretaste of SticsRpacks 
 
 ### TP Stics
 
@@ -69,6 +82,8 @@ if(params$gen_help) {
 ### A simple example
 
 vignette CroptimizR ou encore plus simple (1 seul param) pour réduire le temps d’exécution …
+
+
 
 ## Exploring the content of Stics files 
  
@@ -91,6 +106,12 @@ cat( paste( lines , collapse="\n" ) )
 get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"))
 ```
 
+<!-- ```{r get_usms_list1-check} -->
+<!-- grade_result( -->
+<!--   pass_if(~identical(.result, get_usms_list(usm_path = file.path(workspace_xml, "usms.xml")))) -->
+<!-- ) -->
+<!-- ``` -->
+
 ```{r get_usms_list2, exercise=TRUE}
 # Get the list of cover-crops USMs (their name starts with "cc_")
 ```
@@ -109,7 +130,8 @@ get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"), name = "cc_")
 `get_param_xml`
 
 **TO BE CONTINUED ...**
-	
+SAMUEL
+
  
 		Récupérer les valeurs de XXX et XXX pour tout les sols
 		Faire un plot des valeurs (histogramme ou argi vs Norg)
@@ -122,7 +144,8 @@ Récupérer les valeurs de argi et Norg pour les sols des USMs ... (même questi
  
  
 ## Running simulations from R
- 
+SAMUEL
+
 	run_javaStics
 		Run d’un sous-ensemble des USMs
  
@@ -130,8 +153,9 @@ Récupérer les valeurs de argi et Norg pour les sols des USMs ... (même questi
  
  
 ## Exploring and Evaluating the Stics results
+PATRICE
 
-	get_daily_results
+	get_sim
 Récupérer tous les résultats simulés
 Récupérer les résultats pour la variable XXX et les USMs XXX et XXX
 
@@ -139,6 +163,7 @@ Récupérer les résultats pour la variable XXX et les USMs XXX et XXX
 		Tracer les dynamiques des variables XXX et XXX indépendamment ou superposées
 	
 	get_obs
+  (mettre une note sur l'utilisation de usms.xml ?)
 
 	Evaluate
 		dynamiques avec des obs
@@ -147,55 +172,65 @@ Récupérer les résultats pour la variable XXX et les USMs XXX et XXX
 		stats et graphiques associés
 
 
-## Estimating parameters
 
-estim_param
-	méthode par défaut
-	Afficher résultats produits et plots
-	forcage des paramètres
 
 ## Advanced use
  
 ### Modifying Stics files
- 
- 
+SAMUEL-REMI 
+
+Leur faire trouver les noms de fonction dans le REFERENCE du site web ... 
  
 
 
 ### Generating Stics input Files
+SAMUEL
 
 Generate JavaStics Input files (XML format)
 
 Generate Stics Input files (Text format)
 
 Generate obs
+
 ### Running simulations from R using stics_wrapper
- 
+REMI
+
 	stics_wrapper
 		run sur un lot d’USMs et sélection des variables à renvoyer
 		forçage de paramètre, y compris par USMs
 		parallélisation
+
+La difference avec runJavaStics
 	
+### Estimating parameters
+REMI
+
+estim_param
+	méthode par défaut
+	Afficher résultats produits et plots
+
+plots avec CroPlotR : run du wrapper sur les résultats de l'optimisation puis plot sim-obs
+
 ### Succession culturales
+REMI
  
 	stics_wrapper
 	CroPlotR : dynamique sur succession
 estim_param
-	
+
 ### Intercrop
+SAMUEL
+
 	
 	get_daily_results
 CroPlotR : plot + stats ?	
  
 ### Advanced parameter estimation 
+REMI
 
 plus avancé :
 	contraintes inégalités
 	paramètres par groupe (varietal / spécifique)
 méthode bayesienne
 transfo des sim et obs ???
-This code computes the answer to one plus one, change it so it computes two plus two:
 
-```{r addition, exercise=TRUE}
-1 + 1
-```
