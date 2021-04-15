@@ -14,7 +14,7 @@ params:
   workspace_xml: JavaSTICS-1.41-stics-9.2/example
   workspace_txt: example
   use_default: TRUE
-  work_dir: !r file.path(tempdir(), "SticsRpacks")
+  work_dir: !r file.path(normalizePath(dirname(tempdir()), winslash = "/"), "SticsRpacks")
 ---
 
 ```{r setup, include=FALSE}
@@ -227,6 +227,7 @@ Generate obs
 ### Running simulations from R using stics_wrapper
 REMI
 
+  
 	stics_wrapper
 		run sur un lot d’USMs et sélection des variables à renvoyer
 		forçage de paramètre, y compris par USMs
