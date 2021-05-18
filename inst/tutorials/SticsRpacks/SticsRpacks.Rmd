@@ -360,8 +360,46 @@ run_javastics(javastics_path=javastics,  workspace_path = workspace_xml, usms_li
 ## Exploring and Evaluating the Stics results
 PATRICE
 
-	get_sim
-Récupérer tous les résultats simulés
+### Get simulations results
+
+`get_sim`
+
+```{r, results="asis"}
+lines <- SticsRFiles:::get_from_help(file.path(help_dir,"get_sim.html"))
+cat( paste( lines , collapse="\n" ) )
+```
+
+#### Exercises
+
+> Get simulations outputs of USMs from the JavaStics distribution `example` directory
+
+<!-- Récupérer tous les résultats simulés -->
+```{r get_sim1, exercise=TRUE}
+# Get all outputs
+```
+```{r get_sim1-hint-1}
+# Path of the results is stored in workspace_xml
+```
+
+```{r get_sim1-solution}
+get_sim(workspace = workspace_xml)
+```
+
+<!-- Récupérer tous les résultats simulés pour les les USMs XXX -->
+
+```{r get_sim2, exercise=TRUE}
+# Get outputs for USMs named : SugarBeet, wheat, maize, ...
+```
+
+```{r get_sim2-hint-1}
+# The argument usm_name is particularly useful in this case ...
+```
+
+```{r get_sim2-solution}
+#SOLUTION:
+get_sim(workspace = workspace_xml, usm_name = c("SugarBeet, wheat"))
+```
+
 Récupérer les résultats pour la variable XXX et les USMs XXX et XXX
 
 	plot stics results
@@ -493,14 +531,14 @@ wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = w
 <!-- wrapper_options -->
 <!-- ``` -->
 
-Now use `stics_wrapper()` to simulate the usms "wheat" and "banana" only (not "soybean") using the model options stored in `wrapper_options`, and return the leaf area index and the above-ground biomass:
+Now use `stics_wrapper()` to simulate the usm "wheat" only (not "banana" and "soybean") using the model options stored in `wrapper_options`, and return the leaf area index and the above-ground biomass:
 
 ```{r stics_wrapper1, exercise=TRUE, exercise.setup = "prepare-wrapper"}
-# Simulate "wheat" and "banana"
+# Simulate "wheat"
 ```
 
 ```{r stics_wrapper1-hint-1}
-# The sit_names argument is used to choose the usms.
+# The sit_names argument is used to choose the usms to simulate.
 ```
 
 ```{r stics_wrapper1-hint-2}
@@ -509,7 +547,7 @@ Now use `stics_wrapper()` to simulate the usms "wheat" and "banana" only (not "s
 
 ```{r stics_wrapper1-solution, exercise.setup = "prepare-wrapper"}
 #SOLUTION:
-stics_wrapper(model_options = wrapper_options, sit_names = c("wheat","banana"), var_names = c("lai(n)", "masec(n)"))
+stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = c("lai(n)", "masec(n)"))
 ```
 
 #### Parameter forcing
@@ -540,7 +578,7 @@ Now we can plot the output of the two simulations using `plot()` and adding the 
 ```{r prepare-wrapper-plot, echo=FALSE}
 wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
 
-res1 = stics_wrapper(model_options = wrapper_options, sit_names = c("wheat","banana"), var_names = c("lai(n)", "masec(n)"))
+res1 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = c("lai_n", "masec_n"))
 res2 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = "lai_n", param_values = c("dlaimax" = 0.005, "durvieF" = 80))
 ```
 
@@ -551,7 +589,7 @@ Then, to plot a simulation result, we would do:
 plot(res1$sim_list)
 ```
 
-It is also possible to compare two simulation results by listing them as arguments to the function one after the other.
+It is also possible to compare two simulations by listing them as arguments to the function one after the other.
 
 > Plot the outputs of both simulations:
 
@@ -568,7 +606,9 @@ It is also possible to compare two simulation results by listing them as argumen
 plot(res1$sim_list,res2$sim_list)
 ```
 
-As you can see the second simulation is only showed for the lai on the wheat usm. This is because we only did a simulation for this one.
+<div class="alert alert-info">
+  Only the `lai` variable was requested on the second simulation, that's why there is only the first simulation for masec.
+</div>
 
 We can also name the simulations in our plot by naming them when passed as arguments to `plot()`.
 
@@ -589,6 +629,102 @@ plot("original" = res1$sim_list,"dlaimax=0.005, durvieF=80" = res2$sim_list)
 
 ### Estimating parameters
 REMI
+
+#### Workflow
+
+Model calibration is an important part of most modeling work, but it can be complex and cumbersome. SticsRPacks provides a nice, standardized and easy way to estimate the values of parameters using observations: `estim_param()`.
+
+The workflow for parameter estimation is made using several steps:
+
+- Modeling environment set-up (`stics_wrapper_options()`). `estim_param()` uses `stics_wrapper()` under the hood to run each simulation, so we must set-up our modeling environment first as we saw before. 
+- Import the observations for each usm (`get_obs()` + `filter_obs()`).
+- Choose the parameter(s) to optimize and their boundary values.
+- set-up options for the optimization method (see other section, not presented in this one for simplicity).
+- run the parameter optimization (`optim_options`).
+
+```{r prepare-param-estim, echo=FALSE}
+wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
+
+obs = get_obs(workspace = workspace_xml, usm_name = "wheat")
+obs_filt = filter_obs(obs, "lai_n", include = TRUE)
+```
+
+#### Modelling environment
+
+We will simply re-use the modeling environment from the previous exercise: `wrapper_options`. This is how we did it:
+
+```r
+wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
+```
+
+#### Observations
+
+> Import the observations for the "wheat" usm, and put it in an object called `obs`:
+
+```{r estim_param_obs1, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r estim_param_obs1-hint-1}
+# Use `get_obs()`, workspace_xml is the workspace.
+```
+
+```{r estim_param_obs1-solution, exercise.setup = "prepare-param-estim"}
+#SOLUTION:
+obs = get_obs(workspace = workspace_xml, usm_name = "wheat")
+```
+
+> Filter the observations using `filter_obs()` for the lai only, and put it in an object called `obs_filt`:
+
+```{r estim_param_obs2, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r estim_param_obs2-hint-1}
+# Use `get_obs()`, workspace_xml is the workspace.
+```
+
+```{r estim_param_obs2-solution, exercise.setup = "prepare-param-estim"}
+#SOLUTION:
+obs_filt = filter_obs(obs, "lai_n", include = TRUE)
+```
+
+#### Choose parameter
+
+We have to choose which parameter will be optimized, and what are their respective boundaries values. To do so, we define a list of list for each parameter like so: 
+
+```r
+param_info = list()
+param_info$dlaimax = list(lb=0.0005,ub=0.0025)
+param_info$durvieF = list(lb=c(50,100),ub=c(400,450))
+```
+
+<div class="alert alert-danger">
+  REMI: Continue here. 
+  
+1. Check if providing param_info like this above works (we will replace the other way to do it by this one already used also). 
+1. And continue below
+</div>
+   
+#### Modelling environment
+
+> Now estimate the value of the `dlaimax` parameter using `estim_param()`, and put the results in an object called `optim_res`. You can use `wrapper_options` as the object for the argument `model_options`, and the `obs` object for the observations list. 
+
+```{r estim_param2, exercise=TRUE, exercise.setup = "prepare-wrapper-plot"}
+# Insert your R code here!
+```
+
+```{r estim_param2-hint-1}
+# The simulation results can be listed one after the other in `plot()` for comparison
+```
+
+```{r estim_param2-solution, exercise.setup = "prepare-wrapper-plot"}
+#SOLUTION:
+optim_res = estim_param(obs_list = obs_filt,
+                        model_function = stics_wrapper,
+                        model_options = wrapper_options,
+                        param_info = param_info)
+```
 
 estim_param
 	méthode par défaut
