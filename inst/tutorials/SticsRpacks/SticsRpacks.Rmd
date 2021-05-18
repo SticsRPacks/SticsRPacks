@@ -388,7 +388,7 @@ Let's go now deeper into the packages functionnalities.
 ### Generating STICS input Files
 SAMUEL
 
-Generate JavaStics Input files (XML format)
+Generate JavaStics Input files (XML format) => voir tuto SticsRFiles ...
 
 Generate Stics Input files (Text format)
 
@@ -607,7 +607,7 @@ estim_param
 SAMUEL
 
 	
-	get_daily_results
+	get_sim
 CroPlotR : plot + stats ?	
  
 ### Advanced parameter estimation 
