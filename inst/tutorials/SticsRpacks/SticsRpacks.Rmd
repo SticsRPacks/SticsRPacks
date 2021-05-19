@@ -8,13 +8,6 @@ output:
     progressive: true
 description: "A tutorial to learn SticsRpacks"
 runtime: shiny_prerendered
-params:
-  gen_help: TRUE
-  javastics: JavaSTICS-1.41-stics-9.2
-  workspace_xml: JavaSTICS-1.41-stics-9.2/example
-  workspace_txt: example
-  use_default: TRUE
-  work_dir: !r file.path(normalizePath(dirname(tempdir()), winslash = "/"), "SticsRpacks")
 ---
 
 ```{r setup, include=FALSE}
@@ -27,27 +20,36 @@ tutorial_options(exercise.lines = 5)
 
 # Add checking JavaStics path
 
-work_dir <- params$work_dir
+parameters = list(
+  gen_help = TRUE,
+  javastics = "JavaSTICS-1.41-stics-9.2",
+  workspace_xml = "JavaSTICS-1.41-stics-9.2/example",
+  workspace_txt = "example",
+  use_default = TRUE,
+  work_dir = file.path(normalizePath(dirname(tempdir()), winslash = "/"), "SticsRpacks")
+)
+
+work_dir <- parameters$work_dir
 work_dir <- gsub(pattern = "\\\\", replacement="/", x=work_dir)
 
 # Creating work_dir if needed
 if (!dir.exists(work_dir)) dir.create(work_dir)
 
-javastics <- file.path(work_dir, params$javastics, fsep ="/")
+javastics <- file.path(work_dir, parameters$javastics, fsep ="/")
 
 if (!dir.exists(javastics)) dir.create(javastics)
 
 if(!any(grepl("JavaStics.exe",list.files(javastics)))) {
-  zip_path <- file.path(work_dir,paste0(params$javastics,".zip"))
-  system(paste0("curl -u stics_user:w10lptr6405 https://w3.avignon.inra.fr/forge/attachments/download/2482/",params$javastics,".zip --output ", zip_path))
+  zip_path <- file.path(work_dir,paste0(parameters$javastics,".zip"))
+  system(paste0("curl -u stics_user:w10lptr6405 https://w3.avignon.inra.fr/forge/attachments/download/2482/",parameters$javastics,".zip --output ", zip_path))
   unzip(zip_path, exdir = javastics)
 }
 
-workspace_xml <- file.path(work_dir, params$workspace_xml, fsep ="/")
-workspace_txt <- file.path(work_dir, params$workspace_txt, fsep ="/")
+workspace_xml <- file.path(work_dir, parameters$workspace_xml, fsep ="/")
+workspace_txt <- file.path(work_dir, parameters$workspace_txt, fsep ="/")
 
 # Generating html help files, one for each function
-if(params$gen_help) {
+if(parameters$gen_help) {
   help_dir <- file.path(work_dir, "SticsRFiles_help")
   if (!dir.exists(help_dir)) dir.create(help_dir)
   SticsRFiles:::static_help(pkg = "SticsRFiles", 
@@ -636,7 +638,7 @@ The workflow for parameter estimation is made using several steps:
 - set-up options for the optimization method (see other section, not presented in this one for simplicity).
 - run the parameter optimization (`optim_options`).
 
-```{r prepare-param-estim, echo=FALSE}
+```{r prepare-param-estim, include=FALSE}
 wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
 
 obs = get_obs(workspace = workspace_xml, usm_name = "wheat")
