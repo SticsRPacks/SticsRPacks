@@ -458,37 +458,29 @@ They are not used by the STICS model but can be used to plot comparison between 
  
 ##### Exercises
 
-**Pré-remplir un tableau de données avec des Dates en POSIXct et leur faire ajouter les colonnes ian, mo, jo + usm_name**
-**Ou mieux: modifier gen_obs pour qu'il prenne en entrée la colonne Date plutot que ian, mo, jo ...)**
- 
-* Generate observation files for two usms named "usm1" and "usm2" including observations for a couple of dates for `lai(n)` and `mafruit` variables 
-
-using the `gen_obs` function from a data.frame.
-
-check with get_obs ?
-
-hint
-hint: `lai(n)` ????
-tester avec lai_n
-que se passe-t-il si on met n'importe quoi comme variable ?
-
+* Generate observation files from the data stored in the `df` data.frame using the `gen_obs` function, check the files are created on your computer and check their content using the `get_obs` function.
 
 ```{r gen_obs, exercise=TRUE}
+df <- data.frame(usm_name=c("usm1","usm1","usm2"), ian=c(2020,2021,2021), mo=c(12,7,7), jo=c(25,27,20),jul=c(359,573,566),`lai(n)`=c(0.5,4.5,4.2), mafruit=c(NA,6.5,6.1))
+
 # Insert your R code here!
 ```
 
-```{r get_param_xml1-hint-1}
-# Soils are defined in the "sols.xml" file ...
+```{r gen_obs-hint-1}
+# Use the out_path argument of get_obs if you want to specify the path of the folder where the obs files will be created.
+# By default they are created in the current working directory of the R process (given by getwd()).
 ```
 
-```{r get_param_xml1-solution}
+```{r gen_obs-hint-2}
+# Use the workspace argument of get_obs to specify the path to the folder containing the observation files.
+# if you did not use  the out_path argument in gen_obs, then use workspace = getwd() in get_obs.
+```
+
+```{r gen_obs-solution}
 #SOLUTION:
-get_param_xml(file.path(workspace_xml,"sols.xml"), c("argi"))
+gen_obs(obs_table = df)
+get_obs(workspace = getwd())
 ```
-
- 
- 
- 
  
 ### Running simulations from R using stics_wrapper
 REMI
