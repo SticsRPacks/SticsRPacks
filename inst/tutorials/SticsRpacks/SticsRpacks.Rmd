@@ -24,9 +24,7 @@ library(SticsRPacks)
 knitr::opts_chunk$set(echo = FALSE)
 tutorial_options(exercise.lines = 5)
 # gradethis::gradethis_setup()
-```
 
-```{r set_var, echo=FALSE, results='hide'}
 # Add checking JavaStics path
 
 work_dir <- params$work_dir
@@ -47,9 +45,6 @@ if(!any(grepl("JavaStics.exe",list.files(javastics)))) {
 
 workspace_xml <- file.path(work_dir, params$workspace_xml, fsep ="/")
 workspace_txt <- file.path(work_dir, params$workspace_txt, fsep ="/")
-```
-
-```{r, echo=FALSE, warning=FALSE}
 
 # Generating html help files, one for each function
 if(params$gen_help) {
@@ -59,7 +54,6 @@ if(params$gen_help) {
                             overwrite = FALSE, 
                             out_dir = help_dir)
 }
-
 ```
 
 ## Introduction
