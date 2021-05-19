@@ -308,7 +308,7 @@ sum(filtered_result$ttrr)
 ```
 
 
-## Running simulations from R
+## Running simulations from R {#run-sim}
 
 Let see now how to run STICS simulations directly from R using the function `run_javaStics` from the [SticsOnR package](https://sticsrpacks.github.io/SticsOnR/index.html).
 
@@ -356,25 +356,30 @@ run_javastics(javastics_path=javastics,  workspace_path = workspace_xml, usms_li
 ## Exploring and Evaluating the Stics results
 PATRICE
 
-### Get simulations results
+### Getting simulations results
 
-`get_sim`
+In order to get simulation results to R from a Stics workspace, the `get_sim` function is to be used with some options allowing to filter data against usm names, output variables for example. Check the function help before trying to use it. Check also where the simulations files are stored after running the model in the previous section.
 
+<!-- 
 ```{r, results="asis"}
 lines <- SticsRFiles:::get_from_help(file.path(help_dir,"get_sim.html"))
 cat( paste( lines , collapse="\n" ) )
 ```
+-->
 
 #### Exercises
 
-> Get simulations outputs of USMs from the JavaStics distribution `example` directory
+> Get simulations outputs of USMs from the workspace directory used in the previous exercise for running the model
+
+* Get all outputs from the workspace
 
 <!-- Récupérer tous les résultats simulés -->
 ```{r get_sim1, exercise=TRUE}
-# Get all outputs
+# Insert your R code here! 
+
 ```
 ```{r get_sim1-hint-1}
-# Path of the results is stored in workspace_xml
+# Path of the results is stored in the workspace_xml object
 ```
 
 ```{r get_sim1-solution}
@@ -382,9 +387,10 @@ get_sim(workspace = workspace_xml)
 ```
 
 <!-- Récupérer tous les résultats simulés pour les les USMs XXX -->
+* Get outputs for USMs named : banana, Turmeric
 
 ```{r get_sim2, exercise=TRUE}
-# Get outputs for USMs named : SugarBeet, wheat, maize, ...
+# Insert your R code here! 
 ```
 
 ```{r get_sim2-hint-1}
@@ -392,16 +398,91 @@ get_sim(workspace = workspace_xml)
 ```
 
 ```{r get_sim2-solution}
-#SOLUTION:
-get_sim(workspace = workspace_xml, usm_name = c("SugarBeet, wheat"))
+# SOLUTION
+get_sim(workspace = workspace_xml, usm_name = c("banana","Turmeric"))
+```
+* Get outputs for the USMs of your choice other than banana, Turmeric
+
+```{r get_sim3, exercise=TRUE}
+# Insert your R code here!
+
 ```
 
-Récupérer les résultats pour la variable XXX et les USMs XXX et XXX
+```{r get_sim3-hint-1}
+# Get the usms names list before choosing ...
+```
 
-	plot stics results
-		Tracer les dynamiques des variables XXX et XXX indépendamment ou superposées
-	
-	get_obs
+```{r get_sim3-hint-2}
+# The function get_usms_list will be usefull
+```
+
+```{r get_sim3-solution}
+# SOLUTION
+get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"))
+```
+<!-- Récupérer les résultats pour la variable XXX et les USMs XXX et XXX -->
+* Get and keep in environment simulations outputs using the variable `lai(n)` for the USMs named   
+`wheat` and `maize`
+
+```{r get_sim4, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r get_sim4-hint-1}
+# Use the argument var_list for specifying which variable(s) to select ...
+```
+
+```{r get_sim4-solution}
+results <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"),
+                   var_list = "lai(n)")
+```
+
+### Plotting simulations results
+
+* Plot simulations dynamics of the variable `lai(n)` and `masec` for `wheat`
+  * Independently
+
+<!-- for the USMs named `wheat` and `maize` -->
+
+```{r plot_sim1, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r plot_sim1-hint-1}
+# get output first, perhaps variable names are not correct !
+```
+
+```{r plot_sim1-solution}
+results <- get_sim(workspace = workspace_xml, usm_name = "wheat",
+                   var_list = c("lai(n)", "masec(n)"))
+plot(results, var = "lai_n")
+plot(results, var = "masec_n")
+```
+
+<!-- Tracer les dynamiques des variables XXX et XXX indépendamment ou superposées --> 
+
+  * On the same plot
+
+```{r plot_sim2, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r plot_sim2-hint-1}
+# use a variable names vector ...
+```
+
+```{r plot_sim2-solution}
+results <- get_sim(workspace = workspace_xml, usm_name = "wheat",
+                   var_list = c("lai(n)", "masec(n)"))
+plot(results, var = c("lai_n","masec_n"))
+```
+		
+### Evaluating simulations results
+
+Evaluation of simulation results is performed using observation data for plotting dynamics, scatter graphs and calculating several statistics. Observed data are to be loaded by using the `get_obs` function
+
+#### Getting observation data
+
   (mettre une note sur l'utilisation de usms.xml ?)
 
 	Evaluate
