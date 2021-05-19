@@ -420,15 +420,39 @@ Récupérer les résultats pour la variable XXX et les USMs XXX et XXX
 ## Advanced use
 
 You have learned so far how to use very useful but quite basic features of SticsRpacks packages.
-Let's go now deeper into the packages functionnalities.
+Let's go now deeper into the packages functionalities.
+
+### Modifying STICS files
+SAMUEL-REMI 
+
+Leur faire trouver les noms de fonction dans le REFERENCE du site web ... 
+ 
+Montrer comment modifier les fichiers XML + faire graphe avant / après modification (e.g. code option type stress ou calcul ETP ou forcage).
+
+Dire dans le see also que l'on peut aussi modifier les fichiers txt
 
 
 ### Generating STICS input Files
-SAMUEL
 
-Generate JavaStics Input files (XML format) => voir tuto SticsRFiles ...
+The different types of STICS input files can be generated using the [SticsRFiles package](https://sticsrpacks.github.io/SticsRFiles/index.html). 
 
-Generate Stics Input files (Text format)
+
+#### Generate JavaStics Input files (XML format) 
+
+The STICS XML files can be generated from CSV or Excel files.
+except General parameters files and weather data files.
+
+
+<div class="alert alert-info">
+  See also: the vignette [Generating Stics XML files from tabulated data](https://sticsrpacks.github.io/SticsRFiles/articles/Generating_Stics_XML_files.html).
+</div>
+
+
+##### Exercises
+
+#### Generate Stics Input files (Text format)
+
+##### Exercises
 
 #### Generating observation files 
 
@@ -441,15 +465,35 @@ They are not used by the STICS model but can be used to plot comparison between 
 **Pré-remplir un tableau de données avec des Dates en POSIXct et leur faire ajouter les colonnes ian, mo, jo + usm_name**
 **Ou mieux: modifier gen_obs pour qu'il prenne en entrée la colonne Date plutot que ian, mo, jo ...)**
  
+* Generate observation files for two usms named "usm1" and "usm2" including observations for a couple of dates for `lai(n)` and `mafruit` variables 
+
+using the `gen_obs` function from a data.frame.
+
+check with get_obs ?
+
+hint
+hint: `lai(n)` ????
+tester avec lai_n
+que se passe-t-il si on met n'importe quoi comme variable ?
+
+
+```{r gen_obs, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r get_param_xml1-hint-1}
+# Soils are defined in the "sols.xml" file ...
+```
+
+```{r get_param_xml1-solution}
+#SOLUTION:
+get_param_xml(file.path(workspace_xml,"sols.xml"), c("argi"))
+```
+
  
  
-### Modifying STICS files
-SAMUEL-REMI 
-
-Leur faire trouver les noms de fonction dans le REFERENCE du site web ... 
  
-
-
+ 
 ### Running simulations from R using stics_wrapper
 REMI
 
