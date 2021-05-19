@@ -41,7 +41,7 @@ if (!dir.exists(javastics)) dir.create(javastics)
 
 if(!any(grepl("JavaStics.exe",list.files(javastics)))) {
   zip_path <- file.path(work_dir,paste0(params$javastics,".zip"))
-  system(paste0("curl -u stics_user:w10lptr6405 https://w3.avignon.inra.fr/forge/attachments/download/2402/",params$javastics,".zip --output ", zip_path))
+  system(paste0("curl -u stics_user:w10lptr6405 https://w3.avignon.inra.fr/forge/attachments/download/2482/",params$javastics,".zip --output ", zip_path))
   unzip(zip_path, exdir = javastics)
 }
 
