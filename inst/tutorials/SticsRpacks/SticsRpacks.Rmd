@@ -129,9 +129,9 @@ get_var_info(keyword = "roots")
 ```
 
 
-## Exploring the content of STICS files 
+## Exploring the content of the JavaSTICS files 
 
-We're going to see in this section how to retrieve information from STICS input files.
+We're going to see in this section how to retrieve information from JavaStics input files.
  
 ### Get usm names
 
@@ -186,9 +186,9 @@ get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"))
 get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"), name = "cc_")
 ```
 
-### Get parameters values from STICS input files
+### Get parameters values from JavaStics input files
 
-Parameters values included in STICS input files can be retrieved using the function `get_param_xml` from the [SticsRFiles package](https://sticsrpacks.github.io/SticsRFiles/index.html):
+Parameters values included in JavaStics input files can be retrieved using the function `get_param_xml` from the [SticsRFiles package](https://sticsrpacks.github.io/SticsRFiles/index.html):
 
 <blockquote>
 
@@ -259,7 +259,7 @@ result <- get_param_xml(file.path(workspace_xml,"sols.xml"), c("HCCF","HMINF","e
 sum((result$sols.xml$HCCF-result$sols.xml$HMINF)*result$sols.xml$epc*result$sols.xml$DAF/10)
 ```
 
-### Get weather variables from STICS input files
+### Get weather variables
 
 Weather variables defined in STICS input weather files can be retrieved using the function `get_climate_txt` from the [SticsRFiles package](https://sticsrpacks.github.io/SticsRFiles/index.html):
 
@@ -413,42 +413,67 @@ Récupérer les résultats pour la variable XXX et les USMs XXX et XXX
 
 
 
-## Advanced use
+## Advanced use{#advanced-use}
 
 You have learned so far how to use very useful but quite basic features of SticsRpacks packages.
 Let's go now deeper into the packages functionalities.
-
-### Modifying STICS files
-SAMUEL-REMI 
-
-Leur faire trouver les noms de fonction dans le REFERENCE du site web ... 
- 
-Montrer comment modifier les fichiers XML + faire graphe avant / après modification (e.g. code option type stress ou calcul ETP ou forcage).
-
-Dire dans le see also que l'on peut aussi modifier les fichiers txt
-
 
 ### Generating STICS input Files
 
 The different types of STICS input files can be generated using the [SticsRFiles package](https://sticsrpacks.github.io/SticsRFiles/index.html). 
 
 
-#### Generate JavaStics Input files (XML format) 
+#### Generating JavaStics input files
 
-The STICS XML files can be generated from CSV or Excel files.
-except General parameters files and weather data files.
+The JavaStics XML input files can be generated from R using functions of the [SticsRFiles package](https://sticsrpacks.github.io/SticsRFiles/index.html). JavaStics Input files (XML format) 
 
+##### Exercises
+
+```{r gen_xml-1, echo=FALSE}
+question("What is the name of the SticsRFiles function for generating a usms.xml file?",
+  answer("gen_usms_xml2txt"),
+  answer("get_usms_files"),
+  answer("gen_usms_xml", correct = TRUE),
+  answer("gen_usms"),
+  incorrect = "Look at the Reference tab of the SticsRFiles website...",
+  random_answer_order = TRUE,
+  allow_retry = TRUE)
+```
+
+
+```{r gen_xml-2, echo=FALSE}
+question("From which type of file the usms.xml file can be generated using this function?",
+  answer("csv", correct=TRUE),
+  answer("word"),
+  answer("excel", correct = TRUE),
+  answer("XML"),
+  correct = "Great!",
+  incorrect = "Look at the vignette \"Generating Stics XML files from tabulated data\" of the SticsRFiles website (Article tab)...",
+  random_answer_order = TRUE,
+  allow_retry = TRUE)
+```
+
+
+```{r gen_xml-3, echo=FALSE}
+question("Which type of JavaStics files can not yet be generated using the gen_*_xml functions?",
+  answer("Soil files"),
+  answer("Weather data files", correct=TRUE),
+  answer("General parameter files", correct = TRUE),
+  answer("Technical files"),
+  answer("Weather station files"),
+  correct = "Incredible!",
+  incorrect = "Look at the vignette \"Generating Stics XML files from tabulated data\" of the SticsRFiles website (Article tab)...",
+  random_answer_order = TRUE,
+  allow_retry = TRUE)
+```
 
 <div class="alert alert-info">
-  See also: the vignette [Generating Stics XML files from tabulated data](https://sticsrpacks.github.io/SticsRFiles/articles/Generating_Stics_XML_files.html).
+See also:
+
+  * Look at the vignette [Generating Stics XML files from tabulated data](https://sticsrpacks.github.io/SticsRFiles/articles/Generating_Stics_XML_files.html) for more details on how to use these functions!
+  * STICS input files (txt format) can be generated from a SticsRFiles R function: see section  below "Creating the text files".
 </div>
 
-
-##### Exercises
-
-#### Generate Stics Input files (Text format)
-
-##### Exercises
 
 #### Generating observation files 
 
@@ -482,6 +507,65 @@ gen_obs(obs_table = df)
 get_obs(workspace = getwd())
 ```
  
+**SAMUEL: Ajouter un exercice pour filtrer les USMS ???** 
+ 
+ 
+### Modifying JavaStics input files
+
+[SticsRFiles](https://sticsrpacks.github.io/SticsRFiles/index.html) package also provides facilities for modifying JavaStics input files from R.
+
+##### Exercises
+
+```{r set_param_xml-1, echo=FALSE}
+question("What is the name of the SticsRFiles function for modifying JavaStics Input files (XML format)?",
+  answer("set_param_xml", correct = TRUE), 
+  answer("set_param_txt"),
+  answer("gen_usms_xml"),
+  answer("gen_usms"),
+  incorrect = "Look at the Reference tab of the SticsRFiles website...",
+  random_answer_order = TRUE,
+  allow_retry = TRUE)
+```
+
+* Check the values of the nitrification code (`codenitrif`) for the soils defined in the `sols.xml` file of the JavaStics distribution example workspace (path to the JavaStics distribution example workspace is stored in the R object `workspace_xml`)
+  
+```{r set_param_xml-2, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r set_param_xml-2-hint-1}
+# Use function get_param_xml
+```
+
+```{r set_param_xml-2-solution}
+# SOLUTION:
+get_param_xml(xml_file=file.path(workspace_xml,"sols.xml"),  
+              param_name="codenitrif")
+```
+  
+* Then, generate in the JavaStics distribution example workspace a new soil file called `sols_new.xml` for which all nitrification codes are set to 1 and check their values using the `get_param_xml` function.
+
+```{r set_param_xml-3, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r set_param_xml-3-hint-1}
+# Use function set_param_xml
+```
+
+```{r set_param_xml-3-solution}
+# SOLUTION:
+set_param_xml(xml_file=file.path(workspace_xml,"sols.xml"),  
+              param_name="codenitrif", param_value=1, out_path=file.path(workspace_xml,"sols_new.xml"))
+get_param_xml(xml_file=file.path(workspace_xml,"sols_new.xml"),  
+              param_name="codenitrif")
+```
+
+
+**SAMUEL: AJOUTER UN SEE ALSO POUR MODIF DES TXT ???** 
+ 
+
+ 
 ### Running simulations from R using stics_wrapper
 REMI
 
@@ -489,7 +573,7 @@ REMI
 
 We saw earlier how to make a simulation using `run_javastics()`. This function simply call javastics from the command line to make simulations, which does the same as running an usm by opening the javastics user interface, but from R. 
 
-You are probably familiar with the xml files used as inputs for javastics (*e.g.* `sols.xml` or `usms.xml`). These files list all the parameter values for one or several usms, whith potentially several soils, management practices and climate. Then when we run a usm, javastics reads the parameters values from the xml files, and writes new text files with only the values associated to this particular usm. Then it calls the stics model that reads those text files, make the simulation, and writes the outputs. 
+You are probably familiar with the xml files used as inputs for javastics (*e.g.* `sols.xml` or `usms.xml`). These files list all the parameter values for one or several usms, with potentially several soils, management practices and climate. Then when we run a usm, javastics reads the parameters values from the xml files, and writes new text files with only the values associated to this particular usm. Then it calls the stics model that reads those text files, make the simulation, and writes the outputs. 
 
 So when we run a usm from javastics we have four different steps:
 
@@ -772,7 +856,85 @@ REMI
 estim_param
 
 ### Intercrop
-SAMUEL
+
+We will see in this section how intercrops are handled in SticsRpacks.
+
+##### Exercises
+
+* Run the "intercrop_pea_barley" USM of the JavaStics distribution example workspace from R, get the results of lai(n), masec(n) and mafruit for both crops and store them in an R object called `sim` (path to JavaStics is stored in the `javastics` R object and path to the example workspace is stored in `workspace_xml`)
+
+```{r intercrop-1, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r intercrop-1-hint-1}
+# Use the run_javastics function with the usms_list argument to run the intercrop_pea_barley USM ...
+```
+
+```{r intercrop-1-hint-2}
+# Use the get_sim function with the usms_list and var_list arguments to get the required results.
+```
+
+```{r intercrop-1-solution}
+# SOLUTION:
+run_javastics(javastics_path=javastics,  workspace_path = workspace_xml, usms_list = c("intercrop_pea_barley"))
+sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",var_list=c("lai(n)","masec(n)","mafruit"))
+```
+
+
+* Examine the results and try to answer the quizz below
+
+
+```{r prepare-intercrop-2, echo=FALSE}
+run_javastics(javastics_path=javastics,  workspace_path = workspace_xml, usms_list = c("intercrop_pea_barley"))
+sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",var_list=c("lai(n)","masec(n)","mafruit"))
+```
+
+```{r intercrop-2, exercise=TRUE, exercise.setup = "prepare-intercrop-2"}
+# Insert your R code here!
+```
+
+```{r intercrop-2-hint-1}
+# You just have to print sim ...
+```
+
+```{r intercrop-2-solution}
+print(sim)
+```
+
+```{r intercrop-3, echo=FALSE}
+question("How are organized the results for the different intercrops",
+  answer("In a single data.frame per USM, the results for the different crops being flagged by Plant and Dominance columns", correct = TRUE), 
+  answer("You're not lucky ... it is the other proposition!"),
+  incorrect = "...",
+  random_answer_order = TRUE,
+  allow_retry = TRUE)
+```
+
+* Check now how results are changed when you use the `usms_filename` argument of the `get_sim` function
+
+
+```{r intercrop-4, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r intercrop-4-solution}
+# SOLUTION:
+sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
+               var_list=c("lai(n)","masec(n)","mafruit"),
+               usms_filename=file.path(workspace_xml,"usms.xml"))
+print(sim)
+# The names of the Plants are now given in the Plant column instead of Plant_1 and Plant_2 ...
+```
+
+
+**SAMUEL: La SOLUTION PRECEDENTE SEMBLE NE PAS FONCTIONNER: A VOIR**
+
+* Plot the results
+
+**SAMUEL: TO BE DONE**
+
+intercrop_pea_barley
 
 	
 	get_sim
