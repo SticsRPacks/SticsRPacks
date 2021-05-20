@@ -92,8 +92,10 @@ Detailed documentation on the different packages can be found at:
 
 ### A simple example
 
-vignette CroptimizR ou encore plus simple (1 seul param) pour réduire le temps d’exécution …
+REMI 
 
+vignette CroptimizR ou encore plus simple (1 seul param) pour réduire le temps d’exécution …
+(reprendre le meme code qu'en bas, sans trop d'explications sur le code, mais juste pour montrer les outputs)
 
 ## Finding names of STICS variables
 
@@ -1068,7 +1070,7 @@ Now we can plot the output using `plot()`.
 ```
 
 ```{r estim_param4-hint-1}
-# Read the documentation of stics_wrapper() and use the `param_values` argument along with the resulting optimized value stored in `optim_res$final_values`.
+# Read the documentation of plot(). This one is tricky, you can either see it on the package website <https://sticsrpacks.github.io/CroPlotR/reference/plot.cropr_simulation.html> or from R using ?plot.cropr_simulation
 ```
 
 ```{r estim_param4-solution}
@@ -1085,7 +1087,7 @@ That's a lot of plots! We can also make a scatter plot with all the usms in the 
 ```
 
 ```{r estim_param5-hint-1}
-# Read the documentation of plot(). This one is trick, you can either see it on the package website <https://sticsrpacks.github.io/CroPlotR/reference/plot.cropr_simulation.html> or from R using ?plot.cropr_simulation
+# Read the documentation of plot(). This one is tricky, you can either see it on the package website <https://sticsrpacks.github.io/CroPlotR/reference/plot.cropr_simulation.html> or from R using ?plot.cropr_simulation
 ```
 
 ```{r estim_param5-solution}
@@ -1097,26 +1099,18 @@ plot(sim = sim_after_optim, obs = obs_filt, type = "scatter", var = "lai_n")
 
 It is often interesting to compare the simulations before and after the optimization to investigate if it worked properly. To do so, we just have to simulate both, and to plot the results using `plot()`.
 
-Generally, we make a first simulation *before* the optimization process because it changes the values in the files progressively. If we didn't make a simulation before, we have two solutions:
-
-- make a simulation with `run_javastics` because the xml files were not modified
-- re-generate the text files to use the values before optimization ans use the wrapper again
-
-Because we were using the wrapper in this section, we will use the second solution.
-
-> Re-generate the files for the usms "wheat", "banana" and "soybean" and make a simulation using
+> Make a simulation using `stics_wrapper` with the original values
 
 ```{r estim_param6, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
 # Insert your R code here!
 ```
 
 ```{r estim_param6-hint-1}
-# Read the documentation of plot(). This one is trick, you can either see it on the package website <https://sticsrpacks.github.io/CroPlotR/reference/plot.cropr_simulation.html> or from R using ?plot.cropr_simulation
+# estim_param() does not modify the input files, so you can just re-simulate the usms with stics_wrapper
 ```
 
 ```{r estim_param6-solution}
 #SOLUTION:
-gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("wheat","banana","soybean"))
 sim_before_optim = stics_wrapper(model_options = wrapper_options)$sim_list
 ```
 
