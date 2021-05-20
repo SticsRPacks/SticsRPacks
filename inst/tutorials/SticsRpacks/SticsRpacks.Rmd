@@ -369,7 +369,7 @@ cat( paste( lines , collapse="\n" ) )
 
 #### Exercises
 
-> Get simulations outputs of USMs from the workspace directory used in the previous exercise for running the model
+> Getting simulations outputs of USMs from the workspace directory used in the previous exercise for running the model
 
 * Get all outputs from the workspace
 
@@ -421,8 +421,7 @@ get_sim(workspace = workspace_xml, usm_name = c("banana","Turmeric"))
 get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"))
 ```
 <!-- Récupérer les résultats pour la variable XXX et les USMs XXX et XXX -->
-* Get and keep in environment simulations outputs using the variable `lai(n)` for the USMs named   
-`wheat` and `maize`
+* Get simulations outputs and store them in a `results` object using the variable `lai(n)` for the USMs named `wheat` and `maize`
 
 ```{r get_sim4, exercise=TRUE}
 # Insert your R code here!
@@ -439,7 +438,12 @@ results <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"),
 
 ### Plotting simulations results
 
-* Plot simulations dynamics of the variable `lai(n)` and `masec` for `wheat`
+<div class="alert alert-info">
+Be carefull that for the moment, the names of the Stics variables which are to be used for plotting are not exactly the same as the real ones.
+In fact, the plotting functions use a specfic syntax for variables names which contain braces. For exemple, `lai_n` instead of `lai(n)`.
+</div>
+
+* Plotting simulations dynamics of the variable `lai(n)` and `masec` for `wheat`
   * Independently
 
 <!-- for the USMs named `wheat` and `maize` -->
@@ -463,29 +467,78 @@ plot(results, var = "masec_n")
 
   * On the same plot
 
+<!-- plot(sim, obs= obs, overlap = list(list("lai_n","masec_n")))  -->
+
 ```{r plot_sim2, exercise=TRUE}
 # Insert your R code here!
 ```
 
 ```{r plot_sim2-hint-1}
-# use a variable names vector ...
+# give variable names not as var_list argument value but as a overlap one ...
+# check the function help for overlap content structure !
+```
+```{r plot_sim2-hint-2}
+# try using : overlap = list(list("lai_n","masec_n"))
 ```
 
 ```{r plot_sim2-solution}
 results <- get_sim(workspace = workspace_xml, usm_name = "wheat",
                    var_list = c("lai(n)", "masec(n)"))
-plot(results, var = c("lai_n","masec_n"))
+plot(results, overlap = list(list("lai_n","masec_n")))
 ```
 		
 ### Evaluating simulations results
 
-Evaluation of simulation results is performed using observation data for plotting dynamics, scatter graphs and calculating several statistics. Observed data are to be loaded by using the `get_obs` function
+Evaluation of simulation results is performed using observation data with the help of plotting dynamics, scatter graphs and calculating several statistics criteria. Observed data can be loaded by using the `get_obs` function and they are given as inputs to several functions which are going to be tested here after. 
+
 
 #### Getting observation data
 
-  (mettre une note sur l'utilisation de usms.xml ?)
+<div class="alert alert-info">
+mettre une note sur l'utilisation de usms.xml ?
 
-	Evaluate
+Par défaut, dans la colonne Plant l'identifiant de la plante est stocké (plant_1, plant_2).
+Si le chemin du fichier usms.xml est fourni, la colonne Plant contiendra le nom du fichier plante.
+</div>
+
+
+* Get all the observation data
+
+```{r get_obs1, exercise=TRUE}
+# Insert your R code here! 
+
+```
+```{r get_obs1-hint-1}
+# Path of the observation files is the same as simulations outputs
+```
+
+```{r get_obs1-solution}
+get_obs(workspace = workspace_xml)
+```
+
+* Get observations for USMs named : `wheat` and `maize`
+
+
+```{r get_obs2, exercise=TRUE}
+# Insert your R code here! 
+
+```
+```{r get_obs2-hint-1}
+# Use the same syntax as for the get_sim function
+```
+
+```{r get_obs2-solution}
+get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"))
+```
+
+* Try to get observations for specific variables and combination with USMs 
+
+```{r get_obs3, exercise=TRUE}
+# Insert your R code here! 
+```
+
+#### Evaluating the model performances
+
 		dynamiques avec des obs
 		scatter_plots basiques
 		scatter_plots avec gestion des symboles : demander de mettre des symboles différents selon des groupes d’USMs
