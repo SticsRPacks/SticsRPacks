@@ -92,8 +92,10 @@ Detailed documentation on the different packages can be found at:
 
 ### A simple example
 
-vignette CroptimizR ou encore plus simple (1 seul param) pour réduire le temps d’exécution …
+REMI 
 
+vignette CroptimizR ou encore plus simple (1 seul param) pour réduire le temps d’exécution …
+(reprendre le meme code qu'en bas, sans trop d'explications sur le code, mais juste pour montrer les outputs)
 
 ## Finding names of STICS variables
 
@@ -308,7 +310,7 @@ sum(filtered_result$ttrr)
 ```
 
 
-## Running simulations from R
+## Running simulations from R {#run-sim}
 
 Let see now how to run STICS simulations directly from R using the function `run_javaStics` from the [SticsOnR package](https://sticsrpacks.github.io/SticsOnR/index.html).
 
@@ -356,25 +358,30 @@ run_javastics(javastics_path=javastics,  workspace_path = workspace_xml, usms_li
 ## Exploring and Evaluating the Stics results
 PATRICE
 
-### Get simulations results
+### Getting simulations results
 
-`get_sim`
+In order to get simulation results to R from a Stics workspace, the `get_sim` function is to be used with some options allowing to filter data against usm names, output variables for example. Check the function help before trying to use it. Check also where the simulations files are stored after running the model in the previous section.
 
+<!-- 
 ```{r, results="asis"}
 lines <- SticsRFiles:::get_from_help(file.path(help_dir,"get_sim.html"))
 cat( paste( lines , collapse="\n" ) )
 ```
+-->
 
 #### Exercises
 
-> Get simulations outputs of USMs from the JavaStics distribution `example` directory
+> Getting simulations outputs of USMs from the workspace directory used in the previous exercise for running the model
+
+* Get all outputs from the workspace
 
 <!-- Récupérer tous les résultats simulés -->
 ```{r get_sim1, exercise=TRUE}
-# Get all outputs
+# Insert your R code here! 
+
 ```
 ```{r get_sim1-hint-1}
-# Path of the results is stored in workspace_xml
+# Path of the results is stored in the workspace_xml object
 ```
 
 ```{r get_sim1-solution}
@@ -382,9 +389,10 @@ get_sim(workspace = workspace_xml)
 ```
 
 <!-- Récupérer tous les résultats simulés pour les les USMs XXX -->
+* Get outputs for USMs named : banana, Turmeric
 
 ```{r get_sim2, exercise=TRUE}
-# Get outputs for USMs named : SugarBeet, wheat, maize, ...
+# Insert your R code here! 
 ```
 
 ```{r get_sim2-hint-1}
@@ -392,23 +400,183 @@ get_sim(workspace = workspace_xml)
 ```
 
 ```{r get_sim2-solution}
-#SOLUTION:
-get_sim(workspace = workspace_xml, usm_name = c("SugarBeet, wheat"))
+# SOLUTION
+get_sim(workspace = workspace_xml, usm_name = c("banana","Turmeric"))
+```
+* Get outputs for the USMs of your choice other than banana, Turmeric
+
+```{r get_sim3, exercise=TRUE}
+# Insert your R code here!
+
 ```
 
-Récupérer les résultats pour la variable XXX et les USMs XXX et XXX
+```{r get_sim3-hint-1}
+# Get the usms names list before choosing ...
+```
 
-	plot stics results
-		Tracer les dynamiques des variables XXX et XXX indépendamment ou superposées
+```{r get_sim3-hint-2}
+# The function get_usms_list will be usefull
+```
+
+```{r get_sim3-solution}
+# SOLUTION
+get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"))
+```
+<!-- Récupérer les résultats pour la variable XXX et les USMs XXX et XXX -->
+* Get simulations outputs and store them in a `results` object using the variable `lai(n)` for the USMs named `wheat` and `maize`
+
+```{r get_sim4, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r get_sim4-hint-1}
+# Use the argument var_list for specifying which variable(s) to select ...
+```
+
+```{r get_sim4-solution}
+# SOLUTION
+results <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"),
+                   var_list = "lai(n)")
+```
+
+### Plotting simulations results
+
+<div class="alert alert-info">
+Be carefull that for the moment, the names of the Stics variables which are to be used for plotting are not exactly the same as the real ones.
+In fact, the plotting functions use a specfic syntax for variables names which contain braces. For exemple, `lai_n` instead of `lai(n)`.
+</div>
+
+#### Exercises
+
+* Plotting simulations dynamics of the variable `lai(n)` and `masec` for `wheat`
+  * Independently
+
+<!-- for the USMs named `wheat` and `maize` -->
+
+```{r plot_sim1, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r plot_sim1-hint-1}
+# get output first, perhaps variable names are not correct !
+```
+
+```{r plot_sim1-solution}
+# SOLUTION
+results <- get_sim(workspace = workspace_xml, usm_name = "wheat",
+                   var_list = c("lai(n)", "masec(n)"))
+# separated
+plot(results, var = "lai_n")
+plot(results, var = "masec_n")
+# on the same output graph
+plot(results, var = c("lai_n","masec_n"))
+```
+
+<!-- Tracer les dynamiques des variables XXX et XXX indépendamment ou superposées --> 
+
+  * On the same plot
+
+```{r plot_sim2, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r plot_sim2-hint-1}
+# give variable names not as var_list argument value but as a overlap one ...
+# check the function help for overlap content structure !
+```
+```{r plot_sim2-hint-2}
+# try using : overlap = list(list("lai_n","masec_n"))
+```
+
+```{r plot_sim2-solution}
+# SOLUTION
+results <- get_sim(workspace = workspace_xml, usm_name = "wheat",
+                   var_list = c("lai(n)", "masec(n)"))
+plot(results, overlap = list(list("lai_n","masec_n")))
+```
+		
+### Evaluating simulations results
+
+Evaluation of simulation results is performed using observation data with the help of plotting dynamics, scatter graphs and calculating several statistics criteria. Observed data can be loaded by using the `get_obs` function and they are given as inputs to several functions which are going to be tested here after. 
+
+#### Exercises
+
+##### Getting observation data
+
+<div class="alert alert-info">
+mettre une note sur l'utilisation de usms.xml ?
+
+Par défaut, dans la colonne Plant l'identifiant de la plante est stocké (plant_1, plant_2).
+Si le chemin du fichier usms.xml est fourni, la colonne Plant contiendra le nom du fichier plante.
+</div>
+
+
+* Get all the observation data
+
+```{r get_obs1, exercise=TRUE}
+# Insert your R code here! 
+
+```
+```{r get_obs1-hint-1}
+# Path of the observation files is the same as simulations outputs
+```
+
+```{r get_obs1-solution}
+# SOLUTION
+get_obs(workspace = workspace_xml)
+```
+
+* Get observations for USMs named : `wheat` and `maize`
+
+
+```{r get_obs2, exercise=TRUE}
+# Insert your R code here! 
+
+```
+```{r get_obs2-hint-1}
+# Use the same syntax as for the get_sim function
+```
+
+```{r get_obs2-solution}
+# SOLUTION
+get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"))
+```
+
+* Try to get observations for specific variables and combinations with USMs 
+
+```{r get_obs3, exercise=TRUE}
+# Insert your R code here! 
+```
+
+#####	Dynamics plots using observation data
+
+See previous plotting exercises and add observation data in them.
+
+```{r plot_simobs1, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r plot_simobs1-hint-1}
+# See previous exercises for dynamics plotting
+# check that you already stored observations data
+```
+
+```{r plot_simobs1-solution}
+# SOLUTION
+results <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"))
+observations <- get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"))
+plot(results, var = c("lai_n","masec_n"), obs = observations)
+#plot(results, overlap = list(list("lai_n","masec_n")), obs = observations)
+```
+
+#####	Basic scatter plot
+
+#####	Customized scatter plot using symbols
+
+<!-- 		scatter_plots avec gestion des symboles : demander de mettre des symboles différents selon des groupes d’USMs -->
+
+#####	Statistics and associated graphs
 	
-	get_obs
-  (mettre une note sur l'utilisation de usms.xml ?)
-
-	Evaluate
-		dynamiques avec des obs
-		scatter_plots basiques
-		scatter_plots avec gestion des symboles : demander de mettre des symboles différents selon des groupes d’USMs
-		stats et graphiques associés
 
 
 
@@ -567,7 +735,6 @@ get_param_xml(xml_file=file.path(workspace_xml,"sols_new.xml"),
 
  
 ### Running simulations from R using stics_wrapper
-REMI
 
 #### The need of a wrapper
 
@@ -600,7 +767,28 @@ The first step is to create the text files for each usms in a separate directory
 
 This tutorial stores a javastics installation in the `javastics` variable, and an example workspace in the `workspace_xml` variable.
 
-Use `gen_usms_xml2txt()` with those variables to generate the text files for the usms "wheat", "banana" and "soybean":
+Before generating the text files, we will first restrain the number of variables we want stics to output using `gen_varmod`.
+
+> Use `gen_varmod` to tell stics we only want "lai(n)", "masec(n)" and "QNplante"
+
+```{r gen_varmod, exercise=TRUE}
+# Generate text files for usms "wheat" and "banana" and "soybean"
+```
+
+```{r gen_varmod-hint-1}
+# Use `javastics_path = javastics` and `workspace_path = workspace_xml`
+```
+
+```{r gen_varmod-solution}
+#SOLUTION:
+gen_varmod(workspace_xml, var_names = c("lai(n)", "masec(n)", "QNplante"))
+```
+
+It is generally useful to pre-filter the variables to avoid filtering the variables for the wrapper, the plots and the statistics.  
+
+Now we can generate our text files. 
+
+> Use `gen_usms_xml2txt()` with those variables to generate the text files for the usms "wheat", "banana" and "soybean":
 
 ```{r gen_usms_xml2txt, exercise=TRUE}
 # Generate text files for usms "wheat" and "banana" and "soybean"
@@ -744,7 +932,6 @@ plot("original" = res1$sim_list,"dlaimax=0.005, durvieF=80" = res2$sim_list)
 ```
 
 ### Estimating parameters
-REMI
 
 #### Workflow
 
@@ -758,11 +945,15 @@ The workflow for parameter estimation is made using several steps:
 - set-up options for the optimization method (see other section, not presented in this one for simplicity).
 - run the parameter optimization (`optim_options`).
 
-```{r prepare-param-estim, include=FALSE}
+```{r prepare-param-estim}
 wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
 
 obs = get_obs(workspace = workspace_xml, usm_name = "wheat")
 obs_filt = filter_obs(obs, "lai_n", include = TRUE)
+
+param_info = list(laicomp = list(lb = 0.1, ub = 1.0))
+
+optim_options = list(nb_rep = 3, maxeval = 500, xtol_rel = 1e-03, path_results = workspace_xml, ranseed = 1234)
 ```
 
 #### Modelling environment
@@ -777,7 +968,7 @@ wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = w
 
 > Import the observations for the "wheat" usm, and put it in an object called `obs`:
 
-```{r estim_param_obs1, exercise=TRUE}
+```{r estim_param_obs1, exercise=TRUE, exercise.setup = "prepare-param-estim"}
 # Insert your R code here!
 ```
 
@@ -785,14 +976,14 @@ wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = w
 # Use `get_obs()`, workspace_xml is the workspace.
 ```
 
-```{r estim_param_obs1-solution, exercise.setup = "prepare-param-estim"}
+```{r estim_param_obs1-solution}
 #SOLUTION:
 obs = get_obs(workspace = workspace_xml, usm_name = "wheat")
 ```
 
-> Filter the observations using `filter_obs()` for the lai only, and put it in an object called `obs_filt`:
+> Filter the observations to get only the lai using `filter_obs()`, and put it in an object called `obs_filt`:
 
-```{r estim_param_obs2, exercise=TRUE}
+```{r estim_param_obs2, exercise=TRUE, exercise.setup = "prepare-param-estim"}
 # Insert your R code here!
 ```
 
@@ -800,51 +991,248 @@ obs = get_obs(workspace = workspace_xml, usm_name = "wheat")
 # Use `get_obs()`, workspace_xml is the workspace.
 ```
 
-```{r estim_param_obs2-solution, exercise.setup = "prepare-param-estim"}
+```{r estim_param_obs2-solution}
 #SOLUTION:
 obs_filt = filter_obs(obs, "lai_n", include = TRUE)
 ```
 
+#### Optimization algorithm parameters 
+
+The optimization algorithm available in Croptimizer have some parameters too. For example the simplex method has the following:
+
+- `nb_rep`: Number of times the minimization process is done, each time starting with a different set of initial
+parameters values. This one is used to control whether our initial values impact our resulting optimized value or not. The more is better, but the whole optimization process is repeated `nb_rep` so it takes more and more time.
+- `maxeval`: Maximum number of evaluations of the minimized criteria. That is to say the algorithm is stopped if it did not converge to a value after `maxeval` runs.
+- `xtol_rel`: Tolerance criterion between two iterations, *i.e.* stop the algorithm when an optimization step (or an estimate of the optimum) changes every parameter by less than xtol_rel multiplied by the absolute value of the parameter.
+- `path_results`: path to the directory on which the results will be written (graph and .Rdata)
+- `ranseed`: set the random seed so that each execution give the same results. If you want full randomization, don't set it.
+
+Only `path_results` is mandatory, all the others have default values.
+
+<div class="alert alert-note">
+More information can be found on the CroptimizR vignettes, e.g. [here](https://sticsrpacks.github.io/CroptimizR/articles/Parameter_estimation_simple_case.html).
+</div>
+
+These parameters are passed to `estim_param` as a named list.
+
+> Make a named list to set values for these parameters and put the results in an object named `optim_options`. We require 3 repetitions (to make it quick). You can use any directory to store the results. If you don't particularly care where to put them, you can put them in `workspace_xml`.
+
+```{r estim_param_options, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r estim_param_options-hint-1}
+# A name list is constructed like so: list(name1 = value1, name2 = value2)
+```
+
+```{r estim_param_options-solution}
+#SOLUTION:
+optim_options = list(nb_rep = 3, path_results = workspace_xml)
+```
+
 #### Choose parameter
 
-We have to choose which parameter will be optimized, and what are their respective boundaries values. To do so, we define a list of list for each parameter like so: 
+We have to choose which parameter will be optimized, and what are their respective boundary values. To do so, we define a list of list for each parameter like so: 
 
 ```r
 param_info = list()
-param_info$dlaimax = list(lb=0.0005,ub=0.0025)
-param_info$durvieF = list(lb=c(50,100),ub=c(400,450))
+param_info$dlaimax = list(lb = 0.0005, ub = 0.0025)
+param_info$durvieF = list(lb = 100, ub = 450)
 ```
 
-<div class="alert alert-danger">
-  REMI: Continue here. 
-  
-1. Check if providing param_info like this above works (we will replace the other way to do it by this one already used also). 
-1. And continue below
+<div class="alert alert-note">
+  You can get more information about parameters using `get_param_info`.
 </div>
-   
-#### Modelling environment
 
-> Now estimate the value of the `dlaimax` parameter using `estim_param()`, and put the results in an object called `optim_res`. You can use `wrapper_options` as the object for the argument `model_options`, and the `obs` object for the observations list. 
+Let's try to optimise the value of the `laicomp` parameter. 
 
-```{r estim_param2, exercise=TRUE, exercise.setup = "prepare-wrapper-plot"}
+> Create the parameter list for `laicomp` and name it `param_info`.
+
+```{r estim_param_param, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r estim_param_param-hint-1}
+# You can use 0.1 and 1.0 for boundary values
+```
+
+```{r estim_param_param-solution}
+#SOLUTION:
+# param_info = list(laicomp = list(lb = 0.1, ub = 1.0))
+param_info = list(lb = c(laicomp = 0.1), ub = c(laicomp = 1.0))
+```
+
+#### Optimization
+
+Now that we defined all information we needed, we can use `estim_param()` to make the optimization. 
+
+As a reminder, here's the objects we previously defined:
+
+- `obs_filt`: the observations of the objective variable  
+- `stics_wrapper`: this is the wrapper function for stics
+- `wrapper_options`: the options passed to `stics_wrapper`
+- `optim_options`: the parameters for the optimization method 
+- `param_info`: the parameter(s) names and boundary values
+
+> Now estimate the value of `laicomp` using `estim_param()` and the previous objects we defined, and put the results in an object called `optim_res`.
+
+```{r estim_param2, exercise=TRUE, exercise.setup = "prepare-param-estim"}
 # Insert your R code here!
 ```
 
 ```{r estim_param2-hint-1}
-# The simulation results can be listed one after the other in `plot()` for comparison
+# Read the documentation of estim_param() and associate the aforementioned objects to the corresponding arguments.
 ```
 
-```{r estim_param2-solution, exercise.setup = "prepare-wrapper-plot"}
+```{r estim_param2-solution}
 #SOLUTION:
 optim_res = estim_param(obs_list = obs_filt,
                         model_function = stics_wrapper,
                         model_options = wrapper_options,
+                        optim_options = optim_options,
                         param_info = param_info)
 ```
 
-estim_param
-	méthode par défaut
-	Afficher résultats produits et plots
+<div class="alert alert-note">
+The optimization process can take a while. Time to drink a ☕ maybe! 
+
+If you don't want to wait for the optimization process, we got you covered. You 
+can still continue to the next exercises because we cached the output for you.
+
+If you didn't do the previous exercises about generating stics text files, you might 
+want to execute `gen_usms_xml2txt` before `estim_param` like so:
+
+```r
+gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("wheat","banana","soybean"))
+```
+</div>
+
+```{r prepare-param-estim-out}
+load(file = system.file("extdata/optim_results.Rdata", package = "SticsRPacks"))
+optim_res = res
+rm(res)
+wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
+obs_filt = filter_obs(get_obs(workspace = workspace_xml, usm_name = "wheat"), "lai_n", include = TRUE)
+sim_after_optim = stics_wrapper(param_values = optim_res$final_values, model_options = wrapper_options)$sim_list
+gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("wheat","banana","soybean"))
+sim_before_optim = stics_wrapper(model_options = wrapper_options)$sim_list
+```
+
+#### Plots
+
+Now that our parameter value is optimized, we can re-run the model with this value to check the results.
+To do so, we call again `stics_wrapper` with the optimized value passed as argument.
+
+> Use `stics_wrapper` to make a new simulation with our optimized value, and put only the results (not the errors) in an object called `sim_after_optim` (see documentation for the outputs of `stics_wrapper`.
+
+```{r estim_param3, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
+# Insert your R code here!
+```
+
+```{r estim_param3-hint-1}
+# Read the documentation of stics_wrapper() and use the `param_values` argument along with the resulting optimized value stored in `optim_res$final_values`.
+```
+
+```{r estim_param3-hint-2}
+# stics_wrapper() returns a list of two:
+# - sim_list for the results
+# - error for indications on errors 
+# We need only the results in our object `sim_after_optim`.
+```
+
+```{r estim_param3-solution}
+#SOLUTION:
+sim_after_optim = stics_wrapper(param_values = optim_res$final_values, model_options = wrapper_options)$sim_list
+```
+
+Now we can plot the output using `plot()`.
+
+> Use `plot()` to make a dynamic plot of the simulations along with the observations (`obs_filt`) for the `lai_n` variable.
+
+```{r estim_param4, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
+# Insert your R code here!
+```
+
+```{r estim_param4-hint-1}
+# Read the documentation of plot(). This one is tricky, you can either see it on the package website <https://sticsrpacks.github.io/CroPlotR/reference/plot.cropr_simulation.html> or from R using ?plot.cropr_simulation
+```
+
+```{r estim_param4-solution}
+#SOLUTION:
+plot(sim = sim_after_optim, obs = obs_filt, var = "lai_n")
+```
+
+That's a lot of plots! We can also make a scatter plot with all the usms in the same plot for a better overview.
+
+> Make the same plot but as a scatter plot instead of a dynamic plot
+
+```{r estim_param5, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
+# Insert your R code here!
+```
+
+```{r estim_param5-hint-1}
+# Read the documentation of plot(). This one is tricky, you can either see it on the package website <https://sticsrpacks.github.io/CroPlotR/reference/plot.cropr_simulation.html> or from R using ?plot.cropr_simulation
+```
+
+```{r estim_param5-solution}
+#SOLUTION:
+plot(sim = sim_after_optim, obs = obs_filt, type = "scatter", var = "lai_n")
+```
+
+#### Before/after comparison
+
+It is often interesting to compare the simulations before and after the optimization to investigate if it worked properly. To do so, we just have to simulate both, and to plot the results using `plot()`.
+
+> Make a simulation using `stics_wrapper` with the original values
+
+```{r estim_param6, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
+# Insert your R code here!
+```
+
+```{r estim_param6-hint-1}
+# estim_param() does not modify the input files, so you can just re-simulate the usms with stics_wrapper
+```
+
+```{r estim_param6-solution}
+#SOLUTION:
+sim_before_optim = stics_wrapper(model_options = wrapper_options)$sim_list
+```
+
+Now we can compare the simulations using `plot()` and `summary()`.
+
+> Make a plot to compare both simulations for `lai_n`
+
+```{r estim_param7, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
+# Insert your R code here!
+```
+
+```{r estim_param7-hint-1}
+# Read the documentation of plot(). This one is trick, you can either see it on the package website <https://sticsrpacks.github.io/CroPlotR/reference/plot.cropr_simulation.html> or from R using ?plot.cropr_simulation
+```
+
+```{r estim_param7-solution}
+#SOLUTION:
+plot(sim_before_optim, sim_after_optim, obs= obs_filt, var = "lai_n")
+```
+
+> Compute the nRMSE and Bias using `summary()` 
+
+```{r estim_param8, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
+# Insert your R code here!
+```
+
+```{r estim_param8-hint-1}
+# Read the documentation of plot(). This one is trick, you can either see it on the package website <https://sticsrpacks.github.io/CroPlotR/reference/plot.cropr_simulation.html> or from R using ?plot.cropr_simulation
+```
+
+```{r estim_param8-solution}
+#SOLUTION:
+summary(sim_before_optim, sim_after_optim, obs = obs_filt)
+```
+
+<div class="alert alert-danger">
+  REMI: Continue here. 
+</div>
 
 plots avec CroPlotR : run du wrapper sur les résultats de l'optimisation puis plot sim-obs
 
