@@ -1028,6 +1028,8 @@ rm(res)
 wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
 obs_filt = filter_obs(get_obs(workspace = workspace_xml, usm_name = "wheat"), "lai_n", include = TRUE)
 sim_after_optim = stics_wrapper(param_values = optim_res$final_values, model_options = wrapper_options)$sim_list
+gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("wheat","banana","soybean"))
+sim_before_optim = stics_wrapper(model_options = wrapper_options)$sim_list
 ```
 
 #### Plots
@@ -1093,11 +1095,62 @@ plot(sim = sim_after_optim, obs = obs_filt, type = "scatter", var = "lai_n")
 
 #### Before/after comparison
 
-It is often interesting to compare the simulations before and after the optimization to investigate if it worked properly. 
+It is often interesting to compare the simulations before and after the optimization to investigate if it worked properly. To do so, we just have to simulate both, and to plot the results using `plot()`.
 
-To do so, we just have to simulate both, and to plot the results using `plot()`.
+Generally, we make a first simulation *before* the optimization process because it changes the values in the files progressively. If we didn't make a simulation before, we have two solutions:
 
-> Make the same plot but as a scatter plot instead of a dynamic plot
+- make a simulation with `run_javastics` because the xml files were not modified
+- re-generate the text files to use the values before optimization ans use the wrapper again
+
+Because we were using the wrapper in this section, we will use the second solution.
+
+> Re-generate the files for the usms "wheat", "banana" and "soybean" and make a simulation using
+
+```{r estim_param6, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
+# Insert your R code here!
+```
+
+```{r estim_param6-hint-1}
+# Read the documentation of plot(). This one is trick, you can either see it on the package website <https://sticsrpacks.github.io/CroPlotR/reference/plot.cropr_simulation.html> or from R using ?plot.cropr_simulation
+```
+
+```{r estim_param6-solution}
+#SOLUTION:
+gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("wheat","banana","soybean"))
+sim_before_optim = stics_wrapper(model_options = wrapper_options)$sim_list
+```
+
+Now we can compare the simulations using `plot()` and `summary()`.
+
+> Make a plot to compare both simulations for `lai_n`
+
+```{r estim_param7, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
+# Insert your R code here!
+```
+
+```{r estim_param7-hint-1}
+# Read the documentation of plot(). This one is trick, you can either see it on the package website <https://sticsrpacks.github.io/CroPlotR/reference/plot.cropr_simulation.html> or from R using ?plot.cropr_simulation
+```
+
+```{r estim_param7-solution}
+#SOLUTION:
+plot(sim_before_optim, sim_after_optim, obs= obs_filt, var = "lai_n")
+```
+
+> Compute the nRMSE and Bias using `summary()` 
+
+```{r estim_param8, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
+# Insert your R code here!
+```
+
+```{r estim_param8-hint-1}
+# Read the documentation of plot(). This one is trick, you can either see it on the package website <https://sticsrpacks.github.io/CroPlotR/reference/plot.cropr_simulation.html> or from R using ?plot.cropr_simulation
+```
+
+```{r estim_param8-solution}
+#SOLUTION:
+summary(sim_before_optim, sim_after_optim, obs = obs_filt)
+```
 
 <div class="alert alert-danger">
   REMI: Continue here. 
