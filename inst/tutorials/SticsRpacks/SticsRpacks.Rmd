@@ -310,7 +310,7 @@ sum(filtered_result$ttrr)
 ```
 
 
-## Running simulations from R {#run-sim}
+## Running simulations from R
 
 Let see now how to run STICS simulations directly from R using the function `run_javaStics` from the [SticsOnR package](https://sticsrpacks.github.io/SticsOnR/index.html).
 
@@ -356,26 +356,18 @@ run_javastics(javastics_path=javastics,  workspace_path = workspace_xml, usms_li
 
 
 ## Exploring and Evaluating the Stics results
-PATRICE
+
+<!-- PATRICE -->
 
 ### Getting simulations results
 
 In order to get simulation results to R from a Stics workspace, the `get_sim` function is to be used with some options allowing to filter data against usm names, output variables for example. Check the function help before trying to use it. Check also where the simulations files are stored after running the model in the previous section.
 
-<!-- 
-```{r, results="asis"}
-lines <- SticsRFiles:::get_from_help(file.path(help_dir,"get_sim.html"))
-cat( paste( lines , collapse="\n" ) )
-```
--->
 
-#### Exercises
-
-> Getting simulations outputs of USMs from the workspace directory used in the previous exercise for running the model
+<!-- #### Exercises -->
 
 * Get all outputs from the workspace
 
-<!-- Récupérer tous les résultats simulés -->
 ```{r get_sim1, exercise=TRUE}
 # Insert your R code here! 
 
@@ -388,7 +380,6 @@ cat( paste( lines , collapse="\n" ) )
 get_sim(workspace = workspace_xml)
 ```
 
-<!-- Récupérer tous les résultats simulés pour les les USMs XXX -->
 * Get outputs for USMs named : banana, Turmeric
 
 ```{r get_sim2, exercise=TRUE}
@@ -403,6 +394,7 @@ get_sim(workspace = workspace_xml)
 # SOLUTION
 get_sim(workspace = workspace_xml, usm_name = c("banana","Turmeric"))
 ```
+
 * Get outputs for the USMs of your choice other than banana, Turmeric
 
 ```{r get_sim3, exercise=TRUE}
@@ -422,7 +414,7 @@ get_sim(workspace = workspace_xml, usm_name = c("banana","Turmeric"))
 # SOLUTION
 get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"))
 ```
-<!-- Récupérer les résultats pour la variable XXX et les USMs XXX et XXX -->
+
 * Get simulations outputs and store them in a `results` object using the variable `lai(n)` for the USMs named `wheat` and `maize`
 
 ```{r get_sim4, exercise=TRUE}
@@ -446,12 +438,10 @@ Be carefull that for the moment, the names of the Stics variables which are to b
 In fact, the plotting functions use a specfic syntax for variables names which contain braces. For exemple, `lai_n` instead of `lai(n)`.
 </div>
 
-#### Exercises
+<!-- #### Exercises -->
 
 * Plotting simulations dynamics of the variable `lai(n)` and `masec` for `wheat`
   * Independently
-
-<!-- for the USMs named `wheat` and `maize` -->
 
 ```{r plot_sim1, exercise=TRUE}
 # Insert your R code here!
@@ -471,8 +461,6 @@ plot(results, var = "masec_n")
 # on the same output graph
 plot(results, var = c("lai_n","masec_n"))
 ```
-
-<!-- Tracer les dynamiques des variables XXX et XXX indépendamment ou superposées --> 
 
   * On the same plot
 
@@ -494,24 +482,22 @@ results <- get_sim(workspace = workspace_xml, usm_name = "wheat",
                    var_list = c("lai(n)", "masec(n)"))
 plot(results, overlap = list(list("lai_n","masec_n")))
 ```
-		
+
 ### Evaluating simulations results
 
-Evaluation of simulation results is performed using observation data with the help of plotting dynamics, scatter graphs and calculating several statistics criteria. Observed data can be loaded by using the `get_obs` function and they are given as inputs to several functions which are going to be tested here after. 
+Evaluation of simulation results is performed using observation data with the help of plotting dynamics, scatter graphs and calculating several statistics criteria. Observed data can be loaded by using the `get_obs` function and they are given as inputs to functions which are going to be tested here after. 
 
-#### Exercises
 
-##### Getting observation data
+#### Getting observation data
+
+<!-- Voir ou le mettre, ou alors l'integrer dans les manips ? -->
 
 <div class="alert alert-info">
-mettre une note sur l'utilisation de usms.xml ?
-
-Par défaut, dans la colonne Plant l'identifiant de la plante est stocké (plant_1, plant_2).
-Si le chemin du fichier usms.xml est fourni, la colonne Plant contiendra le nom du fichier plante.
+By default, each element (i.e. data.frame per USM) of the returned object by `get_obs()` contains a `Plant` column in which are stored either `"plant_1"` or `"plant_2"` indicating respectively a main crop or an intercrop. If the `usms.xml` is given to the function, plant file names are set in the `Plant` column. 
 </div>
 
 
-* Get all the observation data
+  * Get all the observation data
 
 ```{r get_obs1, exercise=TRUE}
 # Insert your R code here! 
@@ -526,7 +512,7 @@ Si le chemin du fichier usms.xml est fourni, la colonne Plant contiendra le nom 
 get_obs(workspace = workspace_xml)
 ```
 
-* Get observations for USMs named : `wheat` and `maize`
+  * Get observations for USMs named : `wheat` and `maize`
 
 
 ```{r get_obs2, exercise=TRUE}
@@ -542,13 +528,14 @@ get_obs(workspace = workspace_xml)
 get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"))
 ```
 
-* Try to get observations for specific variables and combinations with USMs 
+   * Try to get observations for specific variables and combinations with USMs 
 
 ```{r get_obs3, exercise=TRUE}
 # Insert your R code here! 
 ```
 
-#####	Dynamics plots using observation data
+
+####	Dynamics plots using observation data
 
 See previous plotting exercises and add observation data in them.
 
@@ -566,18 +553,226 @@ See previous plotting exercises and add observation data in them.
 results <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"))
 observations <- get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"))
 plot(results, var = c("lai_n","masec_n"), obs = observations)
+
+```
+<!-- with overlap
+# ne fonctionne pas
 #plot(results, overlap = list(list("lai_n","masec_n")), obs = observations)
+-->
+
+####	Basic scatter plot
+
+Scatter plots are used for displaying comparison between simulated variables againts observations. They can be produced using the same `plot` function as for dynamics plots, with only changing the plot type.
+
+```{r plot_simobs2, exercise=TRUE}
+# Insert your R code here!
 ```
 
-#####	Basic scatter plot
+```{r plot_simobs2-hint-1}
+# See help for understanding which input function argument must be changed
+```
 
-#####	Customized scatter plot using symbols
+```{r plot_simobs2-solution}
+# SOLUTION
+results <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"))
+observations <- get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"))
+plot(results, var = c("lai_n","masec_n"), obs = observations, type = "scatter")
 
-<!-- 		scatter_plots avec gestion des symboles : demander de mettre des symboles différents selon des groupes d’USMs -->
+```
 
-#####	Statistics and associated graphs
-	
+####	Customized scatter plot using symbols
 
+* Using specific symbols for USMS
+
+```{r plot_simobs3, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r plot_simobs3-hint-1}
+# See help for understanding which input function argument must be changed
+```
+
+```{r plot_simobs3-solution}
+# SOLUTION
+results <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"))
+observations <- get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"))
+plot(results, var = c("lai_n","masec_n"), obs = observations, type = "scatter", shape_sit = "symbol")
+
+```
+
+* Using specific symbols for USMS groups
+
+```{r plot_simobs4, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r plot_simobs4-hint-1}
+# You must get data and observations for more than 2 USMs for defining groups ... and see how to define groups and select the right shape_sit value 
+```
+
+```{r plot_simobs4-solution}
+# SOLUTION
+usms <- c("wheat","DurumWheat", "maize", "sorghum")
+groups <- list(list("wheat","DurumWheat"), list("maize", "sorghum"))
+results <- get_sim(workspace = workspace_xml, usm_name = usms)
+observations <- get_obs(workspace = workspace_xml, usm_name = usms)
+plot(results, var = c("lai_n","masec_n"), obs = observations, type = "scatter", shape_sit = "group", situation_group = groups)
+
+```
+
+<!-- NOTES bug
+* avec 1 groupe
+plot(results, var = c("lai_n","masec_n"), obs = observations, type = "scatter", shape_sit = "group", situation_group = list(list("wheat", "maize")))
+les points associés au groupe mm; couleur (enfin je suppose, pas controle du nb points) légende NA
+
+* 2 groupes
+plot(results, var = c("lai_n","masec_n"), obs = observations, type = "scatter", shape_sit = "group", situation_group = list(list("wheat","DurumWheat"), list("maize", "sorghum")))
+-->
+
+####	Statistics and associated graphs
+
+For that purpose the `summary()` function will be used for producing statistical criteria for simulations and observations, and the summary results will be used for producing plots with the `plot()` function.
+
+In this section only one simulation data set is used for calculating statistics and plotting them. For seeing how to use these functions for 2 sets of simulations in order to compare model versions see online documentation on [CroPlotR site](https://sticsrpacks.github.io/CroPlotR/#223-statistics-plot). 
+
+A usm list containing for example `wheat`,`DurumWheat`, `maize`, `sorghum` may be used and 2 variables will be selected for statistics calculation and plots, `lai_n` and `masec_n`
+
+
+##### Statistics criteria
+
+  * For all USMs
+  
+```{r stat_simobs1, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r stat_simobs1-hint-1}
+# Only simulations and observations are needed
+```    
+
+```{r stat_simobs1-solution}
+# SOLUTION
+usms <- c("wheat","DurumWheat", "maize", "sorghum")
+results <- get_sim(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
+observations <- get_obs(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
+
+summary(results, obs = observations)
+
+```
+
+* For individual USMs
+
+```{r stat_simobs2, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r stat_simobs2-hint-1}
+# use all_situations argument for that
+```
+
+```{r stat_simobs2-solution}
+# SOLUTION
+usms <- c("wheat","DurumWheat", "maize", "sorghum")
+results <- get_sim(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
+observations <- get_obs(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
+
+summary(results, obs = observations, all_situations = FALSE)
+
+```
+
+<!-- note
+la premiere colonne est perturbante Version 1
+si 1 jeu de simulation: superflue !!
+utile en cas de comparaison de 2 jeu de simulations
+
+Si 2 jeux: plutôt que le nom de colonne == group, simu (pour les graphes scatter group == groupes d'usms !)
+-->
+
+<!-- !!!!! voir pour ajouter un cas ou on nomme le jeu de sim
+pour retrouver le nom dans la colonne "group"
+-->
+
+
+
+##### Statistics graphs
+
+For this use, one must limitate the number of variables to use and also the number of criteria to be plotted.    
+As for dynamics plots, the `plot` function will be used to render plot about statistical criteria.
+    
+For this purpose, the `R2` and `nRMSE` criteria will be used.
+
+<!-- Remarque
+- Preciser les limites de la fonction (nb c)
+- amelioration fonction: gerer le nombre de plots en fonction du nombre de criteres et de variables
+-->
+
+  * For all USMs
+
+```{r stat_simobs3, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r stat_simobs3-hint-1}
+# the object returned by the call of the summary function is to be used
+```
+
+```{r stat_simobs3-solution}
+# SOLUTION
+usms <- c("wheat","DurumWheat", "maize", "sorghum")
+results <- get_sim(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
+observations <- get_obs(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
+
+summ <- summary(results, obs = observations, stat = c("R2","nRMSE"))
+
+plot(summ, title = "for all USMs")
+
+```
+
+  * For individual USMs
+
+> USMs may be distinguished using colors and a legend 
+
+```{r stat_simobs4, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r stat_simobs4-hint-1}
+# all_situations argument is usefull for that
+```
+
+```{r stat_simobs4-solution}
+# SOLUTION
+usms <- c("wheat","DurumWheat", "maize", "sorghum")
+results <- get_sim(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
+observations <- get_obs(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
+
+summ <- summary(results, obs = observations, all_situations = FALSE, stat = c("R2","nRMSE"))
+
+plot(summ, title = "for each USM")
+  
+```
+
+> Or USMs names may be used along x axis
+
+```{r stat_simobs5, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r stat_simobs5-hint-1}
+# xvar argument must be used for that !
+```
+
+```{r stat_simobs5-solution}
+# SOLUTION
+usms <- c("wheat","DurumWheat", "maize", "sorghum")
+results <- get_sim(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
+observations <- get_obs(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
+
+summ <- summary(results, obs = observations, all_situations = FALSE, stat = c("R2","nRMSE"))
+
+plot(summ, xvar = "situation", title= "USM names as X")
+  
+```
 
 
 
