@@ -92,10 +92,46 @@ Detailed documentation on the different packages can be found at:
 
 ### A simple example
 
-REMI 
+Here is a simple example use-case of an optimization of the `stamflax` parameter for a wheat crop using one situation (*i.e.* one USM).
 
-vignette CroptimizR ou encore plus simple (1 seul param) pour réduire le temps d’exécution …
-(reprendre le meme code qu'en bas, sans trop d'explications sur le code, mais juste pour montrer les outputs)
+```{r simple-example-param-estim, eval=FALSE}
+usm = "wheat"
+
+# First, import the observations and filter them:
+obs = get_obs(workspace = workspace_xml, usm_name = usm)
+obs_filt = filter_obs(obs, "lai_n", include = TRUE)
+
+# Set-up the simulation environment:
+wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
+optim_options = list(nb_rep = 3, path_results = workspace_xml)
+
+# Define the parameter to optimize and the boundary values:
+param_info = list(stamflax = list(lb = 200, ub = 400))
+
+# Generate the files for the simulation:
+gen_usms_xml2txt(javastics, workspace_xml, usms_list = usm)
+
+# Make the optimization:
+optim_res = estim_param(obs_list = obs_filt,
+                        model_function = stics_wrapper,
+                        model_options = wrapper_options,
+                        optim_options = optim_options,
+                        param_info = param_info)
+
+# Import the results before/after the simulation and plot them:
+sim_after_optim = stics_wrapper(param_values = optim_res$final_values, model_options = wrapper_options)$sim_list
+sim_before_optim = stics_wrapper(model_options = wrapper_options)$sim_list
+
+plot(sim = sim_after_optim, obs = obs_filt, var = "lai_n")
+```
+
+And here is the result:
+
+```{r}
+knitr::include_graphics("optim_stamflax_wheat.png")
+```
+
+
 
 ## Finding names of STICS variables
 
