@@ -92,7 +92,13 @@ Detailed documentation on the different packages can be found at:
 
 ### A simple example
 
-Here is a simple example use-case of an optimization of the `stamflax` parameter for a wheat crop using one situation (*i.e.* one USM).
+Here is an example use-case of an optimization of the `stamflax` parameter for a wheat crop using one situation (*i.e.* one USM):
+
+```{r}
+knitr::include_graphics("https://raw.githubusercontent.com/SticsRPacks/SticsRPacks/master/inst/tutorials/SticsRpacks/optim_stamflax_wheat.png")
+```
+
+The code to get this is the following:
 
 ```{r simple-example-param-estim, echo=TRUE, eval=FALSE}
 usm = "wheat"
@@ -125,13 +131,11 @@ sim_before_optim = stics_wrapper(model_options = wrapper_options)$sim_list
 plot(sim = sim_after_optim, obs = obs_filt, var = "lai_n")
 ```
 
-And here is the result:
+A lot is happening here! 
 
-```{r}
-knitr::include_graphics("https://raw.githubusercontent.com/SticsRPacks/SticsRPacks/master/inst/tutorials/SticsRpacks/optim_stamflax_wheat.png")
-```
+But don't worry if you don't understand anything, you'll learn everything you need to know in this tutorial. We just want you to see that you can make a parameter optimisation under 30 lines of code, including the plots with observations. And the good news is when you understand these lines of code, you'll be able to do almost anything with the packages, because it doesn't get any longer or more complex than this.  
 
-
+OK now that we saw what we can do, let's find out how step by step.
 
 ## Finding names of STICS variables
 
