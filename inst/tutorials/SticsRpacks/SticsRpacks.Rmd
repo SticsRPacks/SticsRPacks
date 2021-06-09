@@ -94,7 +94,7 @@ Detailed documentation on the different packages can be found at:
 
 Here is a simple example use-case of an optimization of the `stamflax` parameter for a wheat crop using one situation (*i.e.* one USM).
 
-```{r simple-example-param-estim, eval=FALSE}
+```{r simple-example-param-estim, echo=TRUE, eval=FALSE}
 usm = "wheat"
 
 # First, import the observations and filter them:
@@ -128,7 +128,7 @@ plot(sim = sim_after_optim, obs = obs_filt, var = "lai_n")
 And here is the result:
 
 ```{r}
-knitr::include_graphics("optim_stamflax_wheat.png")
+knitr::include_graphics("https://raw.githubusercontent.com/SticsRPacks/SticsRPacks/master/inst/tutorials/SticsRpacks/optim_stamflax_wheat.png")
 ```
 
 
