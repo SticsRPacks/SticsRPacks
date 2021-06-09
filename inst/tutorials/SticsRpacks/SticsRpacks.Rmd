@@ -1467,12 +1467,6 @@ plot(sim_before_optim, sim_after_optim, obs= obs_filt, var = "lai_n")
 summary(sim_before_optim, sim_after_optim, obs = obs_filt)
 ```
 
-<div class="alert alert-danger">
-  REMI: Continue here. 
-</div>
-
-plots avec CroPlotR : run du wrapper sur les résultats de l'optimisation puis plot sim-obs
-
 ## Succession culturales
 REMI
  
