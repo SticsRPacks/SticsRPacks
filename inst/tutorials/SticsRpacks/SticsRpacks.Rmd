@@ -779,18 +779,19 @@ plot(summ, xvar = "situation", title= "USM names as X")
 ## Advanced use{#advanced-use}
 
 You have learned so far how to use very useful but quite basic features of SticsRpacks packages.
+
 Let's go now deeper into the packages functionalities.
 
-### Generating STICS input Files
+## Generating STICS input Files
 
 The different types of STICS input files can be generated using the [SticsRFiles package](https://sticsrpacks.github.io/SticsRFiles/index.html). 
 
 
-#### Generating JavaStics input files
+### Generating JavaStics input files
 
 The JavaStics XML input files can be generated from R using functions of the [SticsRFiles package](https://sticsrpacks.github.io/SticsRFiles/index.html). JavaStics Input files (XML format) 
 
-##### Exercises
+#### Exercises
 
 ```{r gen_xml-1, echo=FALSE}
 question("What is the name of the SticsRFiles function for generating a usms.xml file?",
@@ -838,13 +839,13 @@ See also:
 </div>
 
 
-#### Generating observation files 
+### Generating observation files 
 
 Observation files can be generated from a data.frame using the function `gen_obs` of the [SticsRFiles package](https://sticsrpacks.github.io/SticsRFiles/index.html).
 
 They are not used by the STICS model but can be used to plot comparison between observed and simulated variables and to optimize STICS parameters both in JavaStics and in [CroPlotR](https://sticsrpacks.github.io/CroPlotR/index.html) and [CroptimizR](https://sticsrpacks.github.io/CroptimizR/index.html) packages.
  
-##### Exercises
+#### Exercises
 
 * Generate observation files from the data stored in the `df` data.frame using the `gen_obs` function, check the files are created on your computer and check their content using the `get_obs` function.
 
@@ -874,11 +875,11 @@ get_obs(workspace = getwd())
 Note that a subset of the observation files defined in the observation data.frame can be generated using the usms_list argument of gen_obs.
 </div>
  
-### Modifying JavaStics input files
+## Modifying JavaStics input files
 
 [SticsRFiles](https://sticsrpacks.github.io/SticsRFiles/index.html) package also provides facilities for modifying JavaStics input files from R.
 
-##### Exercises
+#### Exercises
 
 ```{r set_param_xml-1, echo=FALSE}
 question("What is the name of the SticsRFiles function for modifying JavaStics Input files (XML format)?",
@@ -930,9 +931,9 @@ get_param_xml(xml_file=file.path(workspace_xml,"sols_new.xml"),
  
 
  
-### Running simulations from R using stics_wrapper
+## Running simulations from R using stics_wrapper
 
-#### The need of a wrapper
+### The need of a wrapper
 
 We saw earlier how to make a simulation using `run_javastics()`. This function simply call javastics from the command line to make simulations, which does the same as running an usm by opening the javastics user interface, but from R. 
 
@@ -957,7 +958,7 @@ So how do we do that? Well, we use three steps:
 - set-up our modeling environment (`stics_wrapper_options()`)
 - run the simulations and import the results (`stics_wrapper()`)
 
-#### Creating the text files
+### Creating the text files
 
 The first step is to create the text files for each usms in a separate directory. To do so, we use `gen_usms_xml2txt()`.
 
@@ -999,7 +1000,7 @@ Now we can generate our text files.
 gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("wheat","banana","soybean"))
 ```
 
-#### Setting-up the modeling environment
+### Setting-up the modeling environment
 
 Before running the simulations using stics, we have to define some information about our modeling environment. This is done using `stics_wrapper_options()`. This function helps us define where is our installation of javastics, which stics executable to use (*e.g.* if you are using an executable from a research branch), which usms to simulate, etc...
 
@@ -1018,7 +1019,7 @@ Use `stics_wrapper_options()` to set-up our modeling environment using a paralle
 stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
 ```
 
-#### Running the simulations
+### Running the simulations
 
 Now everything is set-up to make our simulations! The model options we will use here are stored in the `wrapper_options` object with the options we just set up in the previous section. 
 
@@ -1050,7 +1051,7 @@ Now use `stics_wrapper()` to simulate the usm "wheat" only (not "banana" and "so
 stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = c("lai(n)", "masec(n)"))
 ```
 
-#### Parameter forcing
+### Parameter forcing
 
 Sometimes it is useful to compare the outputs of the model with a different value for one or several parameters to better understand its impact or check if it is used. 
 
@@ -1071,7 +1072,7 @@ Sometimes it is useful to compare the outputs of the model with a different valu
 stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = "lai(n)", param_values = c("dlaimax" = 0.005, "durvieF" = 80))
 ```
 
-#### Plot the comparison
+### Plot the comparison
 
 Now we can plot the output of the two simulations using `plot()` and adding the simulation objects as arguments (optionally named). The results of both simulations are accessible in the `res1` and `res2` objects. The results of the simulations are stored in the `sim_list` field of each object. For example to get the results of the simulation for `res1`, we would do: `res1$sim_list`. 
 
@@ -1127,9 +1128,9 @@ We can also name the simulations in our plot by naming them when passed as argum
 plot("original" = res1$sim_list,"dlaimax=0.005, durvieF=80" = res2$sim_list)
 ```
 
-### Estimating parameters
+## Estimating parameters
 
-#### Workflow
+### Workflow
 
 Model calibration is an important part of most modeling work, but it can be complex and cumbersome. SticsRPacks provides a nice, standardized and easy way to estimate the values of parameters using observations: `estim_param()`.
 
@@ -1152,7 +1153,7 @@ param_info = list(laicomp = list(lb = 0.1, ub = 1.0))
 optim_options = list(nb_rep = 3, maxeval = 500, xtol_rel = 1e-03, path_results = workspace_xml, ranseed = 1234)
 ```
 
-#### Modelling environment
+### Modelling environment
 
 We will simply re-use the modeling environment from the previous exercise: `wrapper_options`. This is how we did it:
 
@@ -1160,7 +1161,7 @@ We will simply re-use the modeling environment from the previous exercise: `wrap
 wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
 ```
 
-#### Observations
+### Observations
 
 > Import the observations for the "wheat" usm, and put it in an object called `obs`:
 
@@ -1192,7 +1193,7 @@ obs = get_obs(workspace = workspace_xml, usm_name = "wheat")
 obs_filt = filter_obs(obs, "lai_n", include = TRUE)
 ```
 
-#### Optimization algorithm parameters 
+### Optimization algorithm parameters 
 
 The optimization algorithm available in Croptimizer have some parameters too. For example the simplex method has the following:
 
@@ -1226,7 +1227,7 @@ These parameters are passed to `estim_param` as a named list.
 optim_options = list(nb_rep = 3, path_results = workspace_xml)
 ```
 
-#### Choose parameter
+### Choose parameter
 
 We have to choose which parameter will be optimized, and what are their respective boundary values. To do so, we define a list of list for each parameter like so: 
 
@@ -1258,7 +1259,7 @@ Let's try to optimise the value of the `laicomp` parameter.
 param_info = list(lb = c(laicomp = 0.1), ub = c(laicomp = 1.0))
 ```
 
-#### Optimization
+### Optimization
 
 Now that we defined all information we needed, we can use `estim_param()` to make the optimization. 
 
@@ -1314,7 +1315,7 @@ gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("wheat","banana","soybe
 sim_before_optim = stics_wrapper(model_options = wrapper_options)$sim_list
 ```
 
-#### Plots
+### Plots
 
 Now that our parameter value is optimized, we can re-run the model with this value to check the results.
 To do so, we call again `stics_wrapper` with the optimized value passed as argument.
@@ -1375,7 +1376,7 @@ That's a lot of plots! We can also make a scatter plot with all the usms in the 
 plot(sim = sim_after_optim, obs = obs_filt, type = "scatter", var = "lai_n")
 ```
 
-#### Before/after comparison
+### Before/after comparison
 
 It is often interesting to compare the simulations before and after the optimization to investigate if it worked properly. To do so, we just have to simulate both, and to plot the results using `plot()`.
 
@@ -1432,18 +1433,18 @@ summary(sim_before_optim, sim_after_optim, obs = obs_filt)
 
 plots avec CroPlotR : run du wrapper sur les résultats de l'optimisation puis plot sim-obs
 
-### Succession culturales
+## Succession culturales
 REMI
  
 	stics_wrapper
 	CroPlotR : dynamique sur succession
 estim_param
 
-### Intercrop
+## Intercrop
 
 We will see in this section how intercrops are handled in SticsRpacks.
 
-##### Exercises
+#### Exercises
 
 * Run the "intercrop_pea_barley" USM of the JavaStics distribution example workspace from R, get the results of lai(n), masec(n) and mafruit for both crops and store them in an R object called `sim` (path to JavaStics is stored in the `javastics` R object and path to the example workspace is stored in `workspace_xml`)
 
@@ -1535,7 +1536,7 @@ intercrop_pea_barley
 
 
  
-### Advanced parameter estimation 
+## Advanced parameter estimation 
 REMI
 
 plus avancé :
