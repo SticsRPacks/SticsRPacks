@@ -5,7 +5,7 @@ output:
     theme: cerulean
     ace_theme: pastel_on_dark
     anchor_sections: FALSE
-    progressive: true
+    progressive: FALSE
 description: "A tutorial to learn SticsRpacks"
 runtime: shiny_prerendered
 ---
@@ -1534,7 +1534,7 @@ question("How are organized the results for the different intercrops",
 
 * Check now how results are changed when you use the `usms_filename` argument of the `get_sim` function
 
-```{r intercrop-4, exercise=TRUE}
+```{r intercrop-4, exercise=TRUE, exercise.setup = "prepare-intercrop-2"}
 # Insert your R code here!
 ```
 
@@ -1551,7 +1551,7 @@ print(sim)
 * And, finally, how results are changed when you use in addition the `javastics_path` argument of the `get_sim` function
 
 
-```{r intercrop-5, exercise=TRUE}
+```{r intercrop-5, exercise=TRUE, exercise.setup = "prepare-intercrop-2"}
 # Insert your R code here!
 ```
 
@@ -1564,11 +1564,22 @@ print(sim)
 # The names of the Plants are now given in the Plant column.
 ```
 
-* Plot the results
+* Now, plot the simulation results using the standard plot function of CroPlotR
 
-**SAMUEL: TO BE DONE**
+```{r prepare-intercrop-6, echo=FALSE}
+sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
+               var_list=c("lai(n)","masec(n)","mafruit"),
+               usms_filename="usms.xml", javastics_path=javastics)
+```
 
-intercrop_pea_barley
+```{r intercrop-6, exercise=TRUE, exercise.setup = "prepare-intercrop-6"}
+# Insert your R code here!
+```
+
+```{r intercrop-6-solution}
+# SOLUTION:
+plot(sim)
+```
 
 
  
