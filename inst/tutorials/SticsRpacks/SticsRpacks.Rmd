@@ -15,7 +15,7 @@ library(learnr)
 library(SticsRPacks)
 # library(gradethis)
 knitr::opts_chunk$set(echo = FALSE)
-tutorial_options(exercise.lines = 5)
+tutorial_options(exercise.lines = 5, exercise.timelimit = 60)
 # gradethis::gradethis_setup()
 
 # Add checking JavaStics path
@@ -364,11 +364,17 @@ run_javastics(javastics_path=javastics,  workspace_path = workspace_xml, usms_li
 In order to get simulation results to R from a Stics workspace, the `get_sim` function is to be used with some options allowing to filter data against usm names, output variables for example. Check the function help before trying to use it. Check also where the simulations files are stored after running the model in the previous section.
 
 
+```{r prepare-get_sim, echo=FALSE}
+run_javastics(javastics_path=javastics,
+              workspace_path = workspace_xml,
+              usms_list = c("banana","Turmeric", "wheat", "maize"))
+```
+
 <!-- #### Exercises -->
 
 * Get all outputs from the workspace
 
-```{r get_sim1, exercise=TRUE}
+```{r get_sim1, exercise=TRUE, , exercise.setup = "prepare-get_sim"}
 # Insert your R code here! 
 
 ```
