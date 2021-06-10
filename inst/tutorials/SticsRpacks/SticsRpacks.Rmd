@@ -828,8 +828,6 @@ plot(summ, xvar = "situation", title= "USM names as X")
 
 ```
 
-
-
 ## Advanced use{#advanced-use}
 
 You have learned so far how to use very useful but quite basic features of SticsRpacks packages.
@@ -1202,7 +1200,7 @@ wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = w
 obs = get_obs(workspace = workspace_xml, usm_name = "wheat")
 obs_filt = filter_obs(obs, "lai_n", include = TRUE)
 
-param_info = list(laicomp = list(lb = 0.1, ub = 1.0))
+param_info = list(stamflax = list(lb = 200, ub = 400))
 
 optim_options = list(nb_rep = 3, maxeval = 500, xtol_rel = 1e-03, path_results = workspace_xml, ranseed = 1234)
 ```
@@ -1295,9 +1293,9 @@ param_info$durvieF = list(lb = 100, ub = 450)
 You can get more information about parameters using `get_param_info`.
 </div>
 
-Let's try to optimise the value of the `laicomp` parameter. 
+Let's try to optimize the value of the `stamflax` parameter. 
 
-> Create the parameter list for `laicomp` and name it `param_info`.
+> Create the parameter list for `stamflax` and name it `param_info`.
 
 ```{r estim_param_param, exercise=TRUE}
 # Insert your R code here!
@@ -1309,8 +1307,7 @@ Let's try to optimise the value of the `laicomp` parameter.
 
 ```{r estim_param_param-solution}
 #SOLUTION:
-# param_info = list(laicomp = list(lb = 0.1, ub = 1.0))
-param_info = list(lb = c(laicomp = 0.1), ub = c(laicomp = 1.0))
+# param_info = list(stamflax = list(lb = 200, ub = 400))
 ```
 
 ### Optimization
@@ -1325,7 +1322,7 @@ As a reminder, here's the objects we previously defined:
 - `optim_options`: the parameters for the optimization method 
 - `param_info`: the parameter(s) names and boundary values
 
-> Now estimate the value of `laicomp` using `estim_param()` and the previous objects we defined, and put the results in an object called `optim_res`.
+> Now estimate the value of `stamflax` using `estim_param()` and the previous objects we defined, and put the results in an object called `optim_res`.
 
 ```{r estim_param2, exercise=TRUE, exercise.setup = "prepare-param-estim"}
 # Insert your R code here!
