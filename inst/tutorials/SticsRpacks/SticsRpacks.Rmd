@@ -6,6 +6,7 @@ output:
     ace_theme: pastel_on_dark
     anchor_sections: FALSE
     progressive: FALSE
+    df_print: "paged"
 description: "A tutorial to learn SticsRpacks"
 runtime: shiny_prerendered
 ---
@@ -13,6 +14,9 @@ runtime: shiny_prerendered
 ```{r setup, include=FALSE}
 library(learnr)
 library(SticsRPacks)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
 # library(gradethis)
 knitr::opts_chunk$set(echo = FALSE)
 tutorial_options(exercise.lines = 5)
@@ -24,6 +28,7 @@ parameters = list(
   gen_help = TRUE,
   javastics = "JavaSTICS-1.41-stics-9.2",
   workspace_xml = "JavaSTICS-1.41-stics-9.2/example",
+  workspace_PW1 = "tutorials/SticsRpacks/PW1",
   workspace_txt = "example",
   use_default = TRUE,
   work_dir = file.path(normalizePath(dirname(tempdir()), winslash = "/"), "SticsRpacks")
@@ -47,6 +52,7 @@ if(!any(grepl("JavaStics.exe",list.files(javastics)))) {
 
 workspace_xml <- file.path(work_dir, parameters$workspace_xml, fsep ="/")
 workspace_txt <- file.path(work_dir, parameters$workspace_txt, fsep ="/")
+workspace_PW1 <- file.path(system.file(package = "SticsRPacks"), parameters$workspace_PW1, fsep ="/")
 
 # Generating html help files, one for each function
 if(parameters$gen_help) {
@@ -87,14 +93,86 @@ Detailed documentation on the different packages can be found at:
 
 ## A foretaste of SticsRpacks 
 
-### TP Stics
+Let see first the possibilities offered by the SticsRpacks packages through two simple examples.
+
+### STICS training Practical session PW1
+
+The practical sessions of the STICS training are traditionally performed using the JavaStics GUI and Excel.
+Let's see how the first sessions would look like in R using SticsRpacks.
+
+The game is to run a single USM by activating and deactivating water and nitrogen stress in turns and to analyze the impact by looking at dynamic variables and stress indicators.
+
+Let's first define the setup and run the different configurations:
+
+```{r, echo=TRUE, eval=TRUE, message=FALSE}
+
+# Let's define the USM and variables of interest to use in this example
+usm_name <- "maize_ref_2013"
+stress_ind_names <- c("turfac1moy", "turfac2moy", "swfac1moy", "swfac2moy", "inn1moy", "inn2moy")
+dyn_var_names <- c("lai_n", "zrac", "resmes", "azomes", "QNplante", "masec_n", "laimax", "mafruit", "drat", "Qles", "N_mineralisation", "totapN", "totir","cprecip")
+var_names <- c(stress_ind_names,dyn_var_names)
+
+# Set-up the simulation environment:
+wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_PW1)
+
+# Generate the files for the simulation:
+gen_usms_xml2txt(javastics, workspace_PW1, usms_list = usm_name)
+
+# Simulate a reference situation with water and nitrogen stress
+sim_ws_ns = stics_wrapper(model_options = wrapper_options, param_values = c(codeinnact=1, codeh2oact=1), 
+                          var_names = var_names)$sim_list
+
+# Simulate with water stress only
+sim_ws = stics_wrapper(model_options = wrapper_options, param_values = c(codeinnact=2), 
+                       var_names = var_names)$sim_list
+
+# Simulate with N stress only
+sim_ns = stics_wrapper(model_options = wrapper_options, param_values = c(codeh2oact=2), 
+                       var_names = var_names)$sim_list
+
+# Simulate with water stress only
+sim_without_stress = stics_wrapper(model_options = wrapper_options, param_values = c(codeinnact=2, codeh2oact=2), 
+                                   var_names = var_names)$sim_list
+
+```
+
+Now we can use the simulated results to plot the dynamic variables of interest for the different configurations: 
+
+```{r, echo=TRUE, eval=TRUE, message=FALSE}
+plot(sim_ws_ns=sim_ws_ns, sim_ws=sim_ws, sim_ns=sim_ns, sim_without_stress=sim_without_stress, var = c("lai_n","zrac","resmes","azomes","QNplante","masec_n"))
+```
+
+Finally, we can plot the stress indicators averaged over vegetative and reproductive phases:
+
+```{r, echo=TRUE, eval=TRUE, message=FALSE}
+
+# Get the final values
+df <- bind_rows(
+  sim_ws_ns[[usm_name]] %>% summarise(across(.cols = stress_ind_names, last)) %>% 
+  bind_cols(Case="sim_ws_ns"),
+  sim_ws[[usm_name]] %>% summarise(across(.cols = stress_ind_names, last)) %>% 
+  bind_cols(Case="sim_ws"),
+  sim_ns[[usm_name]] %>% summarise(across(.cols = stress_ind_names, last)) %>% 
+  bind_cols(Case="sim_ns"),
+  sim_without_stress[[usm_name]] %>% summarise(across(.cols = stress_ind_names, last)) %>% 
+  bind_cols(Case="sim_without_stress"))
+
+# Plot bar graph with ggplot ... sorry, not yet available using CroPlotR ...
+df_long <- tidyr::pivot_longer(df, stress_ind_names, names_to = "variables")
+ggplot(df_long, aes(fill=Case, y=value, x=variables)) + geom_bar(position="dodge", stat="identity")
+
+```
+
+... and let the users interpret these results!
+
+The last part may not be straightforward for R newcomers ... however a function to filter dates in simulated data will come soon :-).
 
 
-### A simple example
+### Parameter optimization: A simple example
 
 Here is an example use-case of an optimization of the `stamflax` parameter for a wheat crop using one situation (*i.e.* one USM):
 
-```{r}
+```{r paged.print=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/SticsRPacks/SticsRPacks/master/inst/tutorials/SticsRpacks/optim_stamflax_wheat.png")
 ```
 
