@@ -64,22 +64,30 @@ if(parameters$gen_help) {
 }
 ```
 
+<!-- <div class="alert alert-danger"> -->
+<!-- Test danger 2 -->
+<!-- </div> -->
+
+<!-- <div class="alert alert-warning"> -->
+<!-- Test warning -->
+<!-- </div> -->
+
+<!-- <div class="alert alert-info"> -->
+<!-- Test info -->
+<!-- </div> -->
+
 ## Introduction
 
-**Décrire ici en 2 mots ce que font les paquets**
+SticsRPacks is a set of packages for managing the STICS crop model from R. 
 
-<div class="alert alert-danger">
-Test danger 2
-</div>
+It includes 4 packages:
 
-<div class="alert alert-warning">
-Test warning
-</div>
+* SticsRFiles: to manipulate STICS input and output files,
+* SticsOnR: to run STICS simulations,
+* CroPlotR: to plot models results / observations and compute stats,
+* CroptimizR: to estimate model parameters.
 
-<div class="alert alert-info">
-Test info
-</div>
-
+SticsRFiles and SticsOnR are dedicated to the STICS model, while CroPlotR and CroptimizR are generic for crop models.
 
 Detailed documentation on the different packages can be found at:
 
@@ -88,12 +96,21 @@ Detailed documentation on the different packages can be found at:
 * [https://sticsrpacks.github.io/CroptimizR/]
 * [https://sticsrpacks.github.io/CroPlotR/]
 
-**Expliquer aussi comment trouver de l'aide sur les fonctions: ? + reference, ...**
+This tutorial aims at introducing the use of these different packages with the STICS model. It was designed to be of increasing complexity, it is thus advised to follow it in order. The different sections are however independent and you can thus start it from any part using the menu on the left side.
+
+The names and documentation of the functions to be used are given in the first exercises before letting you find them on your own as you go through the exercises.
+
+There are different sources of documentation regarding the packages and their functions:
+
+* the home pages of the packages websites (which links are given here-before), that introduce the packages main features,
+* the vignettes (Articles tab at the top of the packages websites home pages), that describe in detail the main features of the packages and the use of the associated functions,
+* the Reference tab at the top of the packages websites home pages, that list and quickly describe all the exported functions of the packages, and give a link to their detailed documentation,
+* the command `? functionName` in the R console,  which displays the detailed documentation of a given function.
 
 
 ## A foretaste of SticsRpacks 
 
-Let see first the possibilities offered by the SticsRpacks packages through two simple examples.
+Let see first the possibilities offered by the SticsRpacks packages through two simple illustrative examples.
 
 ### STICS training Practical session PW1
 
