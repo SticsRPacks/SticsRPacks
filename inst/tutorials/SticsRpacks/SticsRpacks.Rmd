@@ -96,7 +96,7 @@ Detailed documentation on the different packages can be found at:
 * [https://sticsrpacks.github.io/CroptimizR/]
 * [https://sticsrpacks.github.io/CroPlotR/]
 
-This tutorial aims at introducing the use of these different packages with the STICS model. It was designed to be of increasing complexity, it is thus advised to follow it in order. The different sections are however independent and you can thus start it from any part using the menu on the left side.
+This tutorial aims at introducing the use of these different packages with the STICS model. It was designed to be of increasing complexity, it is thus advised to follow it in order. The different sections are however independent and you can thus start it from any part using the menu on the left side (this may however take a little while since results from previous exercises must be automatically generated in this case).
 
 The names and documentation of the functions to be used are given in the first exercises before letting you find them on your own as you go through the exercises.
 
@@ -110,16 +110,16 @@ There are different sources of documentation regarding the packages and their fu
 
 ## A foretaste of SticsRpacks 
 
-Let see first the possibilities offered by the SticsRpacks packages through two simple illustrative examples.
+Let see first the possibilities offered by the SticsRpacks packages through two simple illustrative examples. At this stage it is not necessary to understand the code, the aim in this section is just to show you what we can do with a few lines of R codes, you will learn how to use all the functions used here in the next sections :-).
 
 ### STICS training Practical session PW1
 
 The practical sessions of the STICS training are traditionally performed using the JavaStics GUI and Excel.
-Let's see how the first sessions would look like in R using SticsRpacks.
+Let's see how the first session would look like in R using SticsRpacks.
 
 The game is to run a single USM by activating and deactivating water and nitrogen stress in turns and to analyze the impact by looking at dynamic variables and stress indicators.
 
-Let's first define the setup and run the different configurations:
+Let's first initialize variables and define the setup:
 
 ```{r, echo=TRUE, eval=TRUE, message=FALSE}
 
@@ -135,20 +135,31 @@ wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = w
 # Generate the files for the simulation:
 gen_usms_xml2txt(javastics, workspace_PW1, usms_list = usm_name)
 
+```
+
+
+Then, let's run the simulations for the different configurations:
+
+```{r, echo=TRUE, eval=TRUE, message=FALSE}
+
 # Simulate a reference situation with water and nitrogen stress
-sim_ws_ns = stics_wrapper(model_options = wrapper_options, param_values = c(codeinnact=1, codeh2oact=1), 
+sim_ws_ns = stics_wrapper(model_options = wrapper_options, 
+                          param_values = c(codeinnact=1, codeh2oact=1), 
                           var_names = var_names)$sim_list
 
 # Simulate with water stress only
-sim_ws = stics_wrapper(model_options = wrapper_options, param_values = c(codeinnact=2), 
+sim_ws = stics_wrapper(model_options = wrapper_options, 
+                       param_values = c(codeinnact=2), 
                        var_names = var_names)$sim_list
 
 # Simulate with N stress only
-sim_ns = stics_wrapper(model_options = wrapper_options, param_values = c(codeh2oact=2), 
+sim_ns = stics_wrapper(model_options = wrapper_options, 
+                       param_values = c(codeh2oact=2), 
                        var_names = var_names)$sim_list
 
 # Simulate with water stress only
-sim_without_stress = stics_wrapper(model_options = wrapper_options, param_values = c(codeinnact=2, codeh2oact=2), 
+sim_without_stress = stics_wrapper(model_options = wrapper_options, 
+                                   param_values = c(codeinnact=2, codeh2oact=2), 
                                    var_names = var_names)$sim_list
 
 ```
@@ -182,7 +193,7 @@ ggplot(df_long, aes(fill=Case, y=value, x=variables)) + geom_bar(position="dodge
 
 ... and let the users interpret these results!
 
-The last part may not be straightforward for R newcomers ... however a function to filter dates in simulated data will come soon :-).
+The last part may not be straightforward for R newcomers ... however a function to filter values of simulated variables at given dates and/or stages will come soon :-).
 
 
 ### Parameter optimization: A simple example
