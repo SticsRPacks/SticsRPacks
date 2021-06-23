@@ -96,7 +96,7 @@ Detailed documentation on the different packages can be found at:
 * [https://SticsRPacks.github.io/CroPlotR/]
 * [https://SticsRPacks.github.io/CroptimizR/]
 
-This tutorial aims at introducing the use of these different packages with the STICS model. It was designed to be of increasing complexity, it is thus advised to follow it in order. The different sections are however independent and you can thus start it from any part using the menu on the left side.
+This tutorial aims at introducing the use of these different packages with the STICS model. It was designed to be of increasing complexity, it is thus advised to follow it in order. The different sections are however independent and you can thus start it from any part using the menu on the left side (this may however take a little while since results from previous exercises must be automatically generated in this case).
 
 The names and documentation of the functions to be used are given in the first exercises before letting you find them on your own as you go through the exercises.
 
@@ -107,6 +107,23 @@ There are different sources of documentation regarding the packages and their fu
 * the `Reference` tab at the top of the packages websites home pages, that lists and quickly describes all the exported functions of the packages, and gives links to their detailed documentation,
 * the command `? functionName` in the R console,  which displays the detailed documentation of a given function.
 
+Most of the exercises in the tutorial requires writing and running a few lines of R code through R console panels like this one: 
+```{r test, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r test-hint-1}
+# This is the first advise! 
+```
+
+```{r test-solution}
+# Here's the SOLUTION:
+get_var_info(keyword = "roots")
+```
+
+You just have to type the R code in the black part and click on the `Run Code` green button on the right side to run it. The results will be printed below the panel.
+The `Start over` button re-initialize the panel.
+If you don't find the solution, click on the button `Hints`, it will first give you some advises and finally the expected solution of the exercise.
 
 <!-- Note : indications might be added about some technical tips: for example some parts may take some time
 if they are not followed along the right order, needs for example to run simulations before exploiting outputs ... in part **Exploring and Evaluating the Stics results** -->
@@ -114,16 +131,18 @@ if they are not followed along the right order, needs for example to run simulat
 
 ## A foretaste of SticsRPacks 
 
-Let see first the possibilities offered by the SticsRPacks packages through two simple illustrative examples.
+Let see first the possibilities offered by the SticsRPacks packages through two simple illustrative examples. At this stage it is not necessary to understand the code, the aim in this section is just to show you what we can do with a few lines of R codes, you will learn how to use all the functions used here in the next sections :-).
 
 ### STICS training Practical session PW1
 
 The practical sessions of the STICS training are traditionally performed using the JavaStics GUI and Excel.
+
 Let's see how the first sessions would look like in R using SticsRPacks.
+
 
 The game is to run a single USM by activating and deactivating water and nitrogen stress in turns and to analyze the impact by looking at dynamic variables and stress indicators.
 
-Let's first define the setup and run the different configurations:
+Let's first initialize variables and define the setup:
 
 ```{r, echo=TRUE, eval=TRUE, message=FALSE}
 
@@ -139,20 +158,31 @@ wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = w
 # Generate the files for the simulation:
 gen_usms_xml2txt(javastics, workspace_PW1, usms_list = usm_name)
 
+```
+
+
+Then, let's run the simulations for the different configurations:
+
+```{r, echo=TRUE, eval=TRUE, message=FALSE}
+
 # Simulate a reference situation with water and nitrogen stress
-sim_ws_ns = stics_wrapper(model_options = wrapper_options, param_values = c(codeinnact=1, codeh2oact=1), 
+sim_ws_ns = stics_wrapper(model_options = wrapper_options, 
+                          param_values = c(codeinnact=1, codeh2oact=1), 
                           var_names = var_names)$sim_list
 
 # Simulate with water stress only
-sim_ws = stics_wrapper(model_options = wrapper_options, param_values = c(codeinnact=2), 
+sim_ws = stics_wrapper(model_options = wrapper_options, 
+                       param_values = c(codeinnact=2), 
                        var_names = var_names)$sim_list
 
 # Simulate with N stress only
-sim_ns = stics_wrapper(model_options = wrapper_options, param_values = c(codeh2oact=2), 
+sim_ns = stics_wrapper(model_options = wrapper_options, 
+                       param_values = c(codeh2oact=2), 
                        var_names = var_names)$sim_list
 
 # Simulate with water stress only
-sim_without_stress = stics_wrapper(model_options = wrapper_options, param_values = c(codeinnact=2, codeh2oact=2), 
+sim_without_stress = stics_wrapper(model_options = wrapper_options, 
+                                   param_values = c(codeinnact=2, codeh2oact=2), 
                                    var_names = var_names)$sim_list
 
 ```
@@ -186,12 +216,12 @@ ggplot(df_long, aes(fill=Case, y=value, x=variables)) + geom_bar(position="dodge
 
 ... and let the users interpret these results!
 
-The last part may not be straightforward for R newcomers ... however a function to filter dates in simulated data will come soon :-).
+The last part may not be straightforward for R newcomers ... however a function to filter values of simulated variables at given dates and/or stages will come soon :-).
 
 
 ### Parameter optimization: A simple example
 
-Here is an example use-case of an optimization of the `stamflax` parameter for a wheat crop using one situation (*i.e.* one USM):
+Here is an example use-case of an optimization of the `stamflax` parameter for a wheat crop using observations of Leaf Area Index for one situation (*i.e.* one USM):
 
 ```{r paged.print=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/SticsRPacks/SticsRPacks/master/inst/tutorials/SticsRpacks/optim_stamflax_wheat.png")
@@ -232,7 +262,7 @@ plot(sim = sim_after_optim, obs = obs_filt, var = "lai_n")
 
 A lot is happening here! 
 
-But don't worry if you don't understand anything, you'll learn everything you need to know in this tutorial. We just want you to see that you can make a parameter optimization with less than 30 lines of code, including the plots with observations. And the good news is when you understand these lines of code, you'll be able to do almost anything with the packages, because it doesn't get any longer or more complex than this.  
+But don't worry if you don't understand anything, you'll learn everything you need to know in this tutorial. We just want you to see that you can make a parameter optimization with less than 30 lines of code, including the plots of the improvement of the resulting simulated variable of interest against observation. And the good news is when you understand these lines of code, you'll be able to do almost anything with the packages, because it doesn't get any longer or more complex than this.  
 
 OK now that we saw what we can do, let's find out how step by step.
 
