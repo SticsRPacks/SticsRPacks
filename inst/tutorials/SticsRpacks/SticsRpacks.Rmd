@@ -78,6 +78,8 @@ if(parameters$gen_help) {
 
 ## Introduction
 
+### The SticsRpacks packages
+
 SticsRPacks is a set of packages for managing the STICS crop model from R. 
 
 It includes 4 packages:
@@ -89,16 +91,14 @@ It includes 4 packages:
 
 SticsRFiles and SticsOnR are dedicated to the STICS model, while CroPlotR and CroptimizR are generic for crop models.
 
-Detailed documentation on the different packages can be found at:
+The websites of the different packages can be found at:
 
 * [https://sticsrpacks.github.io/SticsRFiles/]
 * [https://sticsrpacks.github.io/SticsOnR/]
 * [https://sticsrpacks.github.io/CroptimizR/]
 * [https://sticsrpacks.github.io/CroPlotR/]
 
-This tutorial aims at introducing the use of these different packages with the STICS model. It was designed to be of increasing complexity, it is thus advised to follow it in order. The different sections are however independent and you can thus start it from any part using the menu on the left side (this may however take a little while since results from previous exercises must be automatically generated in this case).
-
-The names and documentation of the functions to be used are given in the first exercises before letting you find them on your own as you go through the exercises.
+### Finding documentation about the packages and their functions
 
 There are different sources of documentation regarding the packages and their functions:
 
@@ -106,6 +106,14 @@ There are different sources of documentation regarding the packages and their fu
 * the vignettes (Articles tab at the top of the packages websites home pages), that describe in detail the main features of the packages and the use of the associated functions,
 * the Reference tab at the top of the packages websites home pages, that list and quickly describe all the exported functions of the packages, and give a link to their detailed documentation,
 * the command `? functionName` in the R console,  which displays the detailed documentation of a given function.
+
+Note also that completion can be used to list the different arguments of a function: if you type the name of a function in the R console followed by a bracket, e.g. `read.csv(` and then click on the `Tab` button of your keyboard, the list of arguments of the function will be displayed.
+
+### The SticsRpacks tutorial
+
+This tutorial aims at introducing the use of these different packages with the STICS model. It was designed to be of increasing complexity, it is thus advised to follow it in order. The different sections are however independent and you can thus start it from any part using the menu on the left side (this may however take a little while since results from previous exercises must be automatically generated in this case).
+
+The names and documentation of the functions to be used are given in the first exercises before letting you find them on your own as you go through the exercises.
 
 Most of the exercises in the tutorial requires writing and running a few lines of R code through R console panels like this one: 
 ```{r test, exercise=TRUE}
@@ -124,6 +132,7 @@ get_var_info(keyword = "roots")
 You just have to type the R code in the black part and click on the `Run Code` green button on the right side to run it. The results will be printed below the panel.
 The `Start over` button re-initialize the panel.
 If you don't find the solution, click on the button `Hints`, it will first give you some advises and finally the expected solution of the exercise.
+
 
 ## A foretaste of SticsRpacks 
 
@@ -292,6 +301,10 @@ cat( paste( lines , collapse="\n" ) )
 # SOLUTION:
 get_var_info(keyword = "roots")
 ```
+
+<div class="alert alert-info">
+See also: `get_param_info`, a function for retrieving name and information on STICS parameters.
+</div>
 
 
 ## Exploring the content of the JavaSTICS files 
