@@ -137,7 +137,7 @@ If you don't find the solution, click on the button `Hints`, it will first give 
 <!-- Note : indications might be added about some technical tips: for example some parts may take some time
 if they are not followed along the right order, needs for example to run simulations before exploiting outputs ... in part **Exploring and Evaluating the Stics results** -->
 
-Let see first the possibilities offered by the SticsRPacks packages through two simple illustrative examples. At this stage it is not necessary to understand the code, the aim in this section is just to show you what we can do with a few lines of R codes, you will learn how to use all the functions used here in the next sections :-).
+Let see first the possibilities offered by the SticsRPacks packages through two simple illustrative examples. At this stage it is not necessary to understand the code, the aim in this section is just to show you what we can do with a few lines of R codes, you will learn how to use all the functions used here in the next sections :-). If you feel lost in this section or are hurry to start learning how to use the packages you can skip it and go to the next one!
 
 ### STICS training Practical session PW1
 
@@ -338,7 +338,7 @@ cat(paste(lines, collapse="\n"))
 ```
 
 ```{r get_usms_list1-hint-1}
-# Use file.path function to build full path to a file from directory names and filenames: file.path(path,filename) 
+# Use the file.path function to build full path to a file from directory names and filenames: file.path(path,filename) 
 ```
 
 ```{r get_usms_list1-solution}
@@ -359,7 +359,7 @@ get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"))
 ```
 
 ```{r get_usms_list2-hint-1}
-# The argument name is particularly useful in this case ...
+# The argument "name" is particularly useful in this case ...
 ```
 
 ```{r get_usms_list2-solution}
@@ -382,14 +382,14 @@ cat(paste(lines, collapse="\n"))
 
 #### Exercises
 
-* Get the values of clay content after decarbonation (argi) for all soils defined in the `example` workspace of the JavaStics distribution.
+* Get the values of clay content after decarbonation (argi) for all soils defined in the `sols.xml` file of the `example` workspace of the JavaStics distribution.
 
 ```{r get_param_xml1, exercise=TRUE}
 # Insert your R code here!
 ```
 
 ```{r get_param_xml1-hint-1}
-# Soils are defined in the "sols.xml" file ...
+# The path of the "sols.xml" file of the JavaStics example folder can be defined using the function file.path(workspace_xml, "sols.xml")
 ```
 
 ```{r get_param_xml1-solution}
@@ -401,14 +401,14 @@ get_param_xml(file.path(workspace_xml, "sols.xml"), c("argi"))
 result <- get_param_xml(file.path(workspace_xml, "sols.xml"), c("argi"))
 ```
 
-* Plot an histogram of these values that we stored in an R object called `result`
+* Knowing that the result of the previous exercise has been stored in an R object called `result`, plot an histogram of the values of argi.
 
 ```{r get_param_xml2, exercise=TRUE}
 # Insert your R code here!
 ```
 
 ```{r get_param_xml2-hint-1}
-# Use hist function to plot an histogram
+# Use the hist function to plot an histogram
 ```
 
 ```{r get_param_xml2-hint-2}
@@ -529,6 +529,9 @@ run_javastics(javastics_path = javastics,  workspace_path = workspace_xml)
 run_javastics(javastics_path = javastics,  workspace_path = workspace_xml, usms_list = c("banana","Turmeric"))
 ```
 
+You can check that the corresponding Stics output files have been created in the folder `r workspace_xml`.
+
+
 <div class="alert alert-info">
 See also: `gen_varmod` function to modify var.mod file in case STICS does not simulate the variables you are interested in.
 </div>
@@ -538,7 +541,7 @@ See also: `gen_varmod` function to modify var.mod file in case STICS does not si
 
 ### Getting simulations results
 
-In order to get simulation results to R from a Stics workspace, the `get_sim()` function is to be used with some options allowing to filter data against usm names, output variables for example. Check the function help before trying to use it. Check also where the simulations files are stored after running the model in the previous section.
+The `get_sim()` function can be used get simulation results to R from a Stics workspace. Some options allows filtering data, e.g. for given usm names or output variables. Check the function help before trying to use it.
 
 
 ```{r prepare-get_sim, echo=FALSE, message=FALSE, results='hide'}
@@ -555,7 +558,7 @@ if (!sim_done) {
 
 <!-- #### Exercises -->
 
-* Get all outputs from the workspace
+* Get the values of all the outputs simulated during the previous exercise in the `example` workspace
 
 ```{r get_sim1, exercise=TRUE, exercise.setup = "prepare-get_sim"}
 # Insert your R code here! 
@@ -569,7 +572,7 @@ if (!sim_done) {
 get_sim(workspace = workspace_xml)
 ```
 
-* Get outputs for USMs named : banana, Turmeric
+* Get the values of all the outputs simulated for USMs banana and Turmeric
 
 ```{r get_sim2, exercise=TRUE, exercise.setup = "prepare-get_sim"}
 # Insert your R code here! 
@@ -584,27 +587,28 @@ get_sim(workspace = workspace_xml)
 get_sim(workspace = workspace_xml, usm_name = c("banana","Turmeric"))
 ```
 
-* Get outputs for the USMs of your choice other than banana, Turmeric
+<!-- The tutorial is already quite long, maybe this exercise is not so useful -->
+<!-- * Get outputs for the USMs of your choice other than banana, Turmeric -->
 
-```{r get_sim3, exercise=TRUE, exercise.setup = "prepare-get_sim"}
-# Insert your R code here!
+<!-- ```{r get_sim3, exercise=TRUE, exercise.setup = "prepare-get_sim"} -->
+<!-- # Insert your R code here! -->
 
-```
+<!-- ``` -->
 
-```{r get_sim3-hint-1}
-# Get the usms names list before choosing ...
-```
+<!-- ```{r get_sim3-hint-1} -->
+<!-- # Get the usms names list before choosing ... -->
+<!-- ``` -->
 
-```{r get_sim3-hint-2}
-# The function get_usms_list will be usefull
-```
+<!-- ```{r get_sim3-hint-2} -->
+<!-- # The function get_usms_list will be usefull -->
+<!-- ``` -->
 
-```{r get_sim3-solution}
-# SOLUTION
-get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"))
-```
+<!-- ```{r get_sim3-solution} -->
+<!-- # SOLUTION -->
+<!-- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize")) -->
+<!-- ``` -->
 
-* Get simulations outputs and store them in a `results` object using the variable `lai(n)` for the USMs named `wheat` and `maize`
+* Get the values of the variable `lai(n)` simulated for USMs `wheat` and `maize`
 
 ```{r get_sim4, exercise=TRUE, exercise.setup = "prepare-get_sim"}
 # Insert your R code here!
@@ -616,7 +620,7 @@ get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"))
 
 ```{r get_sim4-solution}
 # SOLUTION
-results <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"),
+get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"),
                    var_list = "lai(n)")
 ```
 
@@ -626,62 +630,57 @@ results <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"),
 <div class="alert alert-info">
 **Further information about get_sim options:**
 
-By default, each element (i.e. data.frame per USM) of the returned object by `get_obs()` contains a `Plant` column in which are stored either `"plant_1"` or `"plant_2"` indicating respectively a main crop or an intercrop. 
+By default, each element (i.e. data.frame per USM) of the returned object by `get_sim()` contains a `Plant` column in which are stored either `"plant_1"` or `"plant_2"` indicating if the corresponding variable values concern the principal or associated crop in case of intercrop simulation.
 
-In addition, if the `usms.xml` file path is given to the function, plant file names are set in the `Plant` column. If both the `usms.xml` file path and the JavaStics path are given to the function, plant names are set in the `Plant` column and an additionnal column indicates those which correspond to a `Principal` or an `Associated` crop. 
+If the `usms.xml` file path is given to the function, plant file names are set in the `Plant` column. If both the `usms.xml` file path and the JavaStics path are given to the function, plant names are set in the `Plant` column and an additional column indicates those which correspond to a `Principal` or an `Associated` crop. 
 </div>
 
 
 ### Plotting simulations results
 
-<div class="alert alert-info">
-Be carefull that for the moment, the names of the Stics variables which are to be used for plotting are not exactly the same as the real ones.
-In fact, the plotting functions use a specfic syntax for variables names which contain braces. For example, `lai_n` must be used instead of `lai(n)`.
-</div>
+The [CroPlotR](https://sticsrpacks.github.io/CroPlotR/) package can be used to plot simulated results as given by the `get_sim` function.
 
 <!-- #### Exercises -->
 
-* Plotting simulations dynamics of the variable `lai(n)` and `masec(n)` for `wheat`
-* Independently
+* Get the values of the variables `lai(n)` and `masec(n)` simulated for USM `wheat` and plot their dynamics
 
 ```{r plot_sim1, exercise=TRUE, exercise.setup = "prepare-get_sim"}
 # Insert your R code here!
 ```
 
 ```{r plot_sim1-hint-1}
-# get output first, perhaps variable names are not correct !
+# Use get_sim first, as in the previous exercise ...
+```
+
+```{r plot_sim1-hint-2}
+# Then you can use the plot function as described in the CroPlotR documentation
 ```
 
 ```{r plot_sim1-solution}
 # SOLUTION
 results <- get_sim(workspace = workspace_xml, usm_name = "wheat",
                    var_list = c("lai(n)", "masec(n)"))
-# separated
-plot(results, var = "lai_n")
-plot(results, var = "masec_n")
-# on the same output graph
-plot(results, var = c("lai_n","masec_n"))
+plot(results)
 ```
 
-* On the same plot
+* Then, do the same but plotting both variables on the same graph
 
 ```{r plot_sim2, exercise=TRUE, exercise.setup = "prepare-get_sim"}
 # Insert your R code here!
 ```
 
 ```{r plot_sim2-hint-1}
-# give variable names not as var_list argument value but as a overlap one ...
-# check the function help for overlap content structure !
+# Use the "overlap" argument ...
 ```
 ```{r plot_sim2-hint-2}
-# try using : overlap = list(list("lai_n","masec_n"))
+# try using : overlap = list(list("lai(n)","masec(n)"))
 ```
 
 ```{r plot_sim2-solution}
 # SOLUTION
 results <- get_sim(workspace = workspace_xml, usm_name = "wheat",
                    var_list = c("lai(n)", "masec(n)"))
-plot(results, overlap = list(list("lai_n","masec_n")))
+plot(results, overlap = list(list("lai(n)","masec(n)")))
 ```
 
 ### Evaluating simulations results
