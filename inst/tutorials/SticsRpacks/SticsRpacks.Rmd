@@ -1233,7 +1233,7 @@ wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = w
 stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = c("lai_n", "masec_n"))
 ```
 
-div class="alert alert-info">
+<div class="alert alert-info">
 * By default, if the `sit_names` argument is not given to `stics_wrapper()`, `stics_wrapper()` will run all the USMs defined in the sub-folders of the `data_dir` folder (`data_dir` is defined in `stics_wrapper_options()`).
 * By default, if the `var_names` argument is not given to `stics_wrapper()`, `stics_wrapper()` will return results for all the variables defined in the var.mod files included in the sub-folders of the `data_dir` folder.
 </div>
