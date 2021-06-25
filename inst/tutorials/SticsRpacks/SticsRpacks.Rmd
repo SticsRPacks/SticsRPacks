@@ -155,7 +155,7 @@ Let's first initialize variables and define the setup:
 # Let's define the USM and variables of interest to use in this example
 usm_name <- "maize_ref_2013"
 stress_ind_names <- c("turfac1moy", "turfac2moy", "swfac1moy", "swfac2moy", "inn1moy", "inn2moy")
-dyn_var_names <- c("lai_n", "zrac", "resmes", "azomes", "QNplante", "masec_n", "laimax", "mafruit", "drat", "Qles", "N_mineralisation", "totapN", "totir","cprecip")
+dyn_var_names <- c("lai_n","zrac","resmes","azomes","QNplante","masec_n")
 var_names <- c(stress_ind_names,dyn_var_names)
 
 # Set-up the simulation environment:
@@ -196,7 +196,7 @@ sim_without_stress = stics_wrapper(model_options = wrapper_options,
 Now we can use the simulated results to plot the dynamic variables of interest for the different configurations: 
 
 ```{r, echo=TRUE, eval=TRUE, message=FALSE}
-plot(sim_ws_ns=sim_ws_ns, sim_ws=sim_ws, sim_ns=sim_ns, sim_without_stress=sim_without_stress, var = c("lai_n","zrac","resmes","azomes","QNplante","masec_n"))
+plot(sim_ws_ns=sim_ws_ns, sim_ws=sim_ws, sim_ns=sim_ns, sim_without_stress=sim_without_stress, var = dyn_var_names )
 ```
 
 Finally, we can plot the stress indicators averaged over vegetative and reproductive phases:
@@ -608,7 +608,7 @@ get_sim(workspace = workspace_xml, usm_name = c("banana","Turmeric"))
 <!-- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize")) -->
 <!-- ``` -->
 
-* Get the values of the variable `lai(n)` simulated for USMs `wheat` and `maize`
+* Get the values of the variable `lai_n` simulated for USMs `wheat` and `maize`
 
 ```{r get_sim4, exercise=TRUE, exercise.setup = "prepare-get_sim"}
 # Insert your R code here!
@@ -621,7 +621,7 @@ get_sim(workspace = workspace_xml, usm_name = c("banana","Turmeric"))
 ```{r get_sim4-solution}
 # SOLUTION
 get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"),
-                   var_list = "lai(n)")
+                   var_list = "lai_n")
 ```
 
 
@@ -642,7 +642,7 @@ The [CroPlotR](https://sticsrpacks.github.io/CroPlotR/) package can be used to p
 
 <!-- #### Exercises -->
 
-* Get the values of the variables `lai(n)` and `masec(n)` simulated for USM `wheat` and plot their dynamics
+* Get the values of the variables `lai_n` and `masec_n` simulated for USM `wheat` and plot their dynamics
 
 ```{r plot_sim1, exercise=TRUE, exercise.setup = "prepare-get_sim"}
 # Insert your R code here!
@@ -659,7 +659,7 @@ The [CroPlotR](https://sticsrpacks.github.io/CroPlotR/) package can be used to p
 ```{r plot_sim1-solution}
 # SOLUTION
 results <- get_sim(workspace = workspace_xml, usm_name = "wheat",
-                   var_list = c("lai(n)", "masec(n)"))
+                   var_list = c("lai_n", "masec_n"))
 plot(results)
 ```
 
@@ -673,14 +673,14 @@ plot(results)
 # Use the "overlap" argument ...
 ```
 ```{r plot_sim2-hint-2}
-# try using : overlap = list(list("lai(n)","masec(n)"))
+# try using : overlap = list(list("lai_n","masec_n"))
 ```
 
 ```{r plot_sim2-solution}
 # SOLUTION
 results <- get_sim(workspace = workspace_xml, usm_name = "wheat",
-                   var_list = c("lai(n)", "masec(n)"))
-plot(results, overlap = list(list("lai(n)","masec(n)")))
+                   var_list = c("lai_n", "masec_n"))
+plot(results, overlap = list(list("lai_n","masec_n")))
 ```
 
 ### Evaluating simulations results
@@ -704,7 +704,7 @@ Evaluation of simulation results is performed using observation data by plotting
 get_obs(workspace = workspace_xml)
 ```
 
-* Get observations of `lai(n)` and `masec(n)` variables for USMs `wheat` and `maize`
+* Get observations of `lai_n` and `masec_n` variables for USMs `wheat` and `maize`
 
 
 ```{r get_obs2, exercise=TRUE, exercise.setup = "prepare-get_sim"}
@@ -717,7 +717,7 @@ get_obs(workspace = workspace_xml)
 
 ```{r get_obs2-solution}
 # SOLUTION
-get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"), var_list = c("lai(n)","masec(n)"))
+get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"), var_list = c("lai_n","masec_n"))
 ```
 
 
@@ -730,7 +730,7 @@ Please refer to the `get_sim()` use section for details.
 
 ####	Dynamics plots using observation data
 
-As for the first exercise in the "Plotting simulations results" section, get the values of the variables `lai(n)` and `masec(n)` simulated for USM `wheat` and plot their dynamics, but this time add the observation data to the plot. 
+As for the first exercise in the "Plotting simulations results" section, get the values of the variables `lai_n` and `masec_n` simulated for USM `wheat` and plot their dynamics, but this time add the observation data to the plot. 
 
 ```{r plot_simobs1, exercise=TRUE, exercise.setup = "prepare-get_sim"}
 # Insert your R code here!
@@ -748,13 +748,8 @@ As for the first exercise in the "Plotting simulations results" section, get the
 # SOLUTION
 results <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"))
 observations <- get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"))
-plot(results, var = c("lai(n)","masec(n)"), obs = observations)
+plot(results, var = c("lai_n","masec_n"), obs = observations)
 ```
-<!-- with overlap
-# ne fonctionne pas
-#plot(results, overlap = list(list("lai_n","masec_n")), obs = observations)
--->
-
 
 <div class="alert alert-info">
 Note that to plot some given variables, you can either filter their values when reading the results or when plotting them.
@@ -764,6 +759,9 @@ Note that to plot some given variables, you can either filter their values when 
 ####	Basic scatter plot
 
 Scatter plots are used for displaying simulated values against observed values. They can be produced using the same `plot()` function as for dynamics plots, with only changing the plot `type` argument.
+
+
+* Get the values of the variables `lai_n` and `masec_n` simulated and observed for USMs `wheat` and `maize` and plot the corresponding scatter plot 
 
 ```{r plot_simobs2, exercise=TRUE, exercise.setup = "prepare-get_sim"}
 # Insert your R code here!
@@ -777,15 +775,13 @@ Scatter plots are used for displaying simulated values against observed values. 
 # SOLUTION
 results <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"))
 observations <- get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"))
-plot(results, var = c("lai(n)","masec(n)"), obs = observations, type = "scatter")
+plot(results, var = c("lai_n","masec_n"), obs = observations, type = "scatter")
 
 ```
 
 ####	Customized scatter plots using symbols
 
-The plot function is able to adapt the used symbols when providing 
-an optional specific argument indicating to use different shapes
-either for `usms` or `groups of usms`.
+The symbols used in the scatter plots can be adapted by the user using optional specific arguments, either to plot one symbol per USMs or per group of USMs. 
 
 * Plot the same scatter plot as in the previous exercise, but with one symbol per USM
 
@@ -801,11 +797,11 @@ either for `usms` or `groups of usms`.
 # SOLUTION
 results <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"))
 observations <- get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"))
-plot(results, var = c("lai(n)","masec(n)"), obs = observations, type = "scatter", shape_sit = "symbol")
+plot(results, var = c("lai_n","masec_n"), obs = observations, type = "scatter", shape_sit = "symbol")
 
 ```
 
-* Now, plot the scatter plot for the same variables `lai(n)` and `masec(n)` but for USMs "wheat","DurumWheat", "maize" and "sorghum", and with different symbols for the 2 groups c("wheat","DurumWheat") and c("maize","sorghum")
+* Now, plot the scatter plot for the same variables `lai_n` and `masec_n` but for USMs "wheat","DurumWheat", "maize" and "sorghum", and with different symbols for the 2 groups c("wheat","DurumWheat") and c("maize","sorghum")
 
 ```{r plot_simobs4, exercise=TRUE, exercise.setup = "prepare-get_sim"}
 # Insert your R code here!
@@ -821,29 +817,25 @@ usms <- c("wheat","DurumWheat", "maize", "sorghum")
 groups <- list(list("wheat","DurumWheat"), list("maize", "sorghum"))
 results <- get_sim(workspace = workspace_xml, usm_name = usms)
 observations <- get_obs(workspace = workspace_xml, usm_name = usms)
-plot(results, var = c("lai(n)","masec(n)"), obs = observations, type = "scatter", shape_sit = "group", situation_group = groups)
+plot(results, var = c("lai_n","masec_n"), obs = observations, type = "scatter", shape_sit = "group", situation_group = groups)
 
 ```
 
 ####	Statistics and associated graphs
 
-For that purpose the `summary()` function will be used for producing statistical criteria for simulations and observations, and the summary results will be used for producing plots with the `plot()` function.
-
-In this section only one simulation data set is used for calculating statistics and plotting them. For seeing how to use these functions for 2 sets of simulations in order to compare model versions see online documentation on [CroPlotR site](https://SticsRPacks.github.io/CroPlotR/#223-statistics-plot). 
-
-A usm list containing for example `wheat`,`DurumWheat`, `maize`, `sorghum` may be used and 2 variables will be selected for statistics calculation and plots, `lai_n` and `masec_n`
-
+The `summary()` function can be used for computing statistical criteria measuring the fit of simulations to observations. These criteria can also be plotted using the `plot()` function.
 
 ##### Statistics criteria
 
-* For all USMs
+* Get the values of the variables `lai_n` and `masec_n` simulated and observed for USMs  `wheat`,`DurumWheat`, `maize`, and `sorghum` and compute the statistical criteria using the `summary()` function
+
 
 ```{r stat_simobs1, exercise=TRUE, exercise.setup = "prepare-get_sim"}
 # Insert your R code here!
 ```
 
 ```{r stat_simobs1-hint-1}
-# Only simulations and observations are needed
+# same use as for the plot function ...
 ```    
 
 ```{r stat_simobs1-solution}
@@ -856,14 +848,14 @@ summary(results, obs = observations)
 
 ```
 
-* For individual USMs
+* Now do the same but compute the statistical criteria per USM
 
 ```{r stat_simobs2, exercise=TRUE}
 # Insert your R code here!
 ```
 
 ```{r stat_simobs2-hint-1}
-# use all_situations argument for that
+# use the argument all_situations ...
 ```
 
 ```{r stat_simobs2-solution, exercise.setup = "prepare-get_sim"}
@@ -892,24 +884,18 @@ pour retrouver le nom dans la colonne "group"
 
 ##### Statistics graphs
 
-For this use, one must limitate the number of variables to use and also the number of criteria to be plotted in order to ensure quality and readability.    
-As for dynamics plots, the `plot()` function will be used to render plot about statistical criteria.
+Statistical criteria can be plotted by providing the results of the `summary()` function to the `plot()` function.
 
 For this purpose, the *R2* and *nRMSE* criteria will be used.
 
-<!-- Remarque
-- Preciser les limites de la fonction (nb c)
-- amelioration fonction: gerer le nombre de plots en fonction du nombre de criteres et de variables
--->
-
-* For all USMs
+* Plot the `R²` and `nRMSE` criteria computed on all the USMs in the previous exercise
 
 ```{r stat_simobs3, exercise=TRUE, exercise.setup = "prepare-get_sim"}
 # Insert your R code here!
 ```
 
 ```{r stat_simobs3-hint-1}
-# the object returned by the call of the summary function is to be used
+# Just use the object returned by the summary function in the plot function ...
 ```
 
 ```{r stat_simobs3-solution}
@@ -924,16 +910,14 @@ plot(summ, title = "for all USMs")
 
 ```
 
-* For individual USMs
-
-> USMs may be distinguished using colors and a legend 
+* Now do the same but per USM
 
 ```{r stat_simobs4, exercise=TRUE, exercise.setup = "prepare-get_sim"}
 # Insert your R code here!
 ```
 
 ```{r stat_simobs4-hint-1}
-# all_situations argument is usefull for that
+# use the argument all_situations in summary ...
 ```
 
 ```{r stat_simobs4-solution}
@@ -948,14 +932,16 @@ plot(summ, title = "for each USM")
 
 ```
 
-> Or USMs names may be used along x axis
+By default the results per USMs are plotted in bars having different columns 
+
+* Now do the same but with USMs named in x axis
 
 ```{r stat_simobs5, exercise=TRUE, exercise.setup = "prepare-get_sim"}
 # Insert your R code here!
 ```
 
 ```{r stat_simobs5-hint-1}
-# xvar argument must be used for that !
+# Use the xvar argument of plot ...
 ```
 
 ```{r stat_simobs5-solution}
@@ -969,6 +955,13 @@ summ <- summary(results, obs = observations, all_situations = FALSE, stat = c("R
 plot(summ, xvar = "situation", title = "USM names as X")
 
 ```
+
+
+<div class="alert alert-info">
+* `summary()` and `plot()` functions can also be used to compare the results of different versions of simulated results (e.g. same USMs simulated with different versions of the model or different input parameters). See online documentation on [CroPlotR site](https://SticsRPacks.github.io/CroPlotR/#223-statistics-plot) for more details. 
+* When plotting the statistical criteria, it is important to select a (short) list of criteria to be plotted (and possibly of output variables) in order to ensure the readability of the graphs.
+</div>
+
 
 ## Advanced use {#advanced-use}
 
@@ -1044,7 +1037,7 @@ They are not used by the STICS model but can be used to plot comparison between 
 * Generate observation files from the data stored in the `df` data.frame using the `gen_obs` function, check the files are created on your computer and check their content using the `get_obs` function.
 
 ```{r gen_obs, exercise=TRUE}
-df <- data.frame(usm_name = c("usm1","usm1","usm2"), ian = c(2020,2021,2021), mo = c(12,7,7), jo = c(25,27,20),jul = c(359,573,566),`lai(n)` = c(0.5,4.5,4.2), mafruit = c(NA,6.5,6.1))
+df <- data.frame(usm_name = c("usm1","usm1","usm2"), ian = c(2020,2021,2021), mo = c(12,7,7), jo = c(25,27,20),jul = c(359,573,566),`lai_n` = c(0.5,4.5,4.2), mafruit = c(NA,6.5,6.1))
 
 # Insert your R code here!
 ```
@@ -1160,7 +1153,7 @@ This tutorial stores a javastics installation in the `javastics` variable, and a
 
 Before generating the text files, we will first restrain the number of variables we want stics to output using `gen_varmod`.
 
-> Use `gen_varmod` to tell stics we only want "lai(n)", "masec(n)" and "QNplante"
+> Use `gen_varmod` to tell stics we only want "lai_n", "masec_n" and "QNplante"
 
 ```{r gen_varmod, exercise=TRUE}
 # Generate text files for usms "wheat" and "banana" and "soybean"
@@ -1172,7 +1165,7 @@ Before generating the text files, we will first restrain the number of variables
 
 ```{r gen_varmod-solution}
 #SOLUTION:
-gen_varmod(workspace_xml, var_names = c("lai(n)", "masec(n)", "QNplante"))
+gen_varmod(workspace_xml, var_names = c("lai_n", "masec_n", "QNplante"))
 ```
 
 It is generally useful to pre-filter the variables to avoid filtering the variables for the wrapper, the plots and the statistics.  
@@ -1242,7 +1235,7 @@ Now use `stics_wrapper()` to simulate the usm "wheat" only (not "banana" and "so
 
 ```{r stics_wrapper1-solution, exercise.setup = "prepare-wrapper"}
 #SOLUTION:
-stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = c("lai(n)", "masec(n)"))
+stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = c("lai_n", "masec_n"))
 ```
 
 ### Parameter forcing
@@ -1263,7 +1256,7 @@ Sometimes it is useful to compare the outputs of the model with a different valu
 
 ```{r stics_wrapper2-solution, exercise.setup = "prepare-wrapper"}
 #SOLUTION:
-stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = "lai(n)", param_values = c("dlaimax" = 0.005, "durvieF" = 80))
+stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = "lai_n", param_values = c("dlaimax" = 0.005, "durvieF" = 80))
 ```
 
 ### Plot the comparison
@@ -1633,7 +1626,7 @@ We will see in this section how intercrops are handled in SticsRPacks.
 
 #### Exercises
 
-* Run the "intercrop_pea_barley" USM of the JavaStics distribution example workspace from R, get the results of lai(n), masec(n) and mafruit for both crops and store them in an R object called `sim` (path to JavaStics is stored in the `javastics` R object and path to the example workspace is stored in `workspace_xml`)
+* Run the "intercrop_pea_barley" USM of the JavaStics distribution example workspace from R, get the results of lai_n, masec_n and mafruit for both crops and store them in an R object called `sim` (path to JavaStics is stored in the `javastics` R object and path to the example workspace is stored in `workspace_xml`)
 
 ```{r intercrop-1, exercise=TRUE}
 # Insert your R code here!
@@ -1650,7 +1643,7 @@ We will see in this section how intercrops are handled in SticsRPacks.
 ```{r intercrop-1-solution}
 # SOLUTION:
 run_javastics(javastics_path=javastics,  workspace_path = workspace_xml, usms_list = c("intercrop_pea_barley"))
-sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",var_list=c("lai(n)","masec(n)","mafruit"))
+sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",var_list=c("lai_n","masec_n","mafruit"))
 ```
 
 
@@ -1659,7 +1652,7 @@ sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",var_li
 
 ```{r prepare-intercrop-2, echo=FALSE}
 run_javastics(javastics_path=javastics,  workspace_path = workspace_xml, usms_list = c("intercrop_pea_barley"))
-sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",var_list=c("lai(n)","masec(n)","mafruit"))
+sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",var_list=c("lai_n","masec_n","mafruit"))
 ```
 
 ```{r intercrop-2, exercise=TRUE, exercise.setup = "prepare-intercrop-2"}
@@ -1692,7 +1685,7 @@ question("How are organized the results for the different intercrops",
 ```{r intercrop-4-solution}
 # SOLUTION:
 sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
-               var_list=c("lai(n)","masec(n)","mafruit"),
+               var_list=c("lai_n","masec_n","mafruit"),
                usms_filename="usms.xml")
 print(sim)
 # The names of the Plant files are now given in the Plant column instead of Plant_1 and Plant_2 ...
@@ -1709,7 +1702,7 @@ print(sim)
 ```{r intercrop-5-solution}
 # SOLUTION:
 sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
-               var_list=c("lai(n)","masec(n)","mafruit"),
+               var_list=c("lai_n","masec_n","mafruit"),
                usms_filename="usms.xml", javastics_path=javastics)
 print(sim)
 # The names of the Plants are now given in the Plant column.
@@ -1719,7 +1712,7 @@ print(sim)
 
 ```{r prepare-intercrop-6, echo=FALSE}
 sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
-               var_list=c("lai(n)","masec(n)","mafruit"),
+               var_list=c("lai_n","masec_n","mafruit"),
                usms_filename="usms.xml", javastics_path=javastics)
 ```
 
