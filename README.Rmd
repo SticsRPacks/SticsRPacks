@@ -29,11 +29,8 @@ If you'd like to learn how to use the SticsRPacks packages, the best place to st
 ## Installation
 
 ```{r eval = FALSE}
-# # Install from CRAN
-# install.packages("SticsRPacks")
-
-# Or the development version from GitHub
-# install.packages("devtools")
+# Install from GitHub
+# install devtools if not yet installed : install.packages("devtools")
 devtools::install_github("SticsRPacks/SticsRPacks")
 ```
 
