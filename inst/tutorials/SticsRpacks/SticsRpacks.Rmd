@@ -137,8 +137,10 @@ get_var_info(keyword = "roots")
 ```
 
 You just have to type the R code in the black part and click on the `Run Code` green button on the right side to run it. The results will be printed below the panel.
+
 The `Start over` button re-initialize the panel.
-If you don't find the solution, click on the button `Hints`, it will first give you some advises and finally the expected solution of the exercise.
+
+If you don't find the solution, click on the button `Hints`, it will first give you some advises and finally the expected solution of the exercise. To copy the solution in the panel, click on the `Copy to Clipboard` blue button on the right and then right-click in the black part of the panel and select "paste".
 
 ## A foretaste of SticsRpacks 
 <!-- Note : indications might be added about some technical tips: for example some parts may take some time
@@ -495,7 +497,7 @@ From now on we will no longer display function help in the tutorial. Use `? func
 
 * Run all the USMs defined in the Example workspace of the JavaStics distribution. The path to JavaStics is stored in the `javastics` R object.
 
-```{r run_javaStics1, exercise=TRUE}
+```{r run_javaStics1, exercise=TRUE, exercise.timelimit=300}
 # Insert your R code here!
 ```
 
@@ -669,6 +671,7 @@ Note that `?plot` does not refer to the `plot` function defined in CroPlotR. To 
 ```{r plot_sim2-hint-1}
 # Use the "overlap" argument ...
 ```
+
 ```{r plot_sim2-hint-2}
 # try using : overlap = list(list("lai_n","masec_n"))
 ```
@@ -725,7 +728,7 @@ for getting information about plant file or plant name for usms.
 Please refer to the `get_sim()` use section for details.
 </div>
 
-####	Dynamics plots using observation data
+####	Dynamic plots using observation data
 
 As for the first exercise in the "Plotting simulations results" section, get the values of the variables `lai_n` and `masec_n` simulated for USM `wheat` and plot their dynamics, but this time add the observation data to the plot. 
 
@@ -755,7 +758,7 @@ Note that to plot some given variables, you can either filter their values when 
 
 ####	Basic scatter plot
 
-Scatter plots are used for displaying simulated values against observed values. They can be produced using the same `plot()` function as for dynamics plots, with only changing the plot `type` argument.
+Scatter plots are used for displaying simulated values against observed values. They can be produced using the same `plot()` function as for dynamics plots, with only changing the argument `type` of the `plot()` function.
 
 
 * Get the values of the variables `lai_n` and `masec_n` simulated and observed for USMs `wheat` and `maize` and plot the corresponding scatter plot 
@@ -1163,7 +1166,7 @@ It is generally useful (although not mandatory) to pre-filter the variables to a
 
 Now we can generate our text files. 
 
-* Use the function `gen_usms_xml2txt()` to generate the text files for the usms "wheat", "banana" and "soybean":
+* Use the function `gen_usms_xml2txt()` to generate the text files for the usm "wheat", "banana" and "soybean":
 
 ```{r gen_usms_xml2txt, exercise=TRUE}
 # Insert your R code here!
@@ -1613,22 +1616,27 @@ Now we can compare the simulations using `plot()` and `summary()`.
 
 ```{r estim_param7-solution}
 #SOLUTION:
-plot(sim_before_optim, sim_after_optim, obs= obs_filt, var = "lai_n")
+plot(before_optim=sim_before_optim, after_optim=sim_after_optim, obs= obs_filt, var = "lai_n")
 ```
 
-* Compute the nRMSE and Bias using `summary()` 
+* Compute the nRMSE and Bias of both simulations for `lai_n` using `summary()` 
 
 ```{r estim_param8, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
 # Insert your R code here!
 ```
 
 ```{r estim_param8-hint-1}
-# Read the documentation of plot(). This one is trick, you can either see it on the package website <https://SticsRPacks.github.io/CroPlotR/reference/plot.cropr_simulation.html> or from R using ?plot.cropr_simulation
+# Read the documentation of summary(). This one is trick, you can either see it on the package website <https://SticsRPacks.github.io/CroPlotR/reference/summary.cropr_simulation.html> or from R using ?summary.cropr_simulation
 ```
+
+```{r estim_param8-hint-2}
+# use the "stat" argument of summary to select the criteria to compute ...
+```
+
 
 ```{r estim_param8-solution}
 #SOLUTION:
-summary(sim_before_optim, sim_after_optim, obs = obs_filt)
+summary(before_optim=sim_before_optim, after_optim=sim_after_optim, obs = obs_filt, stat=c("nRMSE", "Bias"))
 ```
 
 ## Managing successive crops 
