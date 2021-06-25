@@ -47,7 +47,8 @@ Imports:
     CroptimizR,
     CroPlotR,
     remotes,
-    utils
+    utils,
+	learnr
 Remotes: 
     github::SticsRPacks/SticsRFiles@*release,
     github::SticsRPacks/SticsOnR@*release,
