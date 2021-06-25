@@ -35,6 +35,13 @@ parameters = list(
 )
 
 work_dir <- parameters$work_dir
+
+# For avoiding problems under windows
+# with spaces in user dir path
+if (.Platform$OS.type == "windows") {
+  work_dir <- shortPathName(work_dir)
+}
+
 work_dir <- gsub(pattern = "\\\\", replacement="/", x=work_dir)
 
 # Creating work_dir if needed
