@@ -685,21 +685,18 @@ plot(results, overlap = list(list("lai(n)","masec(n)")))
 
 ### Evaluating simulations results
 
-Evaluation of simulation results is performed using observation data with the help of  dynamics plotting, scatter graphs and calculating several statistics criteria. Observed data can be loaded by using the `get_obs()` function and they are given as inputs to functions which are going to be tested here after. 
-
+Evaluation of simulation results is performed using observation data by plotting dynamic graphs, scatter plots and by calculating statistical criteria. Observed data can be loaded by using the SticsRFiles `get_obs()` function and provided to CroPlotR functions. 
 
 #### Getting observation data
 
-
-
-* Get all the observation data
+* Get all the observation data included in the `example` workspace
 
 ```{r get_obs1, exercise=TRUE, exercise.setup = "prepare-get_sim"}
 # Insert your R code here! 
 
 ```
 ```{r get_obs1-hint-1}
-# Path of the observation files is the same as simulations outputs
+# Path of the observation files is the same as this of simulations outputs
 ```
 
 ```{r get_obs1-solution}
@@ -707,7 +704,7 @@ Evaluation of simulation results is performed using observation data with the he
 get_obs(workspace = workspace_xml)
 ```
 
-* Get observations for USMs named : `wheat` and `maize`
+* Get observations of `lai(n)` and `masec(n)` variables for USMs `wheat` and `maize`
 
 
 ```{r get_obs2, exercise=TRUE, exercise.setup = "prepare-get_sim"}
@@ -720,14 +717,9 @@ get_obs(workspace = workspace_xml)
 
 ```{r get_obs2-solution}
 # SOLUTION
-get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"))
+get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"), var_list = c("lai(n)","masec(n)"))
 ```
 
-* Try to get observations for specific variables and combinations with USMs 
-
-```{r get_obs3, exercise=TRUE, exercise.setup = "prepare-get_sim"}
-# Insert your R code here! 
-```
 
 <div class="alert alert-info">
 **Further information about get_obs options:**
@@ -738,7 +730,7 @@ Please refer to the `get_sim()` use section for details.
 
 ####	Dynamics plots using observation data
 
-See previous plotting exercises and add observation data in them using the appropriate input argument.
+As for the first exercise in the "Plotting simulations results" section, get the values of the variables `lai(n)` and `masec(n)` simulated for USM `wheat` and plot their dynamics, but this time add the observation data to the plot. 
 
 ```{r plot_simobs1, exercise=TRUE, exercise.setup = "prepare-get_sim"}
 # Insert your R code here!
@@ -746,73 +738,81 @@ See previous plotting exercises and add observation data in them using the appro
 
 ```{r plot_simobs1-hint-1}
 # See previous exercises for dynamics plotting
-# check that you already stored observations data
+```
+
+```{r plot_simobs1-hint-2}
+# Use the "obs" argument of the CroPlotR plot function
 ```
 
 ```{r plot_simobs1-solution}
 # SOLUTION
 results <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"))
 observations <- get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"))
-plot(results, var = c("lai_n","masec_n"), obs = observations)
-
+plot(results, var = c("lai(n)","masec(n)"), obs = observations)
 ```
 <!-- with overlap
 # ne fonctionne pas
 #plot(results, overlap = list(list("lai_n","masec_n")), obs = observations)
 -->
 
+
+<div class="alert alert-info">
+Note that to plot some given variables, you can either filter their values when reading the results or when plotting them.
+</div>
+
+
 ####	Basic scatter plot
 
-Scatter plots are used for displaying comparison between simulated variables against observations. They can be produced using the same `plot()` function as for dynamics plots, with only changing the plot `type`.
+Scatter plots are used for displaying simulated values against observed values. They can be produced using the same `plot()` function as for dynamics plots, with only changing the plot `type` argument.
 
 ```{r plot_simobs2, exercise=TRUE, exercise.setup = "prepare-get_sim"}
 # Insert your R code here!
 ```
 
 ```{r plot_simobs2-hint-1}
-# See help for understanding which input function argument must be changed
+# Try type = "scatter" ;-)
 ```
 
 ```{r plot_simobs2-solution}
 # SOLUTION
 results <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"))
 observations <- get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"))
-plot(results, var = c("lai_n","masec_n"), obs = observations, type = "scatter")
+plot(results, var = c("lai(n)","masec(n)"), obs = observations, type = "scatter")
 
 ```
 
-####	Customized scatter plot using symbols
+####	Customized scatter plots using symbols
 
 The plot function is able to adapt the used symbols when providing 
 an optional specific argument indicating to use different shapes
 either for `usms` or `groups of usms`.
 
-* Using specific symbols for USMS
+* Plot the same scatter plot as in the previous exercise, but with one symbol per USM
 
 ```{r plot_simobs3, exercise=TRUE, exercise.setup = "prepare-get_sim"}
 # Insert your R code here!
 ```
 
 ```{r plot_simobs3-hint-1}
-# See help for understanding which input function argument must be added
+# Look at the shape_sit argument ...
 ```
 
 ```{r plot_simobs3-solution}
 # SOLUTION
 results <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"))
 observations <- get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"))
-plot(results, var = c("lai_n","masec_n"), obs = observations, type = "scatter", shape_sit = "symbol")
+plot(results, var = c("lai(n)","masec(n)"), obs = observations, type = "scatter", shape_sit = "symbol")
 
 ```
 
-* Using specific symbols for USMS groups
+* Now, plot the scatter plot for the same variables `lai(n)` and `masec(n)` but for USMs "wheat","DurumWheat", "maize" and "sorghum", and with different symbols for the 2 groups c("wheat","DurumWheat") and c("maize","sorghum")
 
 ```{r plot_simobs4, exercise=TRUE, exercise.setup = "prepare-get_sim"}
 # Insert your R code here!
 ```
 
 ```{r plot_simobs4-hint-1}
-# You must get data and observations for more than 2 USMs for defining groups ... and see how to define groups and select the right shape_sit value 
+# Set shape_sit = "group" and use the situation_group argument
 ```
 
 ```{r plot_simobs4-solution}
@@ -821,18 +821,9 @@ usms <- c("wheat","DurumWheat", "maize", "sorghum")
 groups <- list(list("wheat","DurumWheat"), list("maize", "sorghum"))
 results <- get_sim(workspace = workspace_xml, usm_name = usms)
 observations <- get_obs(workspace = workspace_xml, usm_name = usms)
-plot(results, var = c("lai_n","masec_n"), obs = observations, type = "scatter", shape_sit = "group", situation_group = groups)
+plot(results, var = c("lai(n)","masec(n)"), obs = observations, type = "scatter", shape_sit = "group", situation_group = groups)
 
 ```
-
-<!-- NOTES bug
-* avec 1 groupe
-plot(results, var = c("lai_n","masec_n"), obs = observations, type = "scatter", shape_sit = "group", situation_group = list(list("wheat", "maize")))
-les points associés au groupe mm; couleur (enfin je suppose, pas controle du nb points) légende NA
-
-* 2 groupes
-plot(results, var = c("lai_n","masec_n"), obs = observations, type = "scatter", shape_sit = "group", situation_group = list(list("wheat","DurumWheat"), list("maize", "sorghum")))
--->
 
 ####	Statistics and associated graphs
 
