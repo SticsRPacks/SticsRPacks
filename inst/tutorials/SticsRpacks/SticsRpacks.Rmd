@@ -1156,7 +1156,7 @@ Before generating the text files, we will first restrain the number of variables
 ```
 
 ```{r gen_varmod-hint-1}
-# Use `javastics_path = javastics` and `workspace_path = workspace_xml`
+# Use `workspace_path = workspace_xml`
 ```
 
 ```{r gen_varmod-solution}
