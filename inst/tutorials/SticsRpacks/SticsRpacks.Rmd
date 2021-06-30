@@ -17,6 +17,8 @@ library(SticsRPacks)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+options(stringsAsFactors = FALSE) 
+
 # library(gradethis)
 knitr::opts_chunk$set(echo = FALSE)
 tutorial_options(exercise.lines = 5, exercise.timelimit = 60)
