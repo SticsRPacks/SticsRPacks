@@ -27,11 +27,8 @@ available from each websites (Article sections).
 ## Installation
 
 ``` r
-# # Install from CRAN
-# install.packages("SticsRPacks")
-
-# Or the development version from GitHub
-# install.packages("devtools")
+# Install from GitHub
+# install devtools if not yet installed : install.packages("devtools")
 devtools::install_github("SticsRPacks/SticsRPacks")
 ```
 
@@ -42,13 +39,13 @@ It this does not work, follow the instructions given
 
 `library(SticsRPacks)` will load the core SticsRPacks packages:
 
-  - [SticsRFiles](https://github.com/SticsRPacks/SticsRFiles), for files
+-   [SticsRFiles](https://github.com/SticsRPacks/SticsRFiles), for files
     manipulation.  
-  - [SticsOnR](https://github.com/SticsRPacks/SticsOnR), for STICS
+-   [SticsOnR](https://github.com/SticsRPacks/SticsOnR), for STICS
     simulation management.  
-  - [CroPlotR](https://github.com/SticsRPacks/CroPlotR), for plotting
+-   [CroPlotR](https://github.com/SticsRPacks/CroPlotR), for plotting
     and statistics.  
-  - [CroptimizR](https://github.com/SticsRPacks/CroptimizR), for
+-   [CroptimizR](https://github.com/SticsRPacks/CroptimizR), for
     parameter optimization.
 
 You also get a condensed summary of conflicts with other packages you
@@ -56,9 +53,9 @@ have loaded:
 
 ``` r
 library(SticsRPacks)
-#> -- Attaching packages -------------------------------- SticsRPacks 0.0.1.9000 --
-#> v SticsRFiles 0.2.0          v SticsOnR    0.2.0     
-#> v CroptimizR  0.2.0.9000     v CroPlotR    0.6.0
+#> -- Attaching packages ------------------------------------- SticsRPacks 0.2.0 --
+#> v SticsRFiles 0.3.0     v SticsOnR    0.2.1
+#> v CroptimizR  0.3.0     v CroPlotR    0.7.0
 #> 
 ```
 
