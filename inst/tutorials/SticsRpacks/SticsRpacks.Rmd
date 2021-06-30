@@ -272,7 +272,7 @@ optim_res = estim_param(obs_list = obs_filt,
 sim_after_optim = stics_wrapper(param_values = optim_res$final_values, model_options = wrapper_options)$sim_list
 sim_before_optim = stics_wrapper(model_options = wrapper_options)$sim_list
 
-plot(sim = sim_after_optim, obs = obs_filt, var = "lai_n")
+plot(after = sim_after_optim, before = sim_before_optim, obs = obs_filt, var = "lai_n")
 ```
 
 A lot is happening here! 
