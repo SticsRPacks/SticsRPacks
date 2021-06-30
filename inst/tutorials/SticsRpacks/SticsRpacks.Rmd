@@ -384,7 +384,7 @@ cat(paste(lines, collapse="\n"))
 
 </blockquote>
 
-* Get the values of clay content after decarbonation (argi) for all soils defined in the `sols.xml` file of the `example` workspace of the JavaStics distribution.
+* Get the values of clay content after decarbonation (argi) for all soils defined in the `sols.xml` file of the `workspace_xml` workspace of the JavaStics distribution.
 
 ```{r get_param_xml1, exercise=TRUE}
 # Insert your R code here!
