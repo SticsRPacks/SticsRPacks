@@ -1726,7 +1726,7 @@ print(sim)
 # SOLUTION:
 sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
                var_list=c("lai_n","masec_n","mafruit"),
-               usms_filepath ="usms.xml", javastics_path=javastics)
+               usms_filepath = file.path(workspace_xml,"usms.xml"), javastics_path=javastics)
 print(sim)
 # The names of the Plants are now given in the Plant column.
 ```
@@ -1736,7 +1736,7 @@ print(sim)
 ```{r prepare-intercrop-6, echo=FALSE}
 sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
                var_list=c("lai_n","masec_n","mafruit"),
-               usms_filepath = "usms.xml", javastics_path=javastics)
+               usms_filepath = file.path(workspace_xml,"usms.xml"), javastics_path=javastics)
 ```
 
 ```{r intercrop-6, exercise=TRUE, exercise.setup = "prepare-intercrop-6"}
