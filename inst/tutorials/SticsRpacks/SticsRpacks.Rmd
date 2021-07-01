@@ -1709,7 +1709,7 @@ question("How are organized the results for the different intercrops",
 # SOLUTION:
 sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
                var_list=c("lai_n","masec_n","mafruit"),
-               usms_filepath = "usms.xml")
+               usms_filepath = file.path(workspace_xml,"usms.xml"))
 print(sim)
 # The names of the Plant files are now given in the Plant column instead of Plant_1 and Plant_2 ...
 ```
