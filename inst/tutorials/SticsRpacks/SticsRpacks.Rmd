@@ -1703,7 +1703,7 @@ question("How are organized the results for the different intercrops",
          allow_retry = TRUE)
 ```
 
-* Check now how results are changed when you use the `usms_filename` argument of the `get_sim` function
+* Check now how results are changed when you use the `usms_filepath` argument of the `get_sim` function
 
 ```{r intercrop-4, exercise=TRUE, exercise.setup = "prepare-intercrop-2"}
 # Insert your R code here!
@@ -1713,7 +1713,7 @@ question("How are organized the results for the different intercrops",
 # SOLUTION:
 sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
                var_list=c("lai_n","masec_n","mafruit"),
-               usms_filename="usms.xml")
+               usms_filepath = "usms.xml")
 print(sim)
 # The names of the Plant files are now given in the Plant column instead of Plant_1 and Plant_2 ...
 ```
@@ -1730,7 +1730,7 @@ print(sim)
 # SOLUTION:
 sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
                var_list=c("lai_n","masec_n","mafruit"),
-               usms_filename="usms.xml", javastics_path=javastics)
+               usms_filepath ="usms.xml", javastics_path=javastics)
 print(sim)
 # The names of the Plants are now given in the Plant column.
 ```
@@ -1740,7 +1740,7 @@ print(sim)
 ```{r prepare-intercrop-6, echo=FALSE}
 sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
                var_list=c("lai_n","masec_n","mafruit"),
-               usms_filename="usms.xml", javastics_path=javastics)
+               usms_filepath = "usms.xml", javastics_path=javastics)
 ```
 
 ```{r intercrop-6, exercise=TRUE, exercise.setup = "prepare-intercrop-6"}
