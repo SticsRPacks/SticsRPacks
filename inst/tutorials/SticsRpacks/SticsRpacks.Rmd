@@ -424,17 +424,13 @@ result <- get_param_xml(file.path(workspace_xml, "sols.xml"), c("argi"))
 hist(result$sols.xml$argi)
 ```
 
-* Compute the Available Water Capacity of soil `"solmais"` in mm
+* Compute the Available Water Capacity of fine earth for soil `"solmais"` in mm. The equation is `AWC=sum((HCCF-HMINF)*epc*DAF/10)`, where `HCCF` is the vector of Stics parameters for field capacity of the different soil layers, `HMINF` for wilting point, `epc` for thickness, `DAF` for soil density, and sum is over the different layers. 
 
 ```{r get_param_xml3, exercise=TRUE}
 # Insert your R code here!
 ```
 
 ```{r get_param_xml3-hint-1}
-# Equation of Available Water Capacity in mm from STICS inputs is: AWC=sum((HCCF-HMINF)*epc*DAF/10)
-```
-
-```{r get_param_xml3-hint-2}
 # Use select and value arguments of get_param_xml to extract information for a given soil
 ```
 
@@ -1156,7 +1152,7 @@ Before generating the text files, we will first restrain the number of variables
 ```
 
 ```{r gen_varmod-hint-1}
-# Use `javastics_path = javastics` and `workspace_path = workspace_xml`
+# Use `workspace_path = workspace_xml`
 ```
 
 ```{r gen_varmod-solution}
@@ -1406,7 +1402,7 @@ More information can be found on the CroptimizR vignettes, e.g. [here](https://S
 
 These parameters are passed to `estim_param` as a named list.
 
-* Make a named list to set values for these parameters and put the results in an object named `optim_options`. We require 3 repetitions and max_eval=10 (to make it quick ... in real life you should set max_eval to a large value to let the process converge). You can use any directory to store the results. If you don't particularly care where to put them, you can put them in `workspace_xml`.
+* Make a named list to set values for these parameters and put the results in an object named `optim_options`. We require 3 repetitions and maxeval=10 (to make it quick ... in real life you should set maxeval to a large value to let the process converge). You can use any directory to store the results. If you don't particularly care where to put them, you can put them in `workspace_xml`.
 
 ```{r estim_param_options, exercise=TRUE}
 # Insert your R code here!
@@ -1418,7 +1414,7 @@ These parameters are passed to `estim_param` as a named list.
 
 ```{r estim_param_options-solution}
 #SOLUTION:
-optim_options = list(nb_rep = 3, max_eval=10, path_results = workspace_xml)
+optim_options = list(nb_rep = 3, maxeval=10, path_results = workspace_xml)
 ```
 
 ### Choose parameter
@@ -1487,7 +1483,7 @@ optim_res = estim_param(obs_list = obs_filt,
 The optimization process can take a while. Time to drink a ☕ maybe! 
 
 If you don't want to wait for the optimization process, we got you covered. You 
-can still continue to the next exercises because we cached the output for you (we stored the result of `estim_param()` in the object `optim_res`, but running it with the default value of `max_eval`).
+can still continue to the next exercises because we cached the output for you (we stored the result of `estim_param()` in the object `optim_res`, but running it with the default value of `maxeval`).
 
 If you didn't do the previous exercises about generating stics text files, you might 
 want to execute `gen_usms_xml2txt` before `estim_param` like so:
