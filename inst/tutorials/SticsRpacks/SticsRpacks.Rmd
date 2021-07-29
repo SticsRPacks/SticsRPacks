@@ -7,6 +7,7 @@ output:
     anchor_sections: FALSE
     progressive: FALSE
     df_print: "paged"
+    toc_depth: 2
 description: "A tutorial to learn SticsRPacks"
 runtime: shiny_prerendered
 ---
@@ -32,6 +33,7 @@ workspace_xml = "JavaSTICS-1.41-stics-9.2/example"
 workspace_PW1 = "tutorials/SticsRpacks/PW1"
 use_default = TRUE
 work_dir = file.path(normalizePath(dirname(tempdir()), winslash = "/"), "SticsRPacks")
+tmp_dir <- file.path(work_dir, "tmp")
 
 # For avoiding problems under windows
 # with spaces in user dir path
@@ -42,6 +44,7 @@ work_dir <- gsub(pattern = "\\\\", replacement="/", x=work_dir)
 
 # Creating work_dir if needed
 if (!dir.exists(work_dir)) dir.create(work_dir)
+if (!dir.exists(tmp_dir)) dir.create(tmp_dir)
 
 # Creating javastics dir
 javastics <- file.path(work_dir, javastics_dir, fsep ="/")
@@ -1221,13 +1224,14 @@ stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, para
 Now everything is set-up to make our simulations! The model options we will use here are stored in the `wrapper_options` object with the options we just set up in the previous section. 
 
 ```{r prepare-wrapper, echo=FALSE}
-wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
+if (!file.exists(file.path(tmp_dir,"wrapper_options.RData"))) {
+  wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
+  save(list = "wrapper_options", file=file.path(tmp_dir,"wrapper_options.RData"))
+} else {
+  #print("loading")
+  load(file="wrapper_options.RData")
+}
 ```
-
-<!-- Here is its output: -->
-<!-- ```{r wrapper_options_print, exercise.setup = "prepare-wrapper"} -->
-<!-- wrapper_options -->
-<!-- ``` -->
 
 * Now use `stics_wrapper()` to simulate the usm "wheat" only (not "banana" and "soybean") using the model options stored in `wrapper_options`, and return the leaf area index and the above-ground biomass:
 
@@ -1283,11 +1287,21 @@ stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = 
 
 Now we can plot the outputs of the two simulations using the CroPlotR `plot()` function by giving the simulation objects as arguments (optionally named). The results of both simulations are accessible in the `res1` and `res2` objects. The results of the simulations are stored in the `sim_list` field of each object. For example to get the results of the simulation for `res1`, we would do: `res1$sim_list`. 
 
-```{r prepare-wrapper-plot, echo=FALSE}
+```{r prepare-wrapper-plot, echo=FALSE }
 wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
 
-res1 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = c("lai_n", "masec_n"))
-res2 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = "lai_n", param_values = c("dlaimax" = 0.005, "durvieF" = 80))
+# res1 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = c("lai_n", "masec_n"))
+# res2 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = "lai_n", param_values = c("dlaimax" = 0.005, "durvieF" = 80))
+
+if (!file.exists(file.path(tmp_dir,"comp_res.RData"))) {
+  res1 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = c("lai_n", "masec_n"))
+  res2 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = "lai_n", param_values = c("dlaimax" = 0.005, "durvieF" = 80))
+  
+  save(list=c("res1", "res2"), file=file.path(tmp_dir,"comp_res.RData"))
+} else {
+  #print("loading")
+  load(file=file.path(tmp_dir,"comp_res.RData"))
+}
 ```
 
 Then, to plot a simulation result, we would do:
@@ -1491,10 +1505,10 @@ As a reminder, here's the objects we previously defined:
 ```{r estim_param2-solution}
 #SOLUTION:
 optim_res = estim_param(obs_list = obs_filt,
-                        model_function = stics_wrapper,
-                        model_options = wrapper_options,
-                        optim_options = optim_options,
-                        param_info = param_info)
+model_function = stics_wrapper,
+model_options = wrapper_options,
+optim_options = optim_options,
+param_info = param_info)
 ```
 
 <div class="alert alert-note">
@@ -1710,11 +1724,11 @@ print(sim)
 
 ```{r intercrop-3, echo=FALSE}
 question("How are organized the results for the different intercrops",
-         answer("In a single data.frame per USM, the results for the different crops being flagged by Plant and Dominance columns", correct = TRUE), 
-         answer("In different data.frames, depending on the crop"),
-         incorrect = "You're not lucky ... the correct proposition is the other one!",
-         random_answer_order = TRUE,
-         allow_retry = TRUE)
+answer("In a single data.frame per USM, the results for the different crops being flagged by Plant and Dominance columns", correct = TRUE), 
+answer("In different data.frames, depending on the crop"),
+incorrect = "You're not lucky ... the correct proposition is the other one!",
+random_answer_order = TRUE,
+allow_retry = TRUE)
 ```
 
 * Check now how results are changed when you use the `usms_filepath` argument of the `get_sim` function
@@ -1726,8 +1740,8 @@ question("How are organized the results for the different intercrops",
 ```{r intercrop-4-solution}
 # SOLUTION:
 sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
-               var_list=c("lai_n","masec_n","mafruit"),
-               usms_filepath = file.path(workspace_xml,"usms.xml"))
+var_list=c("lai_n","masec_n","mafruit"),
+usms_filepath = file.path(workspace_xml,"usms.xml"))
 print(sim)
 # The names of the Plant files are now given in the Plant column instead of Plant_1 and Plant_2 ...
 ```
@@ -1743,8 +1757,8 @@ print(sim)
 ```{r intercrop-5-solution}
 # SOLUTION:
 sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
-               var_list=c("lai_n","masec_n","mafruit"),
-               usms_filepath = file.path(workspace_xml,"usms.xml"), javastics_path=javastics)
+var_list=c("lai_n","masec_n","mafruit"),
+usms_filepath = file.path(workspace_xml,"usms.xml"), javastics_path=javastics)
 print(sim)
 # The names of the Plants are now given in the Plant column.
 ```
@@ -1753,8 +1767,8 @@ print(sim)
 
 ```{r prepare-intercrop-6, echo=FALSE}
 sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
-               var_list=c("lai_n","masec_n","mafruit"),
-               usms_filepath = file.path(workspace_xml,"usms.xml"), javastics_path=javastics)
+var_list=c("lai_n","masec_n","mafruit"),
+usms_filepath = file.path(workspace_xml,"usms.xml"), javastics_path=javastics)
 ```
 
 ```{r intercrop-6, exercise=TRUE, exercise.setup = "prepare-intercrop-6"}
