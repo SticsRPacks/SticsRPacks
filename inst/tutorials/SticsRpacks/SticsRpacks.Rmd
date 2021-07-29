@@ -26,17 +26,16 @@ tutorial_options(exercise.lines = 5, exercise.timelimit = 60)
 
 # Add checking JavaStics path
 
-parameters = list(
-  gen_help = TRUE,
-  javastics = "JavaSTICS-1.41-stics-9.2",
-  workspace_xml = "JavaSTICS-1.41-stics-9.2/example",
-  workspace_PW1 = "tutorials/SticsRpacks/PW1",
-  workspace_txt = "example",
-  use_default = TRUE,
-  work_dir = file.path(normalizePath(dirname(tempdir()), winslash = "/"), "SticsRPacks")
-)
+#parameters = list(
+gen_help = TRUE#,
+javastics_dir = "JavaSTICS-1.41-stics-9.2"#,
+workspace_xml = "JavaSTICS-1.41-stics-9.2/example"#,
+workspace_PW1 = "tutorials/SticsRpacks/PW1"#,
+use_default = TRUE#,
+work_dir = file.path(normalizePath(dirname(tempdir()), winslash = "/"), "SticsRPacks")
+#)
 
-work_dir <- parameters$work_dir
+#work_dir <- parameters$work_dir
 
 # For avoiding problems under windows
 # with spaces in user dir path
@@ -49,22 +48,29 @@ work_dir <- gsub(pattern = "\\\\", replacement="/", x=work_dir)
 # Creating work_dir if needed
 if (!dir.exists(work_dir)) dir.create(work_dir)
 
-javastics <- file.path(work_dir, parameters$javastics, fsep ="/")
+#javastics <- file.path(work_dir, parameters$javastics, fsep ="/")
+javastics <- file.path(work_dir, javastics_dir, fsep ="/")
 
 if (!dir.exists(javastics)) dir.create(javastics)
 
+# if(!any(grepl("JavaStics.exe",list.files(javastics)))) {
+#   zip_path <- file.path(work_dir,paste0(parameters$javastics,".zip"))
+#   system(paste0("curl -u stics_user:w10lptr6405 https://w3.avignon.inra.fr/forge/attachments/download/2482/",parameters$javastics,".zip --output ", zip_path))
+#   unzip(zip_path, exdir = javastics)
+# }
+
 if(!any(grepl("JavaStics.exe",list.files(javastics)))) {
-  zip_path <- file.path(work_dir,paste0(parameters$javastics,".zip"))
-  system(paste0("curl -u stics_user:w10lptr6405 https://w3.avignon.inra.fr/forge/attachments/download/2482/",parameters$javastics,".zip --output ", zip_path))
+  zip_path <- file.path(work_dir,paste0(javastics_dir,".zip"))
+  system(paste0("curl -u stics_user:w10lptr6405 https://w3.avignon.inra.fr/forge/attachments/download/2482/",javastics_dir,".zip --output ", zip_path))
   unzip(zip_path, exdir = javastics)
 }
 
-workspace_xml <- file.path(work_dir, parameters$workspace_xml, fsep ="/")
-workspace_txt <- file.path(work_dir, parameters$workspace_txt, fsep ="/")
-workspace_PW1 <- file.path(system.file(package = "SticsRPacks"), parameters$workspace_PW1, fsep ="/")
+workspace_xml <- file.path(work_dir, workspace_xml, fsep ="/")
+workspace_PW1 <- file.path(system.file(package = "SticsRPacks"), workspace_PW1, fsep ="/")
 
 # Generating html help files, one for each function
-if(parameters$gen_help) {
+# if(parameters$gen_help) {
+if(gen_help) {
   help_dir <- file.path(work_dir, "SticsRFiles_help")
   if (!dir.exists(help_dir)) dir.create(help_dir)
   SticsRFiles:::static_help(pkg = "SticsRFiles", 
@@ -161,7 +167,7 @@ The game is to run a single USM by activating and deactivating water and nitroge
 
 Let's first initialize variables and define the setup:
 
-```{r, echo=TRUE, eval=TRUE, message=FALSE}
+```{r PW1-setup, echo=TRUE, eval=TRUE, message=FALSE}
 
 # Let's define the USM and variables of interest to use in this example
 usm_name <- "maize_ref_2013"
@@ -180,7 +186,7 @@ gen_usms_xml2txt(javastics, workspace_PW1, usms_list = usm_name)
 
 Then, let's run the simulations for the different configurations:
 
-```{r, echo=TRUE, eval=TRUE, message=FALSE}
+```{r PW1-sim-config, echo=TRUE, eval=TRUE, message=FALSE}
 
 # Simulate a reference situation with water and nitrogen stress
 sim_ws_ns = stics_wrapper(model_options = wrapper_options, 
@@ -206,24 +212,24 @@ sim_without_stress = stics_wrapper(model_options = wrapper_options,
 
 Now we can use the simulated results to plot the dynamic variables of interest for the different configurations: 
 
-```{r, echo=TRUE, eval=TRUE, message=FALSE}
+```{r PW1-plot-dyn, echo=TRUE, eval=TRUE, message=FALSE}
 plot(sim_ws_ns=sim_ws_ns, sim_ws=sim_ws, sim_ns=sim_ns, sim_without_stress=sim_without_stress, var = dyn_var_names )
 ```
 
 Finally, we can plot the stress indicators averaged over vegetative and reproductive phases:
 
-```{r, echo=TRUE, eval=TRUE, message=FALSE}
+```{r PW1-plot-stress, echo=TRUE, eval=TRUE, message=FALSE}
 
 # Get the final values
 df <- bind_rows(
   sim_ws_ns[[usm_name]] %>% summarise(across(.cols = stress_ind_names, last)) %>% 
-  bind_cols(Case="sim_ws_ns"),
+    bind_cols(Case="sim_ws_ns"),
   sim_ws[[usm_name]] %>% summarise(across(.cols = stress_ind_names, last)) %>% 
-  bind_cols(Case="sim_ws"),
+    bind_cols(Case="sim_ws"),
   sim_ns[[usm_name]] %>% summarise(across(.cols = stress_ind_names, last)) %>% 
-  bind_cols(Case="sim_ns"),
+    bind_cols(Case="sim_ns"),
   sim_without_stress[[usm_name]] %>% summarise(across(.cols = stress_ind_names, last)) %>% 
-  bind_cols(Case="sim_without_stress"))
+    bind_cols(Case="sim_without_stress"))
 
 # Plot bar graph with ggplot ... sorry, not yet available using CroPlotR ...
 df_long <- tidyr::pivot_longer(df, stress_ind_names, names_to = "variables")
@@ -240,7 +246,7 @@ The last part may not be straightforward for R newcomers ... however a function 
 
 Here is an example use-case of an optimization of the `stamflax` parameter for a wheat crop using observations of Leaf Area Index for one situation (*i.e.* one USM):
 
-```{r paged.print=FALSE}
+```{r param-estim-stamflax, paged.print=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/SticsRPacks/SticsRPacks/master/inst/tutorials/SticsRpacks/optim_stamflax_wheat.png")
 ```
 
@@ -291,7 +297,7 @@ Here's its description as given in the R help panel (`? get_var_info`) and the [
 
 <blockquote>
 
-```{r, results="asis"}
+```{r get_var_info-help, results="asis"}
 lines <- SticsRFiles:::get_from_help(file.path(help_dir, "get_var_info.html"))
 cat(paste(lines, collapse="\n"))
 ```
@@ -330,15 +336,26 @@ Here's its description as given in the R help panel (`? get_usms_list`) and on t
 
 <blockquote>
 
-```{r, results="asis"}
+```{r get_usms_list-help, results="asis"}
 lines <- SticsRFiles:::get_from_help(file.path(help_dir, "get_usms_list.html"))
 cat(paste(lines, collapse="\n"))
 ```
 
 </blockquote>
 
-* Get the list of USMs included in the `example` workspace of the JavaStics distribution, which path is stored in the R object `workspace_xml`.
+* Get the list of USMs included in the `example` workspace of the JavaStics distribution, which path is stored in the R object `workspace_xml`.    
 
+First display the folder path of the used workspace (contained in  `workspace_xml`) and list its content here after 
+
+```{r view_ls_workspace, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r view_ls_workspace-hint-1}
+# use the object name workspace_xml to display its content   
+# use the list.files for getting files list of a folder
+```
+Now, display the USMs list in the workspace `workspace_xml`
 ```{r get_usms_list1, exercise=TRUE}
 # Insert your R code here!
 ```
@@ -379,7 +396,7 @@ Parameters values included in JavaStics input files can be retrieved using the f
 
 <blockquote>
 
-```{r, results="asis"}
+```{r get_param_xml-help, results="asis"}
 lines <- SticsRFiles:::get_from_help(file.path(help_dir, "get_param_xml.html"))
 cat(paste(lines, collapse="\n"))
 ```
@@ -446,7 +463,7 @@ Weather variables defined in STICS input weather files can be retrieved using th
 
 <blockquote>
 
-```{r, results="asis"}
+```{r get_climate_txt-help, results="asis"}
 lines <- SticsRFiles:::get_from_help(file.path(help_dir,"get_climate_txt.html"))
 cat(paste(lines, collapse="\n"))
 ```
@@ -493,7 +510,7 @@ Let see now how to run STICS simulations directly from R using the function `run
 
 From now on we will no longer display function help in the tutorial. Use `? function_name` or explore the packages websites (in particular the Reference tab) to display it.
 
-* Run all the USMs defined in the Example workspace of the JavaStics distribution. The path to JavaStics is stored in the `javastics` R object.
+* Run all the USMs defined in the `example` workspace (path stored in `workspace_xml`). The path to JavaStics is stored in the `javastics` R object.
 
 ```{r run_javaStics1, exercise=TRUE, exercise.timelimit=300}
 # Insert your R code here!
@@ -615,7 +632,7 @@ get_sim(workspace = workspace_xml, usm_name = c("banana","Turmeric"))
 ```{r get_sim4-solution}
 # SOLUTION
 get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"),
-                   var_list = "lai_n")
+        var_list = "lai_n")
 ```
 
 
@@ -1179,6 +1196,19 @@ Now we can generate our text files.
 gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("wheat","banana","soybean"))
 ```
 
+The text files have been generated in subfolders of **`r workspace_xml`**; one folder per usm.
+
+Now, list the created folders and files inside them:
+```{r list_txt_files, exercise=TRUE}
+# Insert your R code here!
+```
+
+```{r list_txt_files-solution}
+#SOLUTION:
+dirs <- file.path(workspace_xml, c("wheat","banana","soybean"))
+list.files(dirs, full.names = TRUE)
+```
+
 ### Setting-up the modeling environment
 
 Before running the simulations using Stics, we have to define some information about our modeling environment. This is done using `stics_wrapper_options()`. This function, defined in SticsOnR, helps us define where is our installation of javastics, which Stics executable to use (*e.g.* if you are using an executable from a research branch), which workspace to use, etc...
@@ -1497,10 +1527,10 @@ gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("wheat","banana","soybe
 * The default parameter estimation method used in `estim_param()` is the minimization of a least square criterion using the Nelder-Mead simplex. However, different methods and criteria can be used. Look (here)[https://sticsrpacks.github.io/CroptimizR/articles/Available_parameter_estimation_algorithms.html] for more details about the available methods and criteria.
 * The results provided by `estim_param()` depend on the method used. Graphs and .Rdata produced are stored in `optim_options$path_results`. `estim_param()` also displays some results on the standard output (see here-before) and returns a list including the main results (stored here in the `optim_res` object). In the case of the simplex method this list includes:
 
-  * the values of the estimated parameters (`final_values`),
-  * the initial values used for each repetition (`init_values`),
-  * the optimized value of the criterion for each repetition (`crit_values`), 
-  * ...
+* the values of the estimated parameters (`final_values`),
+* the initial values used for each repetition (`init_values`),
+* the optimized value of the criterion for each repetition (`crit_values`), 
+* ...
 
 </div>
 
