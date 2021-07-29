@@ -26,38 +26,26 @@ tutorial_options(exercise.lines = 5, exercise.timelimit = 60)
 
 # Add checking JavaStics path
 
-#parameters = list(
 gen_help = TRUE#,
-javastics_dir = "JavaSTICS-1.41-stics-9.2"#,
-workspace_xml = "JavaSTICS-1.41-stics-9.2/example"#,
-workspace_PW1 = "tutorials/SticsRpacks/PW1"#,
-use_default = TRUE#,
+javastics_dir = "JavaSTICS-1.41-stics-9.2"
+workspace_xml = "JavaSTICS-1.41-stics-9.2/example"
+workspace_PW1 = "tutorials/SticsRpacks/PW1"
+use_default = TRUE
 work_dir = file.path(normalizePath(dirname(tempdir()), winslash = "/"), "SticsRPacks")
-#)
-
-#work_dir <- parameters$work_dir
 
 # For avoiding problems under windows
 # with spaces in user dir path
 if (.Platform$OS.type == "windows") {
   work_dir <- shortPathName(work_dir)
 }
-
 work_dir <- gsub(pattern = "\\\\", replacement="/", x=work_dir)
 
 # Creating work_dir if needed
 if (!dir.exists(work_dir)) dir.create(work_dir)
 
-#javastics <- file.path(work_dir, parameters$javastics, fsep ="/")
+# Creating javastics dir
 javastics <- file.path(work_dir, javastics_dir, fsep ="/")
-
 if (!dir.exists(javastics)) dir.create(javastics)
-
-# if(!any(grepl("JavaStics.exe",list.files(javastics)))) {
-#   zip_path <- file.path(work_dir,paste0(parameters$javastics,".zip"))
-#   system(paste0("curl -u stics_user:w10lptr6405 https://w3.avignon.inra.fr/forge/attachments/download/2482/",parameters$javastics,".zip --output ", zip_path))
-#   unzip(zip_path, exdir = javastics)
-# }
 
 if(!any(grepl("JavaStics.exe",list.files(javastics)))) {
   zip_path <- file.path(work_dir,paste0(javastics_dir,".zip"))
@@ -65,11 +53,11 @@ if(!any(grepl("JavaStics.exe",list.files(javastics)))) {
   unzip(zip_path, exdir = javastics)
 }
 
+# fixing workspaces path
 workspace_xml <- file.path(work_dir, workspace_xml, fsep ="/")
 workspace_PW1 <- file.path(system.file(package = "SticsRPacks"), workspace_PW1, fsep ="/")
 
 # Generating html help files, one for each function
-# if(parameters$gen_help) {
 if(gen_help) {
   help_dir <- file.path(work_dir, "SticsRFiles_help")
   if (!dir.exists(help_dir)) dir.create(help_dir)
