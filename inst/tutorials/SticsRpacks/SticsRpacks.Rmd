@@ -44,7 +44,13 @@ work_dir <- gsub(pattern = "\\\\", replacement="/", x=work_dir)
 
 # Creating work_dir if needed
 if (!dir.exists(work_dir)) dir.create(work_dir)
-if (!dir.exists(tmp_dir)) dir.create(tmp_dir)
+# Creating a tmp dir or emptying it ...
+if (!dir.exists(tmp_dir)) {
+  dir.create(tmp_dir)
+} else {
+  tmp_files <- list.files(path = tmp_dir, pattern = "\\.RData$", full.names = TRUE)
+  file.remove(tmp_files)
+}
 
 # Creating javastics dir
 javastics <- file.path(work_dir, javastics_dir, fsep ="/")
@@ -589,27 +595,6 @@ get_sim(workspace = workspace_xml)
 get_sim(workspace = workspace_xml, usm_name = c("banana","Turmeric"))
 ```
 
-<!-- The tutorial is already quite long, maybe this exercise is not so useful -->
-<!-- * Get outputs for the USMs of your choice other than banana, Turmeric -->
-
-<!-- ```{r get_sim3, exercise=TRUE, exercise.setup = "prepare-get_sim"} -->
-<!-- # Insert your R code here! -->
-
-<!-- ``` -->
-
-<!-- ```{r get_sim3-hint-1} -->
-<!-- # Get the usms names list before choosing ... -->
-<!-- ``` -->
-
-<!-- ```{r get_sim3-hint-2} -->
-<!-- # The function get_usms_list will be usefull -->
-<!-- ``` -->
-
-<!-- ```{r get_sim3-solution} -->
-<!-- # SOLUTION -->
-<!-- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize")) -->
-<!-- ``` -->
-
 * Get the values of the variable `lai_n` simulated for USMs `wheat` and `maize`
 
 ```{r get_sim4, exercise=TRUE, exercise.setup = "prepare-get_sim"}
@@ -642,14 +627,28 @@ If the `usms.xml` file path is given to the function, plant file names are set i
 
 The [CroPlotR](https://sticsrpacks.github.io/CroPlotR/) package can be used to plot simulated results as given by the `get_sim` function.
 
-* Get the values of the variables `lai_n` and `masec_n` simulated for USM `wheat` and plot their dynamics
+* Use the values of the variables `lai_n` and `masec_n` simulated for USM `wheat` already stored in the `results` object and plot their dynamics
 
-```{r plot_sim1, exercise=TRUE, exercise.setup = "prepare-get_sim"}
+<!-- calling prepare-get_sim in case ... -->
+```{r prepare-plot_sim, echo=FALSE, message=FALSE, results='hide'}
+file_path <- file.path(tmp_dir,"sim.RData")
+if (!file.exists(file_path)) {
+ results <- get_sim(workspace = workspace_xml, usm_name = "wheat",
+                   var_list = c("lai_n", "masec_n"), verbose = FALSE)
+  
+  save("results", file=file_path)
+} else {
+  load(file=file_path)
+}
+
+```
+
+```{r plot_sim1, exercise=TRUE, exercise.setup = "prepare-plot_sim"}
 # Insert your R code here!
 ```
 
 ```{r plot_sim1-hint-1}
-# Use get_sim first, as in the previous exercise ...
+# Use the results object containing get_sim output ...
 ```
 
 ```{r plot_sim1-hint-2}
@@ -658,8 +657,6 @@ The [CroPlotR](https://sticsrpacks.github.io/CroPlotR/) package can be used to p
 
 ```{r plot_sim1-solution}
 # SOLUTION
-results <- get_sim(workspace = workspace_xml, usm_name = "wheat",
-                   var_list = c("lai_n", "masec_n"))
 plot(results)
 ```
 
@@ -670,7 +667,7 @@ Note that `?plot` does not refer to the `plot` function defined in CroPlotR. To 
 
 * Then, do the same but plotting both variables on the same graph
 
-```{r plot_sim2, exercise=TRUE, exercise.setup = "prepare-get_sim"}
+```{r plot_sim2, exercise=TRUE, exercise.setup = "prepare-plot_sim"}
 # Insert your R code here!
 ```
 
@@ -684,8 +681,6 @@ Note that `?plot` does not refer to the `plot` function defined in CroPlotR. To 
 
 ```{r plot_sim2-solution}
 # SOLUTION
-results <- get_sim(workspace = workspace_xml, usm_name = "wheat",
-                   var_list = c("lai_n", "masec_n"))
 plot(results, overlap = list(list("lai_n","masec_n")))
 ```
 
@@ -695,9 +690,9 @@ Evaluation of simulation results is performed using observation data by plotting
 
 #### Getting observation data
 
-* Get all the observation data included in the `example` workspace
+* Get all the observation data included in the `example` workspace (`workspace_xml`)
 
-```{r get_obs1, exercise=TRUE, exercise.setup = "prepare-get_sim"}
+```{r get_obs1, exercise=TRUE}
 # Insert your R code here! 
 
 ```
@@ -713,7 +708,7 @@ get_obs(workspace = workspace_xml)
 * Get observations of `lai_n` and `masec_n` variables for USMs `wheat` and `maize`
 
 
-```{r get_obs2, exercise=TRUE, exercise.setup = "prepare-get_sim"}
+```{r get_obs2, exercise=TRUE}
 # Insert your R code here! 
 
 ```
@@ -736,9 +731,21 @@ Please refer to the `get_sim()` use section for details.
 
 ####	Dynamic plots using observation data
 
-As for the first exercise in the "Plotting simulations results" section, get the values of the variables `lai_n` and `masec_n` simulated for USM `wheat` and plot their dynamics, but this time add the observation data to the plot. 
+As for the first exercise in the "Plotting simulations results" section, use the values of the variables `lai_n` and `masec_n` simulated for USM `wheat` stored in the `results2` object and plot their dynamics, but this time add the observation data to the plot using the values stored in the `observations` object. 
 
-```{r plot_simobs1, exercise=TRUE, exercise.setup = "prepare-get_sim"}
+```{r prepare-plot_sim_obs, echo=FALSE, message=FALSE, results='hide'}
+file_path <- file.path(tmp_dir,"sim_obs.RData")
+if (!file.exists(file_path)) {
+  results2 <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"), verbose = FALSE)
+  observations <- get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"), verbose = FALSE)
+  save(list=c("results2","observations"), file=file_path)
+} else {
+  #print("loading")
+  load(file=file_path)
+}
+```
+
+```{r plot_simobs1, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs"}
 # Insert your R code here!
 ```
 
@@ -752,9 +759,7 @@ As for the first exercise in the "Plotting simulations results" section, get the
 
 ```{r plot_simobs1-solution}
 # SOLUTION
-results <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"))
-observations <- get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"))
-plot(results, var = c("lai_n","masec_n"), obs = observations)
+plot(results2, var = c("lai_n","masec_n"), obs = observations)
 ```
 
 <div class="alert alert-info">
@@ -767,9 +772,9 @@ Note that to plot some given variables, you can either filter their values when 
 Scatter plots are used for displaying simulated values against observed values. They can be produced using the same `plot()` function as for dynamics plots, with only changing the argument `type` of the `plot()` function.
 
 
-* Get the values of the variables `lai_n` and `masec_n` simulated and observed for USMs `wheat` and `maize` and plot the corresponding scatter plot 
+* Use the values of the variables `lai_n` and `masec_n` simulated stored in the `results2` object and observed for USMs `wheat` and `maize` stored in the `observations` object and plot the corresponding scatter plot 
 
-```{r plot_simobs2, exercise=TRUE, exercise.setup = "prepare-get_sim"}
+```{r plot_simobs2, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs"}
 # Insert your R code here!
 ```
 
@@ -779,9 +784,7 @@ Scatter plots are used for displaying simulated values against observed values. 
 
 ```{r plot_simobs2-solution}
 # SOLUTION
-results <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"))
-observations <- get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"))
-plot(results, var = c("lai_n","masec_n"), obs = observations, type = "scatter")
+plot(results2, var = c("lai_n","masec_n"), obs = observations, type = "scatter")
 
 ```
 
@@ -791,7 +794,7 @@ The symbols used in the scatter plots can be adapted by the user using optional 
 
 * Plot the same scatter plot as in the previous exercise, but with one symbol per USM
 
-```{r plot_simobs3, exercise=TRUE, exercise.setup = "prepare-get_sim"}
+```{r plot_simobs3, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs"}
 # Insert your R code here!
 ```
 
@@ -801,9 +804,7 @@ The symbols used in the scatter plots can be adapted by the user using optional 
 
 ```{r plot_simobs3-solution}
 # SOLUTION
-results <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"))
-observations <- get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"))
-plot(results, var = c("lai_n","masec_n"), obs = observations, type = "scatter", shape_sit = "symbol")
+plot(results2, var = c("lai_n","masec_n"), obs = observations, type = "scatter", shape_sit = "symbol")
 
 ```
 
