@@ -26,18 +26,27 @@ available from each websites (Article sections).
 
 ## Installation
 
+Get first the default path of installation of R packages on your computer by executing the command `.libPaths()` in the R console.
+If the returned path does not include any space (e.g. "/path/of/installation/of/r/packages" and not "/path of installation/of/r/packages"), you can proceed to the installation of SticsRPacks using the following command:
+
 ``` r
 # Install from GitHub
 # install devtools if not yet installed : install.packages("devtools")
 devtools::install_github("SticsRPacks/SticsRPacks")
 ```
 
-It this does not work, follow the instructions given
+If the returned path includes at least one space, it is strongly advised to install SticsRPacks in another folder which path does not include any space, by using the command:
+``` r
+devtools::install_github("SticsRPacks/SticsRPacks", lib="/the/path/of/your/choice")
+```
+
+It the installation does not work, follow the instructions given
 [here](https://github.com/SticsRPacks/SticsRPacks/issues/1#event-2864068985).
+
 
 ## Usage
 
-`library(SticsRPacks)` will load the core SticsRPacks packages:
+`library(SticsRPacks)` (or `library(SticsRPacks, lib="/the/path/of/your/choice")` if you redefined the installation path) will load the core SticsRPacks packages:
 
 -   [SticsRFiles](https://github.com/SticsRPacks/SticsRFiles), for files
     manipulation.  
