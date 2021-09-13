@@ -128,6 +128,7 @@ This tutorial aims at introducing the use of these different packages with the S
 The names and documentation of the functions to be used are given in the first exercises before letting you find them on your own as you go through the exercises.
 
 Most of the exercises in the tutorial requires writing and running a few lines of R code through R console panels like this one: 
+
 ```{r test, exercise=TRUE}
 # Insert your R code here!
 ```
@@ -622,6 +623,130 @@ By default, each element (i.e. data.frame per USM) of the returned object by `ge
 If the `usms.xml` file path is given to the function, plant file names are set in the `Plant` column. If both the `usms.xml` file path and the JavaStics path are given to the function, plant names are set in the `Plant` column and an additional column indicates those which correspond to a `Principal` or an `Associated` crop. 
 </div>
 
+### Data structures
+
+The simulations (and observations) are stored using a `list` of `data.frame`s. Each `data.frame` is used to store the data from a USM, with each row being an observation (*e.g.* the daily `lai`), and each column a variable.
+
+Each element (*i.e.* `data.frame`) of the `list` is named after the USM name. So we can get the simulation results (or the observations) either by indexing the list with an integer value, or by using the `$` notation followed by the name of the usm, as you would do to get a variable with a `data.frame`. 
+
+<div class="alert alert-info">
+Use the autocompletion from RStudio to get the usm name in the list. The autocompletion is normally triggered whenever you start writing, but you can also force it by typing `ctrl+space` or `tab` after the `$` sign, e.g. `sim$` + `tab` on your keyboard would propose the USM names in the `sim` list.
+</div>
+
+#### Finding data
+
+Let's import some simulations:
+
+```{r prepare-sim_obs, echo=FALSE, message=FALSE, results='hide'}
+usms <- c("wheat","DurumWheat", "maize", "sorghum")
+sim <- get_sim(workspace = workspace_xml, usm_name = usms)
+```
+
+We now have two objects: `sim` for the simulation results, and `obs` for the observations.
+
+You can get the usms names using the `names` function on the `sim` and `obs` objects.
+Let's do it on the simulation results:
+
+```{r data_struct1, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
+# Insert your R code here!
+```
+
+```{r data_struct1-hint-1}
+# use the names function on the `sim` object
+```
+
+```{r data_struct1-solution, exercise.setup = "prepare-sim_obs"}
+# SOLUTION
+names(sim)
+```
+
+The list of USMs is ordered, so we can index into it to get the simulation results. Try to get the simulations results of the second USM using indexing (*e.g.* indexing on a vector is done using e.g. my_vec[1])
+
+<div class="alert alert-info">
+Indexing into a list with `[` gives a subset of the list (it returns a list again), while indexing using `[[` gives you the values (the content) of the list at this index.
+</div>
+
+```{r data_struct2, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
+# Insert your R code here!
+```
+
+```{r data_struct2-hint-1}
+# Index into the `sim` object using `[[`
+```
+
+```{r data_struct2-solution, exercise.setup = "prepare-sim_obs"}
+# SOLUTION
+sim[[2]]
+```
+
+Ok now try to get the same USM results by using the `$` notation:
+
+```{r data_struct3, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
+# Insert your R code here!
+```
+
+```{r data_struct3-hint-1}
+# Index into the `sim` object using `$` and the name of the USM: maize
+```
+
+```{r data_struct3-solution, exercise.setup = "prepare-sim_obs"}
+# SOLUTION
+sim$maize
+```
+
+Finally, it is possible to chain the `$` notation or/and the indexing to get the values of the variables inside the `data.frame`. For example all these notations are equivalent: 
+* `obs$maize$lai_n`
+* `obs[[2]]$lai_n`
+* `obs[[2]][,2]`
+* `obs$maize[,2]`
+
+#### Manipulate data
+
+Because the results are formatted as a list of `data.frame`s, we can use all the standard tools offered by *e.g.* the [tidyverse](https://www.tidyverse.org/).
+
+We can apply any function to each `data.frame` using the \*apply family of functions (*e.g.* lapply, mapply...). For example if you want to get the maximum simulate LAI for each USM you would do:
+
+```{r lapply_sim, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
+lapply(sim, function(x) max(x$lai_n))
+```
+
+An other way to do so is to first transform the list of `data.frame` into a single `data.frame`, and add a new column called situation that defines the USM for each row. CroPlotR provides `bind_rows_sim` to do so. 
+
+Use `bind_rows_sim` to make a single `data.frame` out of the list of `data.frame`s:
+
+```{r data_struct4, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
+# Insert your R code here!
+```
+
+```{r data_struct4-hint-1}
+# Use `bind_rows_sim` on `sim`
+```
+
+```{r data_struct4-solution, exercise.setup = "prepare-sim_obs"}
+# SOLUTION
+bind_rows_sim(sim)
+```
+
+The resulting `data.frame` has a new column to keep track of which USM each row is from.
+
+Now we can use the functions from the [tidyverse](https://www.tidyverse.org/) for data wrangling and analysis.
+
+For example we can use `filter` to filter the data:
+
+```{r filter_sim, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
+sim_all = bind_rows_sim(sim)
+
+filter(sim_all, Date == as.POSIXct("2000-09-04", tz = "UTC"))
+```
+
+
+Or summarize it by group. For exemple if we want the maximum lai for each USM (as we did above using `lapply`), we would do as follows:
+
+```{r summarise_sim, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
+sim_all%>%
+  group_by(situation)%>%
+  summarise(max_lai = max(lai_n))
+```
 
 ### Plotting simulations results
 
@@ -687,6 +812,11 @@ plot(results, overlap = list(list("lai_n","masec_n")))
 ### Evaluating simulations results
 
 Evaluation of simulation results is performed using observation data by plotting dynamic graphs, scatter plots and by calculating statistical criteria. Observed data can be loaded by using the SticsRFiles `get_obs()` function and provided to CroPlotR functions. 
+
+<div class="alert alert-info">
+The data structure of the observations returned by `get_obs()` follow the same format than the simulations (*i.e.* `get_sim()` output). It is a list of `data.frame`s named after the USM name. Each row in the `data.frame` is a daily observation, and each columns is a variable.
+</div>
+
 
 #### Getting observation data
 
@@ -843,7 +973,7 @@ plot(results4, var = c("lai_n","masec_n"), obs = observations4, type = "scatter"
 
 ```
 
-####	Statistics and associated graphs
+#### Statistics and associated graphs
 
 The `summary()` function can be used for computing statistical criteria measuring the fit of simulations to observations. These criteria can also be plotted using the `plot()` function. As for the `plot()` function, to get the documentation about `summary()`, either refer to the CroPlotR website or type `?summary.cropr_simulation`.
 
@@ -889,9 +1019,7 @@ summary(results4, obs = observations4)
 # usms <- c("wheat","DurumWheat", "maize", "sorghum")
 # results <- get_sim(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
 # observations <- get_obs(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
-
 summary(results4, obs = observations4, all_situations = FALSE)
-
 ```
 
 <!-- note
@@ -987,7 +1115,6 @@ plot(summ, xvar = "situation", title = "USM names as X")
 * `summary()` and `plot()` functions can also be used to compare the results of different versions of simulated results (e.g. same USMs simulated with different versions of the model or different input parameters). See online documentation on [CroPlotR site](https://SticsRPacks.github.io/CroPlotR/#223-statistics-plot) for more details. 
 * When plotting the statistical criteria, it is important to select a (short) list of criteria to be plotted (and possibly of output variables) in order to ensure the readability of the graphs.
 </div>
-
 
 ## Advanced use {#advanced-use}
 
@@ -1306,6 +1433,15 @@ Sometimes it is useful to compare the outputs of the model with a different valu
 #SOLUTION:
 stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = "lai_n", param_values = c("dlaimax" = 0.005, "durvieF" = 80))
 ```
+
+### Data structure
+
+The data structure returned by `stics_wrapper` is a list of two: 
+
+- `error`: `TRUE` if there was an error during the simulation, `FALSE` otherwise
+- `sim_list`: a list of the simulation results
+
+The content of `sim_list` follows the same format as the outputs returned by `get_obs` and `get_sim`: it is a list of `data.frame`s. Each `data.frame` corresponds to the simulation results of a USM, with each row being a value for a given day, and each column a variable. The data can be accessed using indexing or the `$` syntax, *i.e.*: `res$sim_list$wheat` would return a `data.frame` with the simulation results for the usm called "wheat".
 
 ### Plot the comparison
 
