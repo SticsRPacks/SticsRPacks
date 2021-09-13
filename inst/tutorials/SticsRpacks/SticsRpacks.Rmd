@@ -622,6 +622,80 @@ By default, each element (i.e. data.frame per USM) of the returned object by `ge
 If the `usms.xml` file path is given to the function, plant file names are set in the `Plant` column. If both the `usms.xml` file path and the JavaStics path are given to the function, plant names are set in the `Plant` column and an additional column indicates those which correspond to a `Principal` or an `Associated` crop. 
 </div>
 
+### Data structures
+
+The simulations (and observations) are stored using a `list` of `data.frame`s. Each `data.frame` is used to store the data from a USM, with each row being an observation (*e.g.* the daily `lai`), and each column a variable.
+
+Each element (*i.e.* `data.frame`) of the `list` is named after the USM name. So we can get the simulation results (or the observations) either by indexing the list with an integer value, or by using the `$` notation followed by the name of the usm, as you would do to get a variable with a `data.frame`. 
+
+<div class="alert alert-info">
+Use the autocompletion from RStudio to get the usm name in the list. The autocompletion is normally triggered whenever you start writing, but you can also force it by typing `ctrl+space` or `tab` after the `$` sign, e.g. `sim$` + `tab` on your keyboard would propose the USM names in the `sim` list.
+</div>
+
+Let's import some simulations:
+
+```{r prepare-sim_obs, echo=FALSE, message=FALSE, results='hide'}
+usms <- c("wheat","DurumWheat", "maize", "sorghum")
+sim <- get_sim(workspace = workspace_xml, usm_name = usms)
+```
+
+We now have two objects: `sim` for the simulation results, and `obs` for the observations.
+
+You can get the usms names using the `names` function on the `sim` and `obs` objects.
+Let's do it on the simulation results:
+
+```{r data_struct1, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
+# Insert your R code here!
+```
+
+```{r data_struct1-hint-1}
+# use the names function on the `sim` object
+```
+
+```{r data_struct1-solution, exercise.setup = "prepare-sim_obs"}
+# SOLUTION
+names(sim)
+```
+
+The list of USMs is ordered, so we can index into it to get the simulation results. Try to get the simulations results of the second USM using indexing (*e.g.* indexing on a vector is done using e.g. my_vec[1])
+
+<div class="alert alert-info">
+Indexing into a list with `[` gives a subset of the list (it returns a list again), while indexing using `[[` gives you the values (the content) of the list at this index.
+</div>
+
+```{r data_struct2, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
+# Insert your R code here!
+```
+
+```{r data_struct2-hint-1}
+# Index into the `sim` object using `[[`
+```
+
+```{r data_struct2-solution, exercise.setup = "prepare-sim_obs"}
+# SOLUTION
+sim[[2]]
+```
+
+Ok now try to get the same USM results by using the `$` notation:
+
+```{r data_struct3, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
+# Insert your R code here!
+```
+
+```{r data_struct3-hint-1}
+# Index into the `sim` object using `$` and the name of the USM: maize
+```
+
+```{r data_struct3-solution, exercise.setup = "prepare-sim_obs"}
+# SOLUTION
+sim$maize
+```
+
+Finally, it is possible to chain the `$` notation or/and the indexing to get the values of the variables inside the `data.frame`. For example all these notations are equivalent: 
+* `obs$maize$lai_n`
+* `obs[[2]]$lai_n`
+* `obs[[2]][,2]`
+* `obs$maize[,2]`
 
 ### Plotting simulations results
 
@@ -828,7 +902,7 @@ plot(results, var = c("lai_n","masec_n"), obs = observations, type = "scatter", 
 
 ```
 
-####	Statistics and associated graphs
+#### Statistics and associated graphs
 
 The `summary()` function can be used for computing statistical criteria measuring the fit of simulations to observations. These criteria can also be plotted using the `plot()` function. As for the `plot()` function, to get the documentation about `summary()`, either refer to the CroPlotR website or type `?summary.cropr_simulation`.
 
@@ -873,7 +947,6 @@ results <- get_sim(workspace = workspace_xml, usm_name = usms, var = c("lai_n","
 observations <- get_obs(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
 
 summary(results, obs = observations, all_situations = FALSE)
-
 ```
 
 <!-- note
@@ -969,7 +1042,6 @@ plot(summ, xvar = "situation", title = "USM names as X")
 * `summary()` and `plot()` functions can also be used to compare the results of different versions of simulated results (e.g. same USMs simulated with different versions of the model or different input parameters). See online documentation on [CroPlotR site](https://SticsRPacks.github.io/CroPlotR/#223-statistics-plot) for more details. 
 * When plotting the statistical criteria, it is important to select a (short) list of criteria to be plotted (and possibly of output variables) in order to ensure the readability of the graphs.
 </div>
-
 
 ## Advanced use {#advanced-use}
 
