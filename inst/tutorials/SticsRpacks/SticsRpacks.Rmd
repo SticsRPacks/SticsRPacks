@@ -706,7 +706,7 @@ Because the results are formatted as a list of `data.frame`s, we can use all the
 
 We can apply any function to each `data.frame` using the \*apply family of functions (*e.g.* lapply, mapply...). For example if you want to get the maximum simulate LAI for each USM you would do:
 
-```{r}
+```{r lapply_sim, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
 lapply(sim, function(x) max(x$lai_n))
 ```
 
@@ -733,7 +733,7 @@ Now we can use the functions from the [tidyverse](https://www.tidyverse.org/) fo
 
 For example we can use `filter` to filter the data:
 
-```{r}
+```{r filter_sim, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
 sim_all = bind_rows_sim(sim)
 
 filter(sim_all, Date == as.POSIXct("2000-09-04", tz = "UTC"))
@@ -742,7 +742,7 @@ filter(sim_all, Date == as.POSIXct("2000-09-04", tz = "UTC"))
 
 Or summarize it by group. For exemple if we want the maximum lai for each USM (as we did above using `lapply`), we would do as follows:
 
-```{r}
+```{r summarise_sim, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
 sim_all%>%
   group_by(situation)%>%
   summarise(max_lai = max(lai_n))
@@ -1411,6 +1411,15 @@ Sometimes it is useful to compare the outputs of the model with a different valu
 #SOLUTION:
 stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = "lai_n", param_values = c("dlaimax" = 0.005, "durvieF" = 80))
 ```
+
+### Data structure
+
+The data structure returned by `stics_wrapper` is a list of two: 
+
+- `error`: `TRUE` if there was an error during the simulation, `FALSE` otherwise
+- `sim_list`: a list of the simulation results
+
+The content of `sim_list` follows the same format as the outputs returned by `get_obs` and `get_sim`: it is a list of `data.frame`s. Each `data.frame` corresponds to the simulation results of a USM, with each row being a value for a given day, and each column a variable. The data can be accessed using indexing or the `$` syntax, *i.e.*: `res$sim_list$wheat` would return a `data.frame` with the simulation results for the usm called "wheat".
 
 ### Plot the comparison
 
