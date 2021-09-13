@@ -128,6 +128,7 @@ This tutorial aims at introducing the use of these different packages with the S
 The names and documentation of the functions to be used are given in the first exercises before letting you find them on your own as you go through the exercises.
 
 Most of the exercises in the tutorial requires writing and running a few lines of R code through R console panels like this one: 
+
 ```{r test, exercise=TRUE}
 # Insert your R code here!
 ```
@@ -632,6 +633,8 @@ Each element (*i.e.* `data.frame`) of the `list` is named after the USM name. So
 Use the autocompletion from RStudio to get the usm name in the list. The autocompletion is normally triggered whenever you start writing, but you can also force it by typing `ctrl+space` or `tab` after the `$` sign, e.g. `sim$` + `tab` on your keyboard would propose the USM names in the `sim` list.
 </div>
 
+#### Finding data
+
 Let's import some simulations:
 
 ```{r prepare-sim_obs, echo=FALSE, message=FALSE, results='hide'}
@@ -697,6 +700,54 @@ Finally, it is possible to chain the `$` notation or/and the indexing to get the
 * `obs[[2]][,2]`
 * `obs$maize[,2]`
 
+#### Manipulate data
+
+Because the results are formatted as a list of `data.frame`s, we can use all the standard tools offered by *e.g.* the [tidyverse](https://www.tidyverse.org/).
+
+We can apply any function to each `data.frame` using the \*apply family of functions (*e.g.* lapply, mapply...). For example if you want to get the maximum simulate LAI for each USM you would do:
+
+```{r}
+lapply(sim, function(x) max(x$lai_n))
+```
+
+An other way to do so is to first transform the list of `data.frame` into a single `data.frame`, and add a new column called situation that defines the USM for each row. CroPlotR provides `bind_rows_sim` to do so. 
+
+Use `bind_rows_sim` to make a single `data.frame` out of the list of `data.frame`s:
+
+```{r data_struct4, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
+# Insert your R code here!
+```
+
+```{r data_struct4-hint-1}
+# Use `bind_rows_sim` on `sim`
+```
+
+```{r data_struct4-solution, exercise.setup = "prepare-sim_obs"}
+# SOLUTION
+bind_rows_sim(sim)
+```
+
+The resulting `data.frame` has a new column to keep track of which USM each row is from.
+
+Now we can use the functions from the [tidyverse](https://www.tidyverse.org/) for data wrangling and analysis.
+
+For example we can use `filter` to filter the data:
+
+```{r}
+sim_all = bind_rows_sim(sim)
+
+filter(sim_all, Date == as.POSIXct("2000-09-04", tz = "UTC"))
+```
+
+
+Or summarize it by group. For exemple if we want the maximum lai for each USM (as we did above using `lapply`), we would do as follows:
+
+```{r}
+sim_all%>%
+  group_by(situation)%>%
+  summarise(max_lai = max(lai_n))
+```
+
 ### Plotting simulations results
 
 The [CroPlotR](https://sticsrpacks.github.io/CroPlotR/) package can be used to plot simulated results as given by the `get_sim` function.
@@ -761,6 +812,11 @@ plot(results, overlap = list(list("lai_n","masec_n")))
 ### Evaluating simulations results
 
 Evaluation of simulation results is performed using observation data by plotting dynamic graphs, scatter plots and by calculating statistical criteria. Observed data can be loaded by using the SticsRFiles `get_obs()` function and provided to CroPlotR functions. 
+
+<div class="alert alert-info">
+The data structure of the observations returned by `get_obs()` follow the same format than the simulations (*i.e.* `get_sim()` output). It is a list of `data.frame`s named after the USM name. Each row in the `data.frame` is a daily observation, and each columns is a variable.
+</div>
+
 
 #### Getting observation data
 
