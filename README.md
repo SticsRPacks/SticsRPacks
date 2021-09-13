@@ -26,27 +26,18 @@ available from each websites (Article sections).
 
 ## Installation
 
-Get first the default path of installation of R packages on your computer by executing the command `.libPaths()` in the R console.
-If the returned path does not include any space (e.g. "/path/of/installation/of/r/packages" and not "/path of installation/of/r/packages"), you can proceed to the installation of SticsRPacks using the following command:
-
 ``` r
 # Install from GitHub
 # install devtools if not yet installed : install.packages("devtools")
 devtools::install_github("SticsRPacks/SticsRPacks")
 ```
 
-If the returned path includes at least one space, it is strongly advised to install SticsRPacks in another folder which path does not include any space, by using the command:
-``` r
-devtools::install_github("SticsRPacks/SticsRPacks", lib="/the/path/of/your/choice")
-```
-
-It the installation does not work, follow the instructions given
+It this does not work, follow the instructions given
 [here](https://github.com/SticsRPacks/SticsRPacks/issues/1#event-2864068985).
-
 
 ## Usage
 
-`library(SticsRPacks)` (or `library(SticsRPacks, lib="/the/path/of/your/choice")` if you redefined the installation path) will load the core SticsRPacks packages:
+`library(SticsRPacks)` will load the core SticsRPacks packages:
 
 -   [SticsRFiles](https://github.com/SticsRPacks/SticsRFiles), for files
     manipulation.  
@@ -63,8 +54,8 @@ have loaded:
 ``` r
 library(SticsRPacks)
 #> -- Attaching packages ------------------------------------- SticsRPacks 0.2.0 --
-#> v SticsRFiles 0.3.0     v SticsOnR    0.2.1
-#> v CroptimizR  0.3.0     v CroPlotR    0.7.0
+#> v SticsRFiles 0.4.1     v SticsOnR    0.2.2
+#> v CroptimizR  0.4.0     v CroPlotR    0.7.1
 #> 
 ```
 
@@ -88,6 +79,28 @@ SticsRPacks_update()
 #> 1: Yes
 #> 2: No
 ```
+
+## Tutorial
+
+**A tutorial is provided to learn how to use the main features of the
+SticsRPacks packages!**
+
+To run it you need to install the `learnr` package.
+
+Then, if you have RStudio version 1.3 or greater, click on the Tutorial
+pane on the right of the RStudio window (close to Environment, History,
+… panes), scroll to see `Tutorial for SticsRPacks` and click on the
+button `Start Tutorial`.
+
+Alternatively, e.g. if you have an older version of RStudio or if you
+don’t have the Tutorial pane for any reason, you can run the tutorial by
+running the command:
+`learnr::run_tutorial("SticsRpacks", package="SticsRPacks")`
+
+The first time it is started the tutorial takes a few minutes to
+initialize in order to download all the materials and run the solutions.
+Subsequent runs do not need this steps, the tutorial will thus start
+almost immediately from the second run.
 
 ## Code of Conduct
 
