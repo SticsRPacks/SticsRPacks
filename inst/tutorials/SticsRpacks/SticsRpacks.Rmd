@@ -1702,11 +1702,12 @@ gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("wheat","banana","soybe
 * The default parameter estimation method used in `estim_param()` is the minimization of a least square criterion using the Nelder-Mead simplex. However, different methods and criteria can be used. Look (here)[https://sticsrpacks.github.io/CroptimizR/articles/Available_parameter_estimation_algorithms.html] for more details about the available methods and criteria.
 * The results provided by `estim_param()` depend on the method used. Graphs and .Rdata produced are stored in `optim_options$path_results`. `estim_param()` also displays some results on the standard output (see here-before) and returns a list including the main results (stored here in the `optim_res` object). In the case of the simplex method this list includes:
 
-* the values of the estimated parameters (`final_values`),
-* the initial values used for each repetition (`init_values`),
-* the optimized value of the criterion for each repetition (`crit_values`), 
-* ...
+  * the values of the estimated parameters (`final_values`),
+  * the initial values used for each repetition (`init_values`),
+  * the optimized value of the criterion for each repetition (`crit_values`), 
+  * ...
 
+* The `info_level` argument of `estim_param` allows to control the quantity of information returned and stored (see `? estim_param` for more details).
 </div>
 
 
@@ -2065,12 +2066,12 @@ plot(sim)
 
 ## Advanced parameter estimation 
 
+Note that many features are available for parameter estimation in CroptimizR. This is not the sake of this tutorial to present all of them. They are detailed either in the `estim_param` function documentation and/or in the CroptimizR vignettes.
 
-Work In Progress ...
+Among them you will find:  
 
-We will show here advanced features of the `estim_param()` function:
-
-* use of inequality constraints between parameters (see argument `satisfy_par_const`),
-* simultaneous estimation of different values of the same parameters depending on the USMs (use of `sit_list`in `param_info` argument, see (here)[https://sticsrpacks.github.io/CroptimizR/articles/Parameter_estimation_Specific_and_Varietal.html] for a detailed example),
-* use of bayesian methods (see (here)[https://sticsrpacks.github.io/CroptimizR/articles/Parameter_estimation_DREAM.html] for a detailed example)
-
+* the use of inequality constraints between parameters (see argument `satisfy_par_const`),
+* the simultaneous estimation of different values of the same parameters depending on the USMs (use of `sit_list`in `param_info` argument, see (here)[https://sticsrpacks.github.io/CroptimizR/articles/Parameter_estimation_Specific_and_Varietal.html] for a detailed example),
+* the use of bayesian methods (see (here)[https://sticsrpacks.github.io/CroptimizR/articles/Parameter_estimation_DREAM.html] for a detailed example)
+* the possibility to dynamically transform simulations and/or observations in case observed values do not directly correspond to simulated variables (see arguments `transform_obs`, `transform_sim` and `var_names`)
+* ...
