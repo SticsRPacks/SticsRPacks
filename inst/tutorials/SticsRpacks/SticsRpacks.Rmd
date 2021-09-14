@@ -484,9 +484,20 @@ result <- get_climate_txt(dirpath = workspace_xml, filename = "Auzeville.2013")
 sum(result$ttrr)
 ```
 
-* Compute the amount of precipitation that has fallen between dates `"2013-03-21"` and `"2013-09-20"`.
+* Compute the amount of precipitation that has fallen between dates `"2013-03-21"` and `"2013-09-20"` using the `result` R object containing the data of the `"Auzeville.2013"` file.
 
-```{r get_climate_txt2, exercise=TRUE}
+
+```{r prepare-get_climate, echo=FALSE, message=FALSE, results='hide'}
+file_path <- file.path(tmp_dir,"climate.RData")
+if (!file.exists(file_path)) {
+  result <- get_climate_txt(dirpath = workspace_xml, filename = "Auzeville.2013")
+  save("result", file=file_path)
+} else {
+  load(file = file_path)
+}
+```
+
+```{r get_climate_txt2, exercise=TRUE, exercise.setup = "prepare-get_climate"}
 # Insert your R code here!
 ```
 
@@ -494,9 +505,8 @@ sum(result$ttrr)
 # Use dplyr::filter(result,Date>"2013-03-21", Date<"2013-09-20") to filter the results wrt the Dates.
 ```
 
-```{r get_climate_txt2-solution}
+```{r get_climate_txt2-solution, exercise.setup = "prepare-get_climate"}
 #SOLUTION:
-result <- get_climate_txt(dirpath = workspace_xml, filename="Auzeville.2013")
 filtered_result <- dplyr::filter(result, Date > "2013-03-21", Date < "2013-09-20")
 sum(filtered_result$ttrr)
 ```
@@ -639,7 +649,9 @@ Let's import some simulations:
 
 ```{r prepare-sim_obs, echo=FALSE, message=FALSE, results='hide'}
 usms <- c("wheat","DurumWheat", "maize", "sorghum")
-sim <- get_sim(workspace = workspace_xml, usm_name = usms)
+obs <- get_obs(workspace = workspace_xml, usm_name = usms, verbose = FALSE)
+sim <- get_sim(workspace = workspace_xml, usm_name = usms, verbose = FALSE)
+sim_all = bind_rows_sim(sim)
 ```
 
 We now have two objects: `sim` for the simulation results, and `obs` for the observations.
@@ -758,8 +770,8 @@ The [CroPlotR](https://sticsrpacks.github.io/CroPlotR/) package can be used to p
 ```{r prepare-plot_sim, echo=FALSE, message=FALSE, results='hide'}
 file_path <- file.path(tmp_dir,"sim-wheat.RData")
 if (!file.exists(file_path)) {
- results <- get_sim(workspace = workspace_xml, usm_name = "wheat",
-                   var_list = c("lai_n", "masec_n"), verbose = FALSE)
+  results <- get_sim(workspace = workspace_xml, usm_name = "wheat",
+                     var_list = c("lai_n", "masec_n"), verbose = FALSE)
   
   save("results", file=file_path)
 } else {
@@ -887,7 +899,7 @@ if (!file.exists(file_path)) {
 # Use the "obs" argument of the CroPlotR plot function
 ```
 
-```{r plot_simobs1-solution}
+```{r plot_simobs1-solution, exercise.setup = "prepare-plot_sim_obs2"}
 # SOLUTION
 plot(results2, var = c("lai_n","masec_n"), obs = observations2)
 ```
@@ -1369,7 +1381,7 @@ stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, para
 
 Now everything is set-up to make our simulations! The model options we will use here are stored in the `wrapper_options` object with the options we just set up in the previous section. 
 
-```{r prepare-wrapper, echo=TRUE, message=TRUE}
+```{r prepare-wrapper, echo=FALSE, message=FALSE, results='hide'}
 # generate missing dirs, if any
 dirs <- c("wheat","banana","soybean")
 dirs_ex <- dir.exists(file.path(workspace_xml,dirs))
@@ -1447,7 +1459,7 @@ The content of `sim_list` follows the same format as the outputs returned by `ge
 
 Now we can plot the outputs of the two simulations using the CroPlotR `plot()` function by giving the simulation objects as arguments (optionally named). The results of both simulations are accessible in the `res1` and `res2` objects. The results of the simulations are stored in the `sim_list` field of each object. For example to get the results of the simulation for `res1`, we would do: `res1$sim_list`. 
 
-```{r prepare-wrapper-plot, echo=FALSE }
+```{r prepare-wrapper-plot, echo=FALSE, message=FALSE, results='hide' }
 wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
 
 # res1 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = c("lai_n", "masec_n"))
@@ -1524,7 +1536,7 @@ The workflow for parameter estimation is made using several steps:
 - Set-up options for the optimization method,
 - run the parameter optimization (`estim_param`).
 
-```{r prepare-param-estim}
+```{r prepare-param-estim, echo=FALSE, message=FALSE, results='hide'}
 wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
 
 obs = get_obs(workspace = workspace_xml, usm_name = "wheat")
@@ -1665,10 +1677,10 @@ As a reminder, here's the objects we previously defined:
 ```{r estim_param2-solution}
 #SOLUTION:
 optim_res = estim_param(obs_list = obs_filt,
-model_function = stics_wrapper,
-model_options = wrapper_options,
-optim_options = optim_options,
-param_info = param_info)
+                        model_function = stics_wrapper,
+                        model_options = wrapper_options,
+                        optim_options = optim_options,
+                        param_info = param_info)
 ```
 
 <div class="alert alert-note">
@@ -1697,7 +1709,7 @@ gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("wheat","banana","soybe
 </div>
 
 
-```{r prepare-param-estim-out}
+```{r prepare-param-estim-out, echo=FALSE, message=FALSE, results='hide'}
 load(file = system.file("extdata/optim_results.Rdata", package = "SticsRPacks"))
 optim_res = res
 rm(res)
@@ -1865,9 +1877,9 @@ sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",var_li
 * Examine the results and try to answer the quizz below
 
 
-```{r prepare-intercrop-2, echo=FALSE}
+```{r prepare-intercrop-2, echo=FALSE, message=FALSE, results='hide'}
 run_javastics(javastics_path=javastics,  workspace_path = workspace_xml, usms_list = c("intercrop_pea_barley"))
-sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",var_list=c("lai_n","masec_n","mafruit"))
+sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",var_list=c("lai_n","masec_n","mafruit"), verbose = FALSE)
 ```
 
 ```{r intercrop-2, exercise=TRUE, exercise.setup = "prepare-intercrop-2"}
@@ -1884,11 +1896,11 @@ print(sim)
 
 ```{r intercrop-3, echo=FALSE}
 question("How are organized the results for the different intercrops",
-answer("In a single data.frame per USM, the results for the different crops being flagged by Plant and Dominance columns", correct = TRUE), 
-answer("In different data.frames, depending on the crop"),
-incorrect = "You're not lucky ... the correct proposition is the other one!",
-random_answer_order = TRUE,
-allow_retry = TRUE)
+         answer("In a single data.frame per USM, the results for the different crops being flagged by Plant and Dominance columns", correct = TRUE), 
+         answer("In different data.frames, depending on the crop"),
+         incorrect = "You're not lucky ... the correct proposition is the other one!",
+         random_answer_order = TRUE,
+         allow_retry = TRUE)
 ```
 
 * Check now how results are changed when you use the `usms_filepath` argument of the `get_sim` function
@@ -1900,8 +1912,8 @@ allow_retry = TRUE)
 ```{r intercrop-4-solution}
 # SOLUTION:
 sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
-var_list=c("lai_n","masec_n","mafruit"),
-usms_filepath = file.path(workspace_xml,"usms.xml"))
+               var_list=c("lai_n","masec_n","mafruit"),
+               usms_filepath = file.path(workspace_xml,"usms.xml"))
 print(sim)
 # The names of the Plant files are now given in the Plant column instead of Plant_1 and Plant_2 ...
 ```
@@ -1917,18 +1929,19 @@ print(sim)
 ```{r intercrop-5-solution}
 # SOLUTION:
 sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
-var_list=c("lai_n","masec_n","mafruit"),
-usms_filepath = file.path(workspace_xml,"usms.xml"), javastics_path=javastics)
+               var_list=c("lai_n","masec_n","mafruit"),
+               usms_filepath = file.path(workspace_xml,"usms.xml"), javastics_path=javastics)
 print(sim)
 # The names of the Plants are now given in the Plant column.
 ```
 
 * Now, plot the simulation results using the standard plot function of CroPlotR
 
-```{r prepare-intercrop-6, echo=FALSE}
+```{r prepare-intercrop-6, echo=FALSE, message=FALSE, results='hide'}
 sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
-var_list=c("lai_n","masec_n","mafruit"),
-usms_filepath = file.path(workspace_xml,"usms.xml"), javastics_path=javastics)
+               var_list=c("lai_n","masec_n","mafruit"),
+               usms_filepath = file.path(workspace_xml,"usms.xml"), javastics_path=javastics,
+               verbose = FALSE)
 ```
 
 ```{r intercrop-6, exercise=TRUE, exercise.setup = "prepare-intercrop-6"}
