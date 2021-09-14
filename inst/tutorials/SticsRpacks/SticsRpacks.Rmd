@@ -1356,7 +1356,7 @@ gen_usms_xml2txt(javastics_path, workspace_path, usms_list = c("wheat","banana",
 The text files have been generated in subfolders of `workspace_path`, i.e. **`r workspace_path`**, one folder per USM, each taking the name of the corresponding USM.
 
 Now, print the files inside the created folders:
-```{r list_txt_files, exercise=TRUE}
+```{r list_txt_files, exercise=TRUE, exercise.setup = "prepare-gen_usms"}
 # Insert your R code here!
 ```
 
