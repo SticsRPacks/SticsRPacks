@@ -29,7 +29,7 @@ tutorial_options(exercise.lines = 5, exercise.timelimit = 60)
 
 gen_help = TRUE#,
 javastics_dir = "JavaSTICS-1.41-stics-9.2"
-workspace_xml = "JavaSTICS-1.41-stics-9.2/example"
+workspace_path = "JavaSTICS-1.41-stics-9.2/example"
 workspace_PW1 = "tutorials/SticsRpacks/PW1"
 use_default = TRUE
 work_dir = file.path(normalizePath(dirname(tempdir()), winslash = "/"), "SticsRPacks")
@@ -53,17 +53,17 @@ if (!dir.exists(tmp_dir)) {
 }
 
 # Creating JavaStics dir
-javastics <- file.path(work_dir, javastics_dir, fsep ="/")
-if (!dir.exists(javastics)) dir.create(javastics)
+javastics_path <- file.path(work_dir, javastics_dir, fsep ="/")
+if (!dir.exists(javastics_path)) dir.create(javastics_path)
 
-if(!any(grepl("JavaStics.exe",list.files(javastics)))) {
+if(!any(grepl("JavaStics.exe",list.files(javastics_path)))) {
   zip_path <- file.path(work_dir,paste0(javastics_dir,".zip"))
   system(paste0("curl -u stics_user:w10lptr6405 https://w3.avignon.inra.fr/forge/attachments/download/2482/",javastics_dir,".zip --output ", zip_path))
-  unzip(zip_path, exdir = javastics)
+  unzip(zip_path, exdir = javastics_path)
 }
 
 # fixing workspaces path
-workspace_xml <- file.path(work_dir, workspace_xml, fsep ="/")
+workspace_path <- file.path(work_dir, workspace_path, fsep ="/")
 workspace_PW1 <- file.path(system.file(package = "SticsRPacks"), workspace_PW1, fsep ="/")
 
 # Generating html help files, one for each function
@@ -147,7 +147,14 @@ You can use these panels to do whatever tests you want to do to explore the feat
 
 The `Start over` button re-initialize the panel.
 
-If you don't find the solution, click on the button `Hints`, it will first give you some advises and finally the expected solution of the exercise. To copy the solution in the panel, click on the `Copy to Clipboard` blue button on the right and then right-click in the black part of the panel and select "paste".
+If you don't find the solution, click on the button `Hints`, it will give you an advice. If you click again and again several advises will be given (dependgin on the exercise) and finally the expected solution of the exercise. To copy the solution in the panel, click on the `Copy to Clipboard` blue button on the right and then right-click in the black part of the panel and select "paste". You can train on the panel above.
+
+<div class="alert alert-info">
+This tutorial automatically downloaded JavaStics in a temporary folder of your computer: `r javastics_path`. The path of this folder is stored in the `javastics_path` R object.
+
+It will be used in the following to perform the exercises. The exercises will use the USMs defined in the "example" workspace of JavaStics (stored in `r workspace_path`). The path of this workspace is stored in the `workspace_path` R object. 
+
+</div>
 
 ## A foretaste of SticsRpacks 
 <!-- Note : indications might be added about some technical tips: for example some parts may take some time
@@ -175,10 +182,10 @@ dyn_var_names <- c("lai_n","zrac","resmes","azomes","QNplante","masec_n")
 var_names <- c(stress_ind_names,dyn_var_names)
 
 # Set-up the simulation environment:
-wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_PW1)
+wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_PW1)
 
 # Generate the files for the simulation:
-gen_usms_xml2txt(javastics, workspace_PW1, usms_list = usm_name)
+gen_usms_xml2txt(javastics_path, workspace_PW1, usms_list = usm_name)
 
 ```
 
@@ -255,18 +262,18 @@ The code to get this is the following:
 usm = "wheat"
 
 # First, import the observations and filter them:
-obs = get_obs(workspace = workspace_xml, usm_name = usm)
+obs = get_obs(workspace = workspace_path, usm_name = usm)
 obs_filt = filter_obs(obs, "lai_n", include = TRUE)
 
 # Set-up the simulation environment:
-wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
-optim_options = list(nb_rep = 3, path_results = workspace_xml)
+wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_path, parallel = TRUE)
+optim_options = list(nb_rep = 3, path_results = workspace_path)
 
 # Define the parameter to optimize and the boundary values:
 param_info = list(stamflax = list(lb = 200, ub = 400))
 
 # Generate the files for the simulation:
-gen_usms_xml2txt(javastics, workspace_xml, usms_list = usm)
+gen_usms_xml2txt(javastics_path, workspace_path, usms_list = usm)
 
 # Make the optimization:
 optim_res = estim_param(obs_list = obs_filt,
@@ -342,19 +349,29 @@ cat(paste(lines, collapse="\n"))
 
 </blockquote>
 
-* Get the list of USMs included in the `example` workspace of the JavaStics distribution, which path is stored in the R object `workspace_xml`.    
+* You will use in the following the `get_usms_list` function to get the list of USMs included in the "example" workspace of the JavaStics distribution installed by this tutorial. The path to this workspace is stored in the R object `workspace_path` (**be careful**, do not confuse the path of the JavaStics example workspace, stored in the R object `workspace_path`, and the path of the examples of the SticsRFiles package, retrieved using the `get_examples_path` function in the function documentation displayed above!).    
 
-First display the folder path of the used workspace (contained in  `workspace_xml`) and list its content here after 
+First, display the path of the JavaStics "example" workspace, and list its content using the `list.files` function:
 
 ```{r view_ls_workspace, exercise=TRUE}
 # Insert your R code here!
 ```
 
 ```{r view_ls_workspace-hint-1}
-# use the object name workspace_xml to display its content   
-# use the list.files for getting files list of a folder
+# print the object workspace_path to display the path   
 ```
-Now, display the USMs list in the workspace `workspace_xml`
+
+```{r view_ls_workspace-hint-2}
+# apply the list.files function to workspace_path for listing its files
+```
+
+```{r view_ls_workspace-solution}
+print(workspace_path)
+
+list.files(workspace_path)
+```
+
+Now, display the list of USMs defined in the workspace `workspace_path`
 ```{r get_usms_list1, exercise=TRUE}
 # Insert your R code here!
 ```
@@ -365,12 +382,12 @@ Now, display the USMs list in the workspace `workspace_xml`
 
 ```{r get_usms_list1-solution}
 # SOLUTION:
-get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"))
+get_usms_list(usm_path = file.path(workspace_path, "usms.xml"))
 ```
 
 <!-- ```{r get_usms_list1-check} -->
 <!-- grade_result( -->
-<!--   pass_if(~identical(.result, get_usms_list(usm_path = file.path(workspace_xml, "usms.xml")))) -->
+<!--   pass_if(~identical(.result, get_usms_list(usm_path = file.path(workspace_path, "usms.xml")))) -->
 <!-- ) -->
 <!-- ``` -->
 
@@ -386,7 +403,7 @@ get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"))
 
 ```{r get_usms_list2-solution}
 #SOLUTION:
-get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"), name = "cc_")
+get_usms_list(usm_path = file.path(workspace_path, "usms.xml"), name = "cc_")
 ```
 
 ### Get parameters values from JavaStics input files
@@ -402,23 +419,23 @@ cat(paste(lines, collapse="\n"))
 
 </blockquote>
 
-* Get the values of clay content after decarbonation (argi) for all soils defined in the `sols.xml` file of the `workspace_xml` workspace of the JavaStics distribution.
+* Get the values of clay content after decarbonation (argi) for all soils defined in the `sols.xml` file of the `workspace_path` workspace of the JavaStics distribution.
 
 ```{r get_param_xml1, exercise=TRUE}
 # Insert your R code here!
 ```
 
 ```{r get_param_xml1-hint-1}
-# The path of the "sols.xml" file of the JavaStics example folder can be defined using the function file.path(workspace_xml, "sols.xml")
+# The path of the "sols.xml" file of the JavaStics example folder can be defined using the function file.path(workspace_path, "sols.xml")
 ```
 
 ```{r get_param_xml1-solution}
 #SOLUTION:
-get_param_xml(file.path(workspace_xml, "sols.xml"), c("argi"))
+get_param_xml(file.path(workspace_path, "sols.xml"), c("argi"))
 ```
 
 ```{r get_param_xml2-setup}
-result <- get_param_xml(file.path(workspace_xml, "sols.xml"), c("argi"))
+result <- get_param_xml(file.path(workspace_path, "sols.xml"), c("argi"))
 ```
 
 * Knowing that the result of the previous exercise has been stored in an R object called `result`, plot an histogram of the values of argi.
@@ -452,7 +469,7 @@ hist(result$sols.xml$argi)
 
 ```{r get_param_xml3-solution}
 # SOLUTION:
-result <- get_param_xml(file.path(workspace_xml, "sols.xml"), c("HCCF", "HMINF", "epc", "DAF"), select = "sol", value = "solmais")
+result <- get_param_xml(file.path(workspace_path, "sols.xml"), c("HCCF", "HMINF", "epc", "DAF"), select = "sol", value = "solmais")
 sum((result$sols.xml$HCCF - result$sols.xml$HMINF) * result$sols.xml$epc * result$sols.xml$DAF / 10)
 ```
 
@@ -481,7 +498,7 @@ cat(paste(lines, collapse="\n"))
 
 ```{r get_climate_txt1-solution}
 #SOLUTION:
-result <- get_climate_txt(dirpath = workspace_xml, filename = "Auzeville.2013")
+result <- get_climate_txt(dirpath = workspace_path, filename = "Auzeville.2013")
 sum(result$ttrr)
 ```
 
@@ -491,7 +508,7 @@ sum(result$ttrr)
 ```{r prepare-get_climate}
 file_path <- file.path(tmp_dir,"climate.RData")
 if (!file.exists(file_path)) {
-  result <- get_climate_txt(dirpath = workspace_xml, filename = "Auzeville.2013")
+  result <- get_climate_txt(dirpath = workspace_path, filename = "Auzeville.2013")
   save("result", file=file_path)
 } else {
   load(file = file_path)
@@ -519,7 +536,7 @@ Let see now how to run STICS simulations directly from R using the function `run
 
 From now on we will no longer display function help in the tutorial. Use `? function_name` or explore the packages websites (in particular the Reference tab) to display it.
 
-* Run all the USMs defined in the `example` workspace (path stored in `workspace_xml`). The path to JavaStics is stored in the `javastics` R object.
+* Run all the USMs defined in the `example` workspace (path stored in `workspace_path`). The path to JavaStics is stored in the `javastics_path` R object.
 
 ```{r run_javaStics1, exercise=TRUE, exercise.timelimit=300}
 # Insert your R code here!
@@ -532,7 +549,7 @@ From now on we will no longer display function help in the tutorial. Use `? func
 
 ```{r run_javaStics1-solution}
 # SOLUTION:
-run_javastics(javastics_path = javastics,  workspace_path = workspace_xml)
+run_javastics(javastics_path = javastics_path,  workspace_path = workspace_path)
 ```
 
 * Run only the USMs banana and Turmeric.
@@ -548,10 +565,10 @@ run_javastics(javastics_path = javastics,  workspace_path = workspace_xml)
 
 ```{r run_javaStics2-solution}
 # SOLUTION:
-run_javastics(javastics_path = javastics,  workspace_path = workspace_xml, usms_list = c("banana","Turmeric"))
+run_javastics(javastics_path = javastics_path,  workspace_path = workspace_path, usms_list = c("banana","Turmeric"))
 ```
 
-You can check that the corresponding STICS output files have been created in the folder `r workspace_xml`.
+You can check that the corresponding STICS output files have been created in the folder `r workspace_path`.
 
 
 <div class="alert alert-info">
@@ -567,14 +584,14 @@ The `get_sim()` function can be used get simulation results to R from a STICS wo
 
 
 ```{r prepare-get_sim, echo=TRUE}
-usms <- get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"))
-sim_done <- length(list.files(pattern = "^mod_s", workspace_xml)) >=
+usms <- get_usms_list(usm_path = file.path(workspace_path, "usms.xml"))
+sim_done <- length(list.files(pattern = "^mod_s", workspace_path)) >=
   length(usms)
 
 if (!sim_done) {
   print("Running simulations, please wait")
-  run_javastics(javastics_path = javastics,
-                workspace_path = workspace_xml, verbose = FALSE) 
+  run_javastics(javastics_path = javastics_path,
+                workspace_path = workspace_path, verbose = FALSE) 
 }
 ```
 
@@ -585,11 +602,11 @@ if (!sim_done) {
 
 ```
 ```{r get_sim1-hint-1}
-# The path of results is stored in the workspace_xml object
+# The path of results is stored in the workspace_path object
 ```
 
 ```{r get_sim1-solution}
-get_sim(workspace = workspace_xml)
+get_sim(workspace = workspace_path)
 ```
 
 * Get the values of all the outputs simulated for USMs banana and Turmeric
@@ -604,7 +621,7 @@ get_sim(workspace = workspace_xml)
 
 ```{r get_sim2-solution}
 # SOLUTION
-get_sim(workspace = workspace_xml, usm_name = c("banana","Turmeric"))
+get_sim(workspace = workspace_path, usm_name = c("banana","Turmeric"))
 ```
 
 * Get the values of the variable `lai_n` simulated for USMs `wheat` and `maize`
@@ -619,7 +636,7 @@ get_sim(workspace = workspace_xml, usm_name = c("banana","Turmeric"))
 
 ```{r get_sim4-solution}
 # SOLUTION
-get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"),
+get_sim(workspace = workspace_path, usm_name = c("wheat", "maize"),
         var_list = "lai_n")
 ```
 
@@ -649,12 +666,12 @@ Use the autocompletion from RStudio to get the USM name in the list. The autocom
 Let's import some simulations for a few USMs and store them in an R object called `sim`:
 ```{r, eval=FALSE, echo=TRUE}
 usms <- c("wheat","DurumWheat", "maize", "sorghum")
-sim <- get_sim(workspace = workspace_xml, usm_name = usms)
+sim <- get_sim(workspace = workspace_path, usm_name = usms)
 ```
 
 ```{r load-sim-obs, eval=FALSE}
 usms <- c("wheat","DurumWheat", "maize", "sorghum")
-sim <- get_sim(workspace = workspace_xml, usm_name = usms, verbose = FALSE)
+sim <- get_sim(workspace = workspace_path, usm_name = usms, verbose = FALSE)
 sim_all = bind_rows_sim(sim)
 ```
 ```{r prepare-sim_obs, ref.label=c("prepare-get_sim","load-sim-obs")}
@@ -774,7 +791,7 @@ The [CroPlotR](https://sticsrpacks.github.io/CroPlotR/) package can be used to p
 ```{r store-sim, eval=FALSE}
 file_path <- file.path(tmp_dir,"sim-1.RData")
 if (!file.exists(file_path)) {
-  results <- get_sim(workspace = workspace_xml, usm_name = "wheat",
+  results <- get_sim(workspace = workspace_path, usm_name = "wheat",
                      var_list = c("lai_n", "masec_n"), verbose = FALSE)
   
   save("results", file=file_path)
@@ -838,7 +855,7 @@ The data structure of the observations returned by `get_obs()` follow the same f
 
 #### Getting observation data
 
-* Get all the observation data included in the `example` workspace (`workspace_xml`)
+* Get all the observation data included in the `example` workspace (`workspace_path`)
 
 ```{r get_obs1, exercise=TRUE}
 # Insert your R code here! 
@@ -850,7 +867,7 @@ The data structure of the observations returned by `get_obs()` follow the same f
 
 ```{r get_obs1-solution}
 # SOLUTION
-get_obs(workspace = workspace_xml)
+get_obs(workspace = workspace_path)
 ```
 
 * Get observations of `lai_n` and `masec_n` variables for USMs `wheat` and `maize`
@@ -866,7 +883,7 @@ get_obs(workspace = workspace_xml)
 
 ```{r get_obs2-solution}
 # SOLUTION
-get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"), var_list = c("lai_n","masec_n"))
+get_obs(workspace = workspace_path, usm_name = c("wheat", "maize"), var_list = c("lai_n","masec_n"))
 ```
 
 
@@ -885,8 +902,8 @@ As for the first exercise in the "Plotting simulations results" section, use the
 ```{r store-sim-obs1, eval=FALSE}
 file_path <- file.path(tmp_dir,"sim_obs1.RData")
 if (!file.exists(file_path)) {
-  results2 <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"), verbose = FALSE)
-  observations2 <- get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"), verbose = FALSE)
+  results2 <- get_sim(workspace = workspace_path, usm_name = c("wheat", "maize"), verbose = FALSE)
+  observations2 <- get_obs(workspace = workspace_path, usm_name = c("wheat", "maize"), verbose = FALSE)
   save(list=c("results2","observations2"), file=file_path)
 } else {
   #print("loading")
@@ -969,8 +986,8 @@ Use the R objects `results4` and `observations4` already containing respectively
 usms <- c("wheat","DurumWheat", "maize", "sorghum")
 file_path <- file.path(tmp_dir,"sim_obs2.RData")
 if (!file.exists(file_path)) {
-  results4 <- get_sim(workspace = workspace_xml, usm_name = usms, verbose = FALSE)
-  observations4 <- get_obs(workspace = workspace_xml, usm_name = usms, verbose = FALSE)
+  results4 <- get_sim(workspace = workspace_path, usm_name = usms, verbose = FALSE)
+  observations4 <- get_obs(workspace = workspace_path, usm_name = usms, verbose = FALSE)
   save(list=c("results4","observations4"), file=file_path)
 } else {
   #print("loading")
@@ -1230,7 +1247,7 @@ question("What is the name of the SticsRFiles function for modifying JavaStics I
          allow_retry = TRUE)
 ```
 
-* Check the values of the nitrification code (`codenitrif`) for the soils defined in the `sols.xml` file of the JavaStics distribution example workspace (path to the JavaStics distribution example workspace is stored in the R object `workspace_xml`)
+* Check the values of the nitrification code (`codenitrif`) for the soils defined in the `sols.xml` file of the JavaStics distribution example workspace (path to the JavaStics distribution example workspace is stored in the R object `workspace_path`)
 
 ```{r set_param_xml-2, exercise=TRUE}
 # Insert your R code here!
@@ -1242,7 +1259,7 @@ question("What is the name of the SticsRFiles function for modifying JavaStics I
 
 ```{r set_param_xml-2-solution}
 # SOLUTION:
-get_param_xml(xml_file = file.path(workspace_xml,"sols.xml"),  
+get_param_xml(xml_file = file.path(workspace_path,"sols.xml"),  
               param_name = "codenitrif")
 ```
 
@@ -1258,9 +1275,9 @@ get_param_xml(xml_file = file.path(workspace_xml,"sols.xml"),
 
 ```{r set_param_xml-3-solution}
 # SOLUTION:
-set_param_xml(xml_file = file.path(workspace_xml,"sols.xml"),  
-              param_name = "codenitrif", param_value = 1, out_path = file.path(workspace_xml,"sols_new.xml"))
-get_param_xml(xml_file = file.path(workspace_xml,"sols_new.xml"),  
+set_param_xml(xml_file = file.path(workspace_path,"sols.xml"),  
+              param_name = "codenitrif", param_value = 1, out_path = file.path(workspace_path,"sols_new.xml"))
+get_param_xml(xml_file = file.path(workspace_path,"sols_new.xml"),  
               param_name = "codenitrif")
 ```
 
@@ -1274,20 +1291,20 @@ Note that STICS input files (txt format) can also be modified from R using the `
 
 We saw earlier how to run a simulation using `run_javastics()`. This function simply calls JavaStics from the command line to run simulations. This does the same as running an USM by opening the JavaStics user interface, but from R. 
 
-You are probably familiar with the xml files used as inputs for JavaStics (*e.g.* `sols.xml` or `usms.xml`). These files list all the parameter values for one or several USMs, with potentially several soils, management practices and climate. Then when we run a given USM, JavaStics reads the parameters values from the xml files, and writes new text files with only the values associated to this particular USM. Then it calls the STICS model that reads those text files, runs the simulation, and writes the outputs. 
+You are probably familiar with the xml files used as inputs for JavaStics (*e.g.* `sols.xml` or `usms.xml`). These files define all the parameters values for one or several USMs, with potentially several soils, management practices and climate. Then when we run a given USM, JavaStics reads the parameters values from the xml files, and writes new text files with only the values associated to this particular USM. Then it calls the STICS model that reads those text files, runs the simulation, and writes the outputs. 
 
 So when we run a USM from JavaStics we have four different steps:
 
-1. JavaStics reads the parameter values for the USM from the xml files
-1. JavaStics writes text files with the parameter values that only describe this USM
+1. JavaStics reads the parameters values for the USM from the xml files
+1. JavaStics writes text files with the parameters values that only describe this USM
 1. JavaStics calls the STICS model (*i.e* the STICS executable)
-1. the STICS model reads the parameter values from the text files, runs a simulation, and writes the output files (*i.e.* `mod_bXXX.sti` and `mod_sXXX.sti`)
+1. the STICS model reads the parameters values from the text files, runs a simulation, and writes the output files (*i.e.* `mod_bXXX.sti` and `mod_sXXX.sti`)
 
 This method is simpler for the user because it hides the technical details, but it has some downsides: it is slow because we have to create the text files each time we make a simulation, and we cannot parallelize the simulations because we share the same text files.
 
 But no worries, SticsRPacks provides a solution to this!
 
-Instead of creating the text files one USM at a time, we create them for all USMs once into one folder for each, and then we directly call the STICS model (*i.e* without using javastics) on these files. Using this method we are now able to run the simulations way faster, and in parallel! 
+Instead of creating the text files one USM at a time, we can create them for all USMs once into one folder for each, and then we directly call the STICS model (*i.e* without using JavaStics) on these files. Using this method we are now able to run the simulations way faster, and in parallel! 
 
 So how do we do that? Well, we use three steps:
 
@@ -1297,76 +1314,76 @@ So how do we do that? Well, we use three steps:
 
 ### Creating the text files
 
-The first step is to create the text files for each USMs in a separate directory. To do so, we use `gen_usms_xml2txt()`.
-
-This tutorial stores a JavaSticsinstallation in the `javastics` variable, and an example workspace in the `workspace_xml` variable.
+The first step is to create the text files for each USMs in a separate directory. To do so, we will use the function `gen_usms_xml2txt()`.
 
 Before generating the text files, we will first restrain the number of variables we want STICS to output using `gen_varmod`.
 
-* Use `gen_varmod` to tell STICS we only want "lai_n", "masec_n" and "QNplante"
+* Use the `gen_varmod` function to tell STICS we only want to simulate "lai_n", "masec_n" and "QNplante"
 
 ```{r gen_varmod, exercise=TRUE}
 # Insert your R code here!
 ```
 
 ```{r gen_varmod-hint-1}
-# Use `workspace_path = workspace_xml`
+# Use `workspace_path = workspace_path`
 ```
 
 ```{r gen_varmod-solution}
 #SOLUTION:
-gen_varmod(workspace_xml, var_names = c("lai_n", "masec_n", "QNplante"))
+gen_varmod(workspace_path, var_names = c("lai_n", "masec_n", "QNplante"))
 ```
 
 It is generally useful (although not mandatory) to pre-filter the variables to avoid filtering the variables for the wrapper, the plots and the statistics.  
 
-Now we can generate our text files. 
+Now we can generate our text files. Remember, the path of the JavaStics distribution downloaded by this tutorial is stored in the `javastics_path` R object, and the path to the example workspace in `workspace_path`.
 
-* Use the function `gen_usms_xml2txt()` to generate the text files for the USM "wheat", "banana" and "soybean":
+* Use the function `gen_usms_xml2txt()` to generate the text files for the USMs "wheat", "banana" and "soybean" in sub-folders of the `workspace_path` folder:
 
 ```{r gen_usms_xml2txt, exercise=TRUE}
 # Insert your R code here!
 ```
 
 ```{r gen_usms_xml2txt-hint-1}
-# Use `javastics_path = javastics` and `workspace_path = workspace_xml`
+# Use `javastics_path = javastics_path` and `workspace_path = workspace_path`
+# No need to use the `target_path` argument here, it will be set by default to `workspace_path`
 ```
 
 ```{r gen_usms_xml2txt-solution}
 #SOLUTION:
-gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("wheat","banana","soybean"))
+gen_usms_xml2txt(javastics_path, workspace_path, usms_list = c("wheat","banana","soybean"))
 ```
 
-The text files have been generated in subfolders of **`r workspace_xml`**; one folder per USM.
+The text files have been generated in subfolders of `workspace_path`, i.e. **`r workspace_path`**, one folder per USM, each taking the name of the corresponding USM.
 
-Now, list the created folders and files inside them:
+Now, print the files inside the created folders:
 ```{r list_txt_files, exercise=TRUE}
 # Insert your R code here!
 ```
 
 ```{r list_txt_files-solution}
 #SOLUTION:
-dirs <- file.path(workspace_xml, c("wheat","banana","soybean"))
+dirs <- file.path(workspace_path, c("wheat","banana","soybean"))
 list.files(dirs, full.names = TRUE)
 ```
 
 ### Setting-up the modeling environment
 
-Before running the simulations using Stics, we have to define some information about our modeling environment. This is done using `stics_wrapper_options()`. This function, defined in SticsOnR, helps us define where is our installation of javastics, which STICS executable to use (*e.g.* if you are using an executable from a research branch), which workspace to use, etc...
+Before running the simulations using STICS, we have to define some information about our modeling environment. This is done using `stics_wrapper_options()`. This function, defined in SticsOnR, helps us define where is our installation of JavaStics, which STICS executable to use (*e.g.* if you are using an executable from a research branch), which workspace to use, etc...
 
-* Use `stics_wrapper_options()` to set-up our modeling environment using a parallel computation over the USMs:
+* Use `stics_wrapper_options()` to set-up our modeling environment using a parallel computation over the USMs for which we generated text files here-before:
 
 ```{r stics_wrapper_options1, exercise=TRUE}
 # Insert your R code here!
 ```
 
 ```{r stics_wrapper_options1-hint-1}
-# Use `javastics_path = javastics` and `data_dir = workspace_xml`
+# Use `javastics_path = javastics_path` and `data_dir = workspace_path` 
+# (remember, the folders including the text files for each USMs have been created in the folder workspace_path)
 ```
 
 ```{r stics_wrapper_options1-solution}
 #SOLUTION:
-stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
+stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_path, parallel = TRUE)
 ```
 
 ### Running the simulations
@@ -1376,11 +1393,11 @@ Now everything is set-up to make our simulations! The model options we will use 
 ```{r prepare-wrapper}
 # generate missing dirs, if any
 dirs <- c("wheat","banana","soybean")
-dirs_ex <- dir.exists(file.path(workspace_xml,dirs))
-if (!all(dirs_ex)) gen_usms_xml2txt(javastics, workspace_xml, usms_list = dirs[!dirs_ex], verbose = FALSE)
+dirs_ex <- dir.exists(file.path(workspace_path,dirs))
+if (!all(dirs_ex)) gen_usms_xml2txt(javastics_path, workspace_path, usms_list = dirs[!dirs_ex], verbose = FALSE)
 wrapper_options_file <- file.path(tmp_dir,"wrapper_options.RData")
 if (!file.exists(wrapper_options_file)) {
-  wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE, verbose = FALSE)
+  wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_path, parallel = TRUE, verbose = FALSE)
   save(list = "wrapper_options", file = wrapper_options_file)
 } else {
   #print("loading")
@@ -1452,7 +1469,7 @@ The content of `sim_list` follows the same format as the outputs returned by `ge
 Now we can plot the outputs of the two simulations using the CroPlotR `plot()` function by giving the simulation objects as arguments (optionally named). The results of both simulations are accessible in the `res1` and `res2` objects. The results of the simulations are stored in the `sim_list` field of each object. For example to get the results of the simulation for `res1`, we would do: `res1$sim_list`. 
 
 ```{r prepare-wrapper-plot}
-wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE, verbose = FALSE)
+wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_path, parallel = TRUE, verbose = FALSE)
 
 if (!file.exists(file.path(tmp_dir,"comp_res.RData"))) {
   res1 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = c("lai_n", "masec_n"))
@@ -1526,14 +1543,14 @@ The workflow for parameter estimation is made using several steps:
 - run the parameter optimization (`estim_param`).
 
 ```{r prepare-param-estim}
-wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE, verbose = FALSE)
+wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_path, parallel = TRUE, verbose = FALSE)
 
-obs = get_obs(workspace = workspace_xml, usm_name = "wheat", verbose = FALSE)
+obs = get_obs(workspace = workspace_path, usm_name = "wheat", verbose = FALSE)
 obs_filt = filter_obs(obs, "lai_n", include = TRUE)
 
 param_info = list(stamflax = list(lb = 200, ub = 400))
 
-optim_options = list(nb_rep = 3, maxeval = 10, xtol_rel = 1e-03, path_results = workspace_xml, ranseed = 1234)
+optim_options = list(nb_rep = 3, maxeval = 10, xtol_rel = 1e-03, path_results = workspace_path, ranseed = 1234)
 ```
 
 ### Modelling environment
@@ -1541,7 +1558,7 @@ optim_options = list(nb_rep = 3, maxeval = 10, xtol_rel = 1e-03, path_results = 
 We will simply re-use the modeling environment from the previous exercise: `wrapper_options`. This is how we did it:
 
 ```r
-wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
+wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_path, parallel = TRUE)
 ```
 
 ### Observations
@@ -1553,12 +1570,12 @@ wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = w
 ```
 
 ```{r estim_param_obs1-hint-1}
-# Use `get_obs()`, workspace_xml is the workspace.
+# Use `get_obs()`, workspace_path is the workspace.
 ```
 
 ```{r estim_param_obs1-solution}
 #SOLUTION:
-obs = get_obs(workspace = workspace_xml, usm_name = "wheat")
+obs = get_obs(workspace = workspace_path, usm_name = "wheat")
 ```
 
 * Filter the observations to get only the lai using `filter_obs()`, and put it in an object called `obs_filt`:
@@ -1595,7 +1612,7 @@ More information can be found on the CroptimizR vignettes, e.g. [here](https://S
 
 These parameters are passed to `estim_param` as a named list.
 
-* Make a named list to set values for these parameters and put the results in an object named `optim_options`. We require 3 repetitions and maxeval=10 (to make it quick ... in real life you should set maxeval to a large value to let the process converge). You can use any directory to store the results. If you don't particularly care where to put them, you can put them in `workspace_xml`.
+* Make a named list to set values for these parameters and put the results in an object named `optim_options`. We require 3 repetitions and maxeval=10 (to make it quick ... in real life you should set maxeval to a large value to let the process converge). You can use any directory to store the results. If you don't particularly care where to put them, you can put them in `workspace_path`.
 
 ```{r estim_param_options, exercise=TRUE}
 # Insert your R code here!
@@ -1607,7 +1624,7 @@ These parameters are passed to `estim_param` as a named list.
 
 ```{r estim_param_options-solution}
 #SOLUTION:
-optim_options = list(nb_rep = 3, maxeval=10, path_results = workspace_xml)
+optim_options = list(nb_rep = 3, maxeval=10, path_results = workspace_path)
 ```
 
 ### Choose parameter
@@ -1682,7 +1699,7 @@ If you didn't do the previous exercises about generating STICS text files, you m
 want to execute `gen_usms_xml2txt` before `estim_param` like so:
 
 ```r
-gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("wheat","banana","soybean"))
+gen_usms_xml2txt(javastics_path, workspace_path, usms_list = c("wheat","banana","soybean"))
 ```
 </div>
 
@@ -1703,10 +1720,10 @@ gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("wheat","banana","soybe
 load(file = system.file("extdata/optim_results.Rdata", package = "SticsRPacks"))
 optim_res = res
 rm(res)
-wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE, verbose = FALSE)
-obs_filt = filter_obs(get_obs(workspace = workspace_xml, usm_name = "wheat", verbose = FALSE), "lai_n", include = TRUE)
+wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_path, parallel = TRUE, verbose = FALSE)
+obs_filt = filter_obs(get_obs(workspace = workspace_path, usm_name = "wheat", verbose = FALSE), "lai_n", include = TRUE)
 sim_after_optim = stics_wrapper(param_values = optim_res$final_values, model_options = wrapper_options, sit_names = "wheat")$sim_list
-gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("wheat","banana","soybean"),
+gen_usms_xml2txt(javastics_path, workspace_path, usms_list = c("wheat","banana","soybean"),
                  verbose=FALSE)
 sim_before_optim = stics_wrapper(model_options = wrapper_options, sit_names = "wheat")$sim_list
 ```
@@ -1863,17 +1880,17 @@ The `run_javastics` function CAN NOT be used to run successive USMs. In this cas
 #SOLUTION:
 
 # Generate the txt files
-gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+gen_usms_xml2txt(javastics_path, workspace_path, usms_list = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
 
 # Run without succession
-wrapper_options <- stics_wrapper_options(javastics_path = javastics, 
-                                         data_dir = workspace_xml)
+wrapper_options <- stics_wrapper_options(javastics_path = javastics_path, 
+                                         data_dir = workspace_path)
 without_succ <- stics_wrapper(model_options = wrapper_options, 
                               sit_names = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
 
 # Run with succession
-wrapper_options <- stics_wrapper_options(javastics_path = javastics, 
-                                         data_dir = workspace_xml,
+wrapper_options <- stics_wrapper_options(javastics_path = javastics_path, 
+                                         data_dir = workspace_path,
                                          successive_usms = list(c("demo_Wheat1","demo_BareSoil2","demo_maize3")))
 with_succ <- stics_wrapper(model_options = wrapper_options, 
                            sit_names = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
@@ -1907,19 +1924,19 @@ Dynamic plots of variables can be aggregated to generate continuous plots.
 * Have a look at the argument `successive` of the `plot` function of the CroPlotR package.  Then plot the `azomes` variable (amount of NO3-N in soil) simulated in the previous exercise for both modes (use the `without_succ` and `with_succ` R variables that contains the results returned by the wrapper, as presented in the SOLUTION of the previous exercise). In both cases, use the `successive` argument of the `plot` function to easily compare the two plots and check that `azomes` is more continuous in the second case.  
 
 ```{r prepare-plot-successive}
-gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("demo_Wheat1","demo_BareSoil2","demo_maize3"), 
+gen_usms_xml2txt(javastics_path, workspace_path, usms_list = c("demo_Wheat1","demo_BareSoil2","demo_maize3"), 
                  verbose = FALSE)
 
 # Run without succession
-wrapper_options <- stics_wrapper_options(javastics_path = javastics, 
-                                         data_dir = workspace_xml, 
+wrapper_options <- stics_wrapper_options(javastics_path = javastics_path, 
+                                         data_dir = workspace_path, 
                                          verbose = FALSE)
 without_succ <- stics_wrapper(model_options = wrapper_options, 
                               sit_names = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
 
 # Run with succession
-wrapper_options <- stics_wrapper_options(javastics_path = javastics, 
-                                         data_dir = workspace_xml,
+wrapper_options <- stics_wrapper_options(javastics_path = javastics_path, 
+                                         data_dir = workspace_path,
                                          successive_usms = list(c("demo_Wheat1","demo_BareSoil2","demo_maize3")), 
                                          verbose = FALSE)
 with_succ <- stics_wrapper(model_options = wrapper_options, 
@@ -1950,7 +1967,7 @@ Note however that by default the same values of the parameters will be applied o
 
 We will see in this section how intercrops are handled in SticsRPacks.
 
-* Run the "intercrop_pea_barley" USM of the JavaStics distribution example workspace from R, get the results of lai_n, masec_n and mafruit for both crops and store them in an R object called `sim` (path to JavaStics is stored in the `javastics` R object and path to the example workspace is stored in `workspace_xml`)
+* Run the "intercrop_pea_barley" USM of the JavaStics distribution example workspace from R, get the results of lai_n, masec_n and mafruit for both crops and store them in an R object called `sim` (path to JavaStics is stored in the `javastics_path` R object and path to the example workspace is stored in `workspace_path`)
 
 ```{r intercrop-1, exercise=TRUE}
 # Insert your R code here!
@@ -1966,8 +1983,8 @@ We will see in this section how intercrops are handled in SticsRPacks.
 
 ```{r intercrop-1-solution}
 # SOLUTION:
-run_javastics(javastics_path=javastics,  workspace_path = workspace_xml, usms_list = c("intercrop_pea_barley"))
-sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",var_list=c("lai_n","masec_n","mafruit"))
+run_javastics(javastics_path=javastics_path,  workspace_path = workspace_path, usms_list = c("intercrop_pea_barley"))
+sim <- get_sim(workspace = workspace_path, usm_name="intercrop_pea_barley",var_list=c("lai_n","masec_n","mafruit"))
 ```
 
 
@@ -1975,8 +1992,8 @@ sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",var_li
 
 
 ```{r prepare-intercrop-2}
-run_javastics(javastics_path=javastics,  workspace_path = workspace_xml, usms_list = c("intercrop_pea_barley"), verbose = FALSE)
-sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",var_list=c("lai_n","masec_n","mafruit"), verbose = FALSE)
+run_javastics(javastics_path=javastics_path,  workspace_path = workspace_path, usms_list = c("intercrop_pea_barley"), verbose = FALSE)
+sim <- get_sim(workspace = workspace_path, usm_name="intercrop_pea_barley",var_list=c("lai_n","masec_n","mafruit"), verbose = FALSE)
 ```
 
 ```{r intercrop-2, exercise=TRUE, exercise.setup = "prepare-intercrop-2"}
@@ -2008,9 +2025,9 @@ question("How are organized the results for the different intercrops",
 
 ```{r intercrop-4-solution}
 # SOLUTION:
-sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
+sim <- get_sim(workspace = workspace_path, usm_name="intercrop_pea_barley",
                var_list=c("lai_n","masec_n","mafruit"),
-               usms_filepath = file.path(workspace_xml,"usms.xml"))
+               usms_filepath = file.path(workspace_path,"usms.xml"))
 print(sim)
 # The names of the Plant files are now given in the Plant column instead of Plant_1 and Plant_2 ...
 ```
@@ -2025,9 +2042,9 @@ print(sim)
 
 ```{r intercrop-5-solution}
 # SOLUTION:
-sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
+sim <- get_sim(workspace = workspace_path, usm_name="intercrop_pea_barley",
                var_list=c("lai_n","masec_n","mafruit"),
-               usms_filepath = file.path(workspace_xml,"usms.xml"), javastics_path=javastics)
+               usms_filepath = file.path(workspace_path,"usms.xml"), javastics_path=javastics_path)
 print(sim)
 # The names of the Plants are now given in the Plant column.
 ```
@@ -2035,9 +2052,9 @@ print(sim)
 * Now, plot the simulation results using the standard plot function of CroPlotR
 
 ```{r prepare-intercrop-6}
-sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
+sim <- get_sim(workspace = workspace_path, usm_name="intercrop_pea_barley",
                var_list=c("lai_n","masec_n","mafruit"),
-               usms_filepath = file.path(workspace_xml,"usms.xml"), javastics_path=javastics,
+               usms_filepath = file.path(workspace_path,"usms.xml"), javastics_path=javastics_path,
                verbose = FALSE)
 ```
 
