@@ -1841,13 +1841,116 @@ plot(before_optim=sim_before_optim, after_optim=sim_after_optim, obs= obs_filt, 
 summary(before_optim=sim_before_optim, after_optim=sim_after_optim, obs = obs_filt, stat=c("nRMSE", "Bias"))
 ```
 
-## Managing successive crops 
+## Managing successive USMs 
 
-Work In Progress ...
+In STICS, USMs can be run successively so that soil and plant initial conditions of a USM are defined from the state of soil and plant as simulated on a preceding USM. This is for example very useful to simulated crop rotations. For that, starting and ending dates of simulations for the different successive USMs must be adequately defined (if USM1 ends at day d_end1, USM2 must start at day d_end1+1 ... see STICS documentation for more details).
 
-We will show here that we can use `stics_wrapper()` to run successive situations, `plot()` to plot variables continuously in dynamic crops and `estim_param()` to estimate parameters using successive simulations. 
+### Simulating successive crops 
 
-If you are interested, you can check the documentation of `stics_wrapper_options()` (argument `successive_usms`), `plot()` (argument `successive`) and `estim_param` (use of `sit_list`in `param_info` argument).
+The `run_javastics` function CAN NOT be used to run successive USMs. In this case, it is advised to use the `stics_wrapper()` function. 
+
+* Have a look at the argument `successive_usms` of the function `stics_wrapper_options()`. Then, simulate USMs `demo_Wheat1`, `demo_BareSoil2`and `demo_maize3` (defined in the JavaStics distribution example workspace) both in independent and successive ways using `stics_wrapper`. Check that the last values of the simulated mafruit for `demo_maize3` differ between the two different simulation modes (independent or successive USMs).
+
+```{r sim_successive, exercise=TRUE, exercise.lines=20}
+# Insert your R code here!
+```
+
+```{r sim_successive-hint-1}
+# First generate the txt files using gen_usms_xml2txt
+```
+
+```{r sim_successive-hint-2}
+# successive_usms argument must be a list of vectors of successive USMs, 
+# thus in this case list(c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+```
+
+```{r sim_successive-hint-3}
+# Use the tail function with argument n=1 to extract the last element of a vector.
+```
+
+```{r sim_successive-solution}
+#SOLUTION:
+
+# Generate the txt files
+gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+
+# Run without succession
+wrapper_options <- stics_wrapper_options(javastics_path = javastics, 
+                                         data_dir = workspace_xml)
+without_succ <- stics_wrapper(model_options = wrapper_options, 
+                              sit_names = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+
+# Run with succession
+wrapper_options <- stics_wrapper_options(javastics_path = javastics, 
+                                         data_dir = workspace_xml,
+                                         successive_usms = list(c("demo_Wheat1","demo_BareSoil2","demo_maize3")))
+with_succ <- stics_wrapper(model_options = wrapper_options, 
+                           sit_names = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+
+# Compare both
+print(paste("mafruit demo_maize3 without succession:",
+            tail(without_succ$sim_list$demo_maize3$mafruit, n=1)))
+print(paste("mafruit demo_maize3 with succession:",
+            tail(with_succ$sim_list$demo_maize3$mafruit, n=1)))
+
+```
+
+
+<div class="alert alert-info">
+Successive USMs can also be simulated using the `run_stics` function. 
+This is however a bit more complex since the user has in this case to explicitly handle the succession by: 
+
+i) Calling `run_stics` for each USM to simulate ; 
+ii) Between two calls to `run_stics`, copying the files `recup.tmp` and `snow_variables.txt` generated in the folder of the preceding USMs to the folder of the USMs to simulate
+iii) Defining the `codesuite` parameter to 1 in the file `travail.usm` of the USM to simulate
+
+It can however be useful if one want for example to include decision rules between the successive USMs to simulate.
+</div>
+
+
+
+### Plotting successive simulations
+
+Dynamic plots of variables can be aggregated to generate continuous plots.
+
+* Have a look at the argument `successive` of the `plot` function of the CroPlotR package.  Then plot the `azomes` variable (amount of NO3-N in soil) simulated in the previous exercise for both modes (use the `without_succ` and `with_succ` R variables that contains the results returned by the wrapper, as presented in the SOLUTION of the previous exercise). In both cases, use the `successive` argument of the `plot` function to easily compare the two plots and check that `azomes` is more continuous in the second case.  
+
+```{r prepare-plot-successive}
+gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+
+# Run without succession
+wrapper_options <- stics_wrapper_options(javastics_path = javastics, 
+                                         data_dir = workspace_xml)
+without_succ <- stics_wrapper(model_options = wrapper_options, 
+                              sit_names = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+
+# Run with succession
+wrapper_options <- stics_wrapper_options(javastics_path = javastics, 
+                                         data_dir = workspace_xml,
+                                         successive_usms = list(c("demo_Wheat1","demo_BareSoil2","demo_maize3")))
+with_succ <- stics_wrapper(model_options = wrapper_options, 
+                           sit_names = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+```
+
+```{r plot_successive, exercise=TRUE, exercise.setup = "prepare-plot-successive", exercise.lines=8}
+# Insert your R code here!
+```
+
+```{r plot_successive-solution}
+#SOLUTION:
+plot(without_succ$sim_list, var = "azomes", 
+     successive = list(c("demo_Wheat1","demo_BareSoil2","demo_maize3")))
+
+plot(with_succ$sim_list, var = "azomes", 
+     successive = list(c("demo_Wheat1","demo_BareSoil2","demo_maize3")))
+```
+
+### Estimating parameters on successive simulations
+
+Estimating parameters on successive simulations is also possible. Actually it may not require specific options in the `estim_param` function: if the `successive_usms` argument is defined in the stics wrapper options, then the parameters will be estimated on successive simulations. 
+
+Note however that by default the same values of the parameters will be applied on all USMs. If one want to estimate the parameters for specific USMs only, or with different values depending on the USMs, one must use the `sit_list` element of the `param_info` argument.
+
 
 ## Managing Intercrops
 
