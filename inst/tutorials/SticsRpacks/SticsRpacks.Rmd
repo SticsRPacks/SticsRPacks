@@ -487,7 +487,7 @@ sum(result$ttrr)
 * Compute the amount of precipitation that has fallen between dates `"2013-03-21"` and `"2013-09-20"` using the `result` R object containing the data of the `"Auzeville.2013"` file.
 
 
-```{r prepare-get_climate, echo=FALSE, message=FALSE, results='hide'}
+```{r prepare-get_climate}
 file_path <- file.path(tmp_dir,"climate.RData")
 if (!file.exists(file_path)) {
   result <- get_climate_txt(dirpath = workspace_xml, filename = "Auzeville.2013")
@@ -565,7 +565,7 @@ See also: `gen_varmod` function to modify var.mod file in case STICS does not si
 The `get_sim()` function can be used get simulation results to R from a Stics workspace. Some options allows filtering data, e.g. for given usm names or output variables. Check the function help before trying to use it.
 
 
-```{r prepare-get_sim, echo=FALSE, message=FALSE, results='hide'}
+```{r prepare-get_sim}
 usms <- get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"))
 sim_done <- length(list.files(pattern = "^mod_s", workspace_xml)) >=
   length(usms)
@@ -573,7 +573,7 @@ sim_done <- length(list.files(pattern = "^mod_s", workspace_xml)) >=
 if (!sim_done) {
   print("Running simulations, please wait")
   run_javastics(javastics_path = javastics,
-                workspace_path = workspace_xml) 
+                workspace_path = workspace_xml, verbose = FALSE) 
 }
 ```
 
@@ -647,7 +647,7 @@ Use the autocompletion from RStudio to get the usm name in the list. The autocom
 
 Let's import some simulations:
 
-```{r prepare-sim_obs, echo=FALSE, message=FALSE, results='hide'}
+```{r prepare-sim_obs}
 usms <- c("wheat","DurumWheat", "maize", "sorghum")
 obs <- get_obs(workspace = workspace_xml, usm_name = usms, verbose = FALSE)
 sim <- get_sim(workspace = workspace_xml, usm_name = usms, verbose = FALSE)
@@ -767,7 +767,7 @@ The [CroPlotR](https://sticsrpacks.github.io/CroPlotR/) package can be used to p
 * Use the values of the variables `lai_n` and `masec_n` simulated for USM `wheat` already stored in the `results` R object and plot their dynamics
 
 <!-- calling prepare-get_sim in case ... -->
-```{r prepare-plot_sim, echo=FALSE, message=FALSE, results='hide'}
+```{r prepare-plot_sim}
 file_path <- file.path(tmp_dir,"sim-wheat.RData")
 if (!file.exists(file_path)) {
   results <- get_sim(workspace = workspace_xml, usm_name = "wheat",
@@ -875,7 +875,7 @@ Please refer to the `get_sim()` use section for details.
 
 As for the first exercise in the "Plotting simulations results" section, use the values of the variables `lai_n` and `masec_n` simulated for USM `wheat` stored in the `results2` object and plot their dynamics, but this time add the observation data to the plot using the values stored in the `observations2` object. 
 
-```{r prepare-plot_sim_obs2, echo=FALSE, message=FALSE, results='hide'}
+```{r prepare-plot_sim_obs2}
 file_path <- file.path(tmp_dir,"sim_obs.RData")
 if (!file.exists(file_path)) {
   results2 <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"), verbose = FALSE)
@@ -954,7 +954,7 @@ plot(results2, var = c("lai_n","masec_n"), obs = observations2, type = "scatter"
 
 Use the R objects `results4` and `observations4` already containing respectively simulation outputs and observations for these usms and variables. 
 
-```{r prepare-plot_sim_obs_4, echo=FALSE, message=FALSE, results='hide'}
+```{r prepare-plot_sim_obs_4}
 usms <- c("wheat","DurumWheat", "maize", "sorghum")
 file_path <- file.path(tmp_dir,"sim_obs_2.RData")
 if (!file.exists(file_path)) {
@@ -1381,14 +1381,14 @@ stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, para
 
 Now everything is set-up to make our simulations! The model options we will use here are stored in the `wrapper_options` object with the options we just set up in the previous section. 
 
-```{r prepare-wrapper, echo=FALSE, message=FALSE, results='hide'}
+```{r prepare-wrapper}
 # generate missing dirs, if any
 dirs <- c("wheat","banana","soybean")
 dirs_ex <- dir.exists(file.path(workspace_xml,dirs))
-if (!all(dirs_ex)) gen_usms_xml2txt(javastics, workspace_xml, usms_list = dirs[!dirs_ex])
+if (!all(dirs_ex)) gen_usms_xml2txt(javastics, workspace_xml, usms_list = dirs[!dirs_ex], verbose = FALSE)
 wrapper_options_file <- file.path(tmp_dir,"wrapper_options.RData")
 if (!file.exists(wrapper_options_file)) {
-  wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
+  wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE, verbose = FALSE)
   save(list = "wrapper_options", file = wrapper_options_file)
 } else {
   #print("loading")
@@ -1459,8 +1459,8 @@ The content of `sim_list` follows the same format as the outputs returned by `ge
 
 Now we can plot the outputs of the two simulations using the CroPlotR `plot()` function by giving the simulation objects as arguments (optionally named). The results of both simulations are accessible in the `res1` and `res2` objects. The results of the simulations are stored in the `sim_list` field of each object. For example to get the results of the simulation for `res1`, we would do: `res1$sim_list`. 
 
-```{r prepare-wrapper-plot, echo=FALSE, message=FALSE, results='hide' }
-wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
+```{r prepare-wrapper-plot}
+wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE, verbose = FALSE)
 
 # res1 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = c("lai_n", "masec_n"))
 # res2 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = "lai_n", param_values = c("dlaimax" = 0.005, "durvieF" = 80))
@@ -1536,10 +1536,10 @@ The workflow for parameter estimation is made using several steps:
 - Set-up options for the optimization method,
 - run the parameter optimization (`estim_param`).
 
-```{r prepare-param-estim, echo=FALSE, message=FALSE, results='hide'}
-wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
+```{r prepare-param-estim}
+wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE, verbose = FALSE)
 
-obs = get_obs(workspace = workspace_xml, usm_name = "wheat")
+obs = get_obs(workspace = workspace_xml, usm_name = "wheat", verbose = FALSE)
 obs_filt = filter_obs(obs, "lai_n", include = TRUE)
 
 param_info = list(stamflax = list(lb = 200, ub = 400))
@@ -1709,14 +1709,15 @@ gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("wheat","banana","soybe
 </div>
 
 
-```{r prepare-param-estim-out, echo=FALSE, message=FALSE, results='hide'}
+```{r prepare-param-estim-out}
 load(file = system.file("extdata/optim_results.Rdata", package = "SticsRPacks"))
 optim_res = res
 rm(res)
-wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE)
-obs_filt = filter_obs(get_obs(workspace = workspace_xml, usm_name = "wheat"), "lai_n", include = TRUE)
+wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE, verbose = FALSE)
+obs_filt = filter_obs(get_obs(workspace = workspace_xml, usm_name = "wheat", verbose = FALSE), "lai_n", include = TRUE)
 sim_after_optim = stics_wrapper(param_values = optim_res$final_values, model_options = wrapper_options, sit_names = "wheat")$sim_list
-gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("wheat","banana","soybean"))
+gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("wheat","banana","soybean"),
+                 verbose=FALSE)
 sim_before_optim = stics_wrapper(model_options = wrapper_options, sit_names = "wheat")$sim_list
 ```
 
@@ -1916,18 +1917,21 @@ Dynamic plots of variables can be aggregated to generate continuous plots.
 * Have a look at the argument `successive` of the `plot` function of the CroPlotR package.  Then plot the `azomes` variable (amount of NO3-N in soil) simulated in the previous exercise for both modes (use the `without_succ` and `with_succ` R variables that contains the results returned by the wrapper, as presented in the SOLUTION of the previous exercise). In both cases, use the `successive` argument of the `plot` function to easily compare the two plots and check that `azomes` is more continuous in the second case.  
 
 ```{r prepare-plot-successive}
-gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("demo_Wheat1","demo_BareSoil2","demo_maize3"), 
+                                         verbose = FALSE)
 
 # Run without succession
 wrapper_options <- stics_wrapper_options(javastics_path = javastics, 
-                                         data_dir = workspace_xml)
+                                         data_dir = workspace_xml, 
+                                         verbose = FALSE)
 without_succ <- stics_wrapper(model_options = wrapper_options, 
                               sit_names = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
 
 # Run with succession
 wrapper_options <- stics_wrapper_options(javastics_path = javastics, 
                                          data_dir = workspace_xml,
-                                         successive_usms = list(c("demo_Wheat1","demo_BareSoil2","demo_maize3")))
+                                         successive_usms = list(c("demo_Wheat1","demo_BareSoil2","demo_maize3")), 
+                                         verbose = FALSE)
 with_succ <- stics_wrapper(model_options = wrapper_options, 
                            sit_names = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
 ```
@@ -1980,8 +1984,8 @@ sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",var_li
 * Examine the results and try to answer the quizz below
 
 
-```{r prepare-intercrop-2, echo=FALSE, message=FALSE, results='hide'}
-run_javastics(javastics_path=javastics,  workspace_path = workspace_xml, usms_list = c("intercrop_pea_barley"))
+```{r prepare-intercrop-2}
+run_javastics(javastics_path=javastics,  workspace_path = workspace_xml, usms_list = c("intercrop_pea_barley"), verbose = FALSE)
 sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",var_list=c("lai_n","masec_n","mafruit"), verbose = FALSE)
 ```
 
@@ -2040,7 +2044,7 @@ print(sim)
 
 * Now, plot the simulation results using the standard plot function of CroPlotR
 
-```{r prepare-intercrop-6, echo=FALSE, message=FALSE, results='hide'}
+```{r prepare-intercrop-6}
 sim <- get_sim(workspace = workspace_xml, usm_name="intercrop_pea_barley",
                var_list=c("lai_n","masec_n","mafruit"),
                usms_filepath = file.path(workspace_xml,"usms.xml"), javastics_path=javastics,
