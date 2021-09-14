@@ -6,8 +6,8 @@ output:
     ace_theme: pastel_on_dark
     anchor_sections: FALSE
     progressive: FALSE
+    allow_skip: true
     df_print: "paged"
-    toc_depth: 2
 description: "A tutorial to learn SticsRPacks"
 runtime: shiny_prerendered
 ---
@@ -505,7 +505,7 @@ if (!file.exists(file_path)) {
 # Use dplyr::filter(result,Date>"2013-03-21", Date<"2013-09-20") to filter the results wrt the Dates.
 ```
 
-```{r get_climate_txt2-solution, exercise.setup = "prepare-get_climate"}
+```{r get_climate_txt2-solution}
 #SOLUTION:
 filtered_result <- dplyr::filter(result, Date > "2013-03-21", Date < "2013-09-20")
 sum(filtered_result$ttrr)
@@ -565,7 +565,7 @@ See also: `gen_varmod` function to modify var.mod file in case STICS does not si
 The `get_sim()` function can be used get simulation results to R from a Stics workspace. Some options allows filtering data, e.g. for given usm names or output variables. Check the function help before trying to use it.
 
 
-```{r prepare-get_sim}
+```{r prepare-get_sim, echo=TRUE}
 usms <- get_usms_list(usm_path = file.path(workspace_xml, "usms.xml"))
 sim_done <- length(list.files(pattern = "^mod_s", workspace_xml)) >=
   length(usms)
@@ -647,11 +647,14 @@ Use the autocompletion from RStudio to get the usm name in the list. The autocom
 
 Let's import some simulations:
 
-```{r prepare-sim_obs}
+
+```{r load-sim-obs, eval=FALSE}
 usms <- c("wheat","DurumWheat", "maize", "sorghum")
 obs <- get_obs(workspace = workspace_xml, usm_name = usms, verbose = FALSE)
 sim <- get_sim(workspace = workspace_xml, usm_name = usms, verbose = FALSE)
 sim_all = bind_rows_sim(sim)
+```
+```{r prepare-sim_obs, ref.label=c("prepare-get_sim","load-sim-obs")}
 ```
 
 We now have two objects: `sim` for the simulation results, and `obs` for the observations.
@@ -667,7 +670,7 @@ Let's do it on the simulation results:
 # use the names function on the `sim` object
 ```
 
-```{r data_struct1-solution, exercise.setup = "prepare-sim_obs"}
+```{r data_struct1-solution}
 # SOLUTION
 names(sim)
 ```
@@ -686,7 +689,7 @@ Indexing into a list with `[` gives a subset of the list (it returns a list agai
 # Index into the `sim` object using `[[`
 ```
 
-```{r data_struct2-solution, exercise.setup = "prepare-sim_obs"}
+```{r data_struct2-solution}
 # SOLUTION
 sim[[2]]
 ```
@@ -701,7 +704,7 @@ Ok now try to get the same USM results by using the `$` notation:
 # Index into the `sim` object using `$` and the name of the USM: maize
 ```
 
-```{r data_struct3-solution, exercise.setup = "prepare-sim_obs"}
+```{r data_struct3-solution}
 # SOLUTION
 sim$maize
 ```
@@ -734,7 +737,7 @@ Use `bind_rows_sim` to make a single `data.frame` out of the list of `data.frame
 # Use `bind_rows_sim` on `sim`
 ```
 
-```{r data_struct4-solution, exercise.setup = "prepare-sim_obs"}
+```{r data_struct4-solution}
 # SOLUTION
 bind_rows_sim(sim)
 ```
@@ -766,9 +769,9 @@ The [CroPlotR](https://sticsrpacks.github.io/CroPlotR/) package can be used to p
 
 * Use the values of the variables `lai_n` and `masec_n` simulated for USM `wheat` already stored in the `results` R object and plot their dynamics
 
-<!-- calling prepare-get_sim in case ... -->
-```{r prepare-plot_sim}
-file_path <- file.path(tmp_dir,"sim-wheat.RData")
+
+```{r store-sim, eval=FALSE}
+file_path <- file.path(tmp_dir,"sim-1.RData")
 if (!file.exists(file_path)) {
   results <- get_sim(workspace = workspace_xml, usm_name = "wheat",
                      var_list = c("lai_n", "masec_n"), verbose = FALSE)
@@ -777,7 +780,9 @@ if (!file.exists(file_path)) {
 } else {
   load(file=file_path)
 }
+```
 
+```{r prepare-plot_sim, ref.label=c("prepare-get_sim","store-sim")}
 ```
 
 ```{r plot_sim1, exercise=TRUE, exercise.setup = "prepare-plot_sim"}
@@ -875,8 +880,9 @@ Please refer to the `get_sim()` use section for details.
 
 As for the first exercise in the "Plotting simulations results" section, use the values of the variables `lai_n` and `masec_n` simulated for USM `wheat` stored in the `results2` object and plot their dynamics, but this time add the observation data to the plot using the values stored in the `observations2` object. 
 
-```{r prepare-plot_sim_obs2}
-file_path <- file.path(tmp_dir,"sim_obs.RData")
+
+```{r store-sim-obs1, eval=FALSE}
+file_path <- file.path(tmp_dir,"sim_obs1.RData")
 if (!file.exists(file_path)) {
   results2 <- get_sim(workspace = workspace_xml, usm_name = c("wheat", "maize"), verbose = FALSE)
   observations2 <- get_obs(workspace = workspace_xml, usm_name = c("wheat", "maize"), verbose = FALSE)
@@ -885,6 +891,9 @@ if (!file.exists(file_path)) {
   #print("loading")
   load(file=file_path)
 }
+```
+
+```{r prepare-plot_sim_obs2, ref.label=c("prepare-get_sim","store-sim-obs1")}
 ```
 
 ```{r plot_simobs1, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs2"}
@@ -899,7 +908,7 @@ if (!file.exists(file_path)) {
 # Use the "obs" argument of the CroPlotR plot function
 ```
 
-```{r plot_simobs1-solution, exercise.setup = "prepare-plot_sim_obs2"}
+```{r plot_simobs1-solution}
 # SOLUTION
 plot(results2, var = c("lai_n","masec_n"), obs = observations2)
 ```
@@ -924,7 +933,7 @@ Scatter plots are used for displaying simulated values against observed values. 
 # Try type = "scatter" ;-)
 ```
 
-```{r plot_simobs2-solution, exercise.setup = "prepare-plot_sim_obs2"}
+```{r plot_simobs2-solution}
 # SOLUTION
 plot(results2, var = c("lai_n","masec_n"), obs = observations2, type = "scatter")
 
@@ -944,7 +953,7 @@ The symbols used in the scatter plots can be adapted by the user using optional 
 # Look at the shape_sit argument ...
 ```
 
-```{r plot_simobs3-solution, exercise.setup = "prepare-plot_sim_obs2"}
+```{r plot_simobs3-solution}
 # SOLUTION
 plot(results2, var = c("lai_n","masec_n"), obs = observations2, type = "scatter", shape_sit = "symbol")
 
@@ -954,9 +963,10 @@ plot(results2, var = c("lai_n","masec_n"), obs = observations2, type = "scatter"
 
 Use the R objects `results4` and `observations4` already containing respectively simulation outputs and observations for these usms and variables. 
 
-```{r prepare-plot_sim_obs_4}
+
+```{r store-sim-obs2, eval=FALSE}
 usms <- c("wheat","DurumWheat", "maize", "sorghum")
-file_path <- file.path(tmp_dir,"sim_obs_2.RData")
+file_path <- file.path(tmp_dir,"sim_obs2.RData")
 if (!file.exists(file_path)) {
   results4 <- get_sim(workspace = workspace_xml, usm_name = usms, verbose = FALSE)
   observations4 <- get_obs(workspace = workspace_xml, usm_name = usms, verbose = FALSE)
@@ -967,6 +977,9 @@ if (!file.exists(file_path)) {
 }
 ```
 
+```{r prepare-plot_sim_obs_4, ref.label=c("prepare-get_sim","store-sim-obs2")}
+```
+
 ```{r plot_simobs4, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs_4"}
 # Insert your R code here!
 ```
@@ -975,12 +988,9 @@ if (!file.exists(file_path)) {
 # Set shape_sit = "group" and use the situation_group argument containing the groups definition (as a list of list)
 ```
 
-```{r plot_simobs4-solution, exercise.setup = "prepare-plot_sim_obs_4"}
+```{r plot_simobs4-solution}
 # SOLUTION
-# usms <- c("wheat","DurumWheat", "maize", "sorghum")
 groups <- list(list("wheat","DurumWheat"), list("maize", "sorghum"))
-# results <- get_sim(workspace = workspace_xml, usm_name = usms)
-# observations <- get_obs(workspace = workspace_xml, usm_name = usms)
 plot(results4, var = c("lai_n","masec_n"), obs = observations4, type = "scatter", shape_sit = "group", situation_group = groups)
 
 ```
@@ -1006,12 +1016,8 @@ Compute the statistical criteria using the `summary()` function
 # same use as for the plot function ...
 ```    
 
-```{r stat_simobs1-solution, exercise.setup = "prepare-plot_sim_obs_4"}
+```{r stat_simobs1-solution}
 # SOLUTION
-#usms <- c("wheat","DurumWheat", "maize", "sorghum")
-#results <- get_sim(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
-#observations <- get_obs(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
-
 summary(results4, obs = observations4)
 
 ```
@@ -1026,11 +1032,8 @@ summary(results4, obs = observations4)
 # use the argument all_situations ...
 ```
 
-```{r stat_simobs2-solution, exercise.setup = "prepare-plot_sim_obs_4"}
+```{r stat_simobs2-solution}
 # SOLUTION
-# usms <- c("wheat","DurumWheat", "maize", "sorghum")
-# results <- get_sim(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
-# observations <- get_obs(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
 summary(results4, obs = observations4, all_situations = FALSE)
 ```
 
@@ -1064,12 +1067,8 @@ For this purpose, the *R2* and *nRMSE* criteria will be used.
 # Just use the object returned by the summary function in the plot function ...
 ```
 
-```{r stat_simobs3-solution, exercise.setup = "prepare-plot_sim_obs_4"}
+```{r stat_simobs3-solution}
 # SOLUTION
-# usms <- c("wheat","DurumWheat", "maize", "sorghum")
-# results <- get_sim(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
-# observations <- get_obs(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
-
 summ <- summary(results4, obs = observations4, stat = c("R2","nRMSE"))
 
 plot(summ, title = "for all USMs")
@@ -1086,12 +1085,8 @@ plot(summ, title = "for all USMs")
 # use the argument all_situations in summary ...
 ```
 
-```{r stat_simobs4-solution, exercise.setup = "prepare-plot_sim_obs_4"}
+```{r stat_simobs4-solution}
 # SOLUTION
-# usms <- c("wheat","DurumWheat", "maize", "sorghum")
-# results <- get_sim(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
-# observations <- get_obs(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
-
 summ <- summary(results4, obs = observations4, all_situations = FALSE, stat = c("R2","nRMSE"))
 
 plot(summ, title = "for each USM")
@@ -1110,12 +1105,8 @@ By default the results per USMs are plotted in bars having different columns
 # Use the xvar argument of plot ...
 ```
 
-```{r stat_simobs5-solution, exercise.setup = "prepare-plot_sim_obs_4"}
+```{r stat_simobs5-solution}
 # SOLUTION
-# usms <- c("wheat","DurumWheat", "maize", "sorghum")
-# results <- get_sim(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
-# observations <- get_obs(workspace = workspace_xml, usm_name = usms, var = c("lai_n","masec_n"))
-
 summ <- summary(results4, obs = observations4, all_situations = FALSE, stat = c("R2","nRMSE"))
 
 plot(summ, xvar = "situation", title = "USM names as X")
@@ -1461,9 +1452,6 @@ Now we can plot the outputs of the two simulations using the CroPlotR `plot()` f
 
 ```{r prepare-wrapper-plot}
 wrapper_options = stics_wrapper_options(javastics_path = javastics, data_dir = workspace_xml, parallel = TRUE, verbose = FALSE)
-
-# res1 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = c("lai_n", "masec_n"))
-# res2 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = "lai_n", param_values = c("dlaimax" = 0.005, "durvieF" = 80))
 
 if (!file.exists(file.path(tmp_dir,"comp_res.RData"))) {
   res1 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = c("lai_n", "masec_n"))
@@ -1918,7 +1906,7 @@ Dynamic plots of variables can be aggregated to generate continuous plots.
 
 ```{r prepare-plot-successive}
 gen_usms_xml2txt(javastics, workspace_xml, usms_list = c("demo_Wheat1","demo_BareSoil2","demo_maize3"), 
-                                         verbose = FALSE)
+                 verbose = FALSE)
 
 # Run without succession
 wrapper_options <- stics_wrapper_options(javastics_path = javastics, 
