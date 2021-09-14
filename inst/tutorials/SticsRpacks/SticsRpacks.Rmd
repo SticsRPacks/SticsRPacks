@@ -645,22 +645,21 @@ Use the autocompletion from RStudio to get the USM name in the list. The autocom
 
 #### Finding data
 
-Let's import some simulations:
-
+Let's import some simulations for a few USMs and store them in an R object called `sim`:
+```{r, eval=FALSE, echo=TRUE}
+usms <- c("wheat","DurumWheat", "maize", "sorghum")
+sim <- get_sim(workspace = workspace_xml, usm_name = usms)
+```
 
 ```{r load-sim-obs, eval=FALSE}
 usms <- c("wheat","DurumWheat", "maize", "sorghum")
-obs <- get_obs(workspace = workspace_xml, usm_name = usms, verbose = FALSE)
 sim <- get_sim(workspace = workspace_xml, usm_name = usms, verbose = FALSE)
 sim_all = bind_rows_sim(sim)
 ```
 ```{r prepare-sim_obs, ref.label=c("prepare-get_sim","load-sim-obs")}
 ```
 
-We now have two objects: `sim` for the simulation results, and `obs` for the observations.
-
-You can get the USMs names using the `names` function on the `sim` and `obs` objects.
-Let's do it on the simulation results:
+You can get the USMs names using the `names` function on the `sim` object: 
 
 ```{r data_struct1, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
 # Insert your R code here!
@@ -711,10 +710,10 @@ sim$maize
 
 Finally, it is possible to chain the `$` notation or/and the indexing to get the values of the variables inside the `data.frame`. For example all these notations are equivalent: 
 
-* `obs$maize$lai_n`
-* `obs[[2]]$lai_n`
-* `obs[[2]][,2]`
-* `obs$maize[,2]`
+* `sim$maize$lai_n`
+* `sim[[2]]$lai_n`
+* `sim[[2]][,2]`
+* `sim$maize[,2]`
 
 #### Manipulate data
 
@@ -832,7 +831,7 @@ plot(results, overlap = list(list("lai_n","masec_n")))
 Evaluation of simulation results is performed using observation data by plotting dynamic graphs, scatter plots and by calculating statistical criteria. Observed data can be loaded by using the SticsRFiles `get_obs()` function and provided to CroPlotR functions. 
 
 <div class="alert alert-info">
-The data structure of the observations returned by `get_obs()` follow the same format than the simulations (*i.e.* `get_sim()` output). It is a list of `data.frame`s named after the USM name. Each row in the `data.frame` is a daily observation, and each columns is a variable.
+The data structure of the observations returned by `get_obs()` follow the same format than the simulations (*i.e.* `get_sim()` output). It is a list of `data.frame`s named after the USM name. Each row in the `data.frame` is a daily observation, and each columns is a variable. All the manipulations presented on the `sim` object in the previous section are thus also applicable on the list returned by `get_obs()`.
 </div>
 
 
