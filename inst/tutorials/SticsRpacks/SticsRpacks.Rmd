@@ -101,14 +101,14 @@ It includes 4 packages:
 * CroPlotR: to plot models results / observations and compute stats,
 * CroptimizR: to estimate model parameters.
 
-SticsRFiles and SticsOnR are dedicated to the STICS model, while CroPlotR and CroptimizR are generic for crop models.
+SticsRFiles and SticsOnR are dedicated to the STICS model, while CroPlotR and CroptimizR are generic for crop models (i.e. they can be used with any crop model that has an adequate R wrapper).
 
 The websites of the different packages can be found at:
 
-* [https://SticsRPacks.github.io/SticsRFiles/]
-* [https://SticsRPacks.github.io/SticsOnR/]
-* [https://SticsRPacks.github.io/CroPlotR/]
-* [https://SticsRPacks.github.io/CroptimizR/]
+* https://SticsRPacks.github.io/SticsRFiles/
+* https://SticsRPacks.github.io/SticsOnR/
+* https://SticsRPacks.github.io/CroPlotR/
+* https://SticsRPacks.github.io/CroptimizR/
 
 ### Finding documentation about the packages and their functions
 
@@ -142,7 +142,8 @@ Most of the exercises in the tutorial requires writing and running a few lines o
 get_var_info(keyword = "roots")
 ```
 
-You just have to type the R code in the black part and click on the `Run Code` green button on the right side to run it. The results will be printed below the panel.
+You just have to type the R code in the black part and click on the `Run Code` green button on the right side to run it. The results will be printed below the panel. 
+You can use these panels to do whatever tests you want to do to explore the features of the packages.
 
 The `Start over` button re-initialize the panel.
 
