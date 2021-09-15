@@ -580,10 +580,10 @@ See also: `gen_varmod` function to modify var.mod file in case STICS does not si
 
 ### Getting simulations results
 
-The `get_sim()` function can be used get simulation results to R from a STICS workspace. Some options allows filtering data, e.g. for given USM names or output variables. Check the function help before trying to use it.
+The `get_sim()` function can be used to get simulation results to R from a STICS workspace. Some options allows filtering data, e.g. for given USM names or output variables. Check the function help before trying to use it.
 
 
-```{r prepare-get_sim, echo=TRUE}
+```{r prepare-get_sim}
 usms <- get_usms_list(usm_path = file.path(workspace_path, "usms.xml"))
 sim_done <- length(list.files(pattern = "^mod_s", workspace_path)) >=
   length(usms)
@@ -669,17 +669,17 @@ usms <- c("wheat","DurumWheat", "maize", "sorghum")
 sim <- get_sim(workspace = workspace_path, usm_name = usms)
 ```
 
-```{r load-sim-obs, eval=FALSE}
+```{r load-sim, eval=FALSE}
 usms <- c("wheat","DurumWheat", "maize", "sorghum")
 sim <- get_sim(workspace = workspace_path, usm_name = usms, verbose = FALSE)
 sim_all = bind_rows_sim(sim)
 ```
-```{r prepare-sim_obs, ref.label=c("prepare-get_sim","load-sim-obs")}
+```{r prepare-sim, ref.label=c("prepare-get_sim","load-sim")}
 ```
 
 You can get the USMs names using the `names` function on the `sim` object: 
 
-```{r data_struct1, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
+```{r data_struct1, exercise=TRUE, exercise.setup = "prepare-sim"}
 # Insert your R code here!
 ```
 
@@ -698,7 +698,7 @@ The list of USMs is ordered, so we can index into it to get the simulation resul
 Indexing into a list with `[` gives a subset of the list (it returns a list again), while indexing using `[[` gives you the values (the content) of the list at this index.
 </div>
 
-```{r data_struct2, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
+```{r data_struct2, exercise=TRUE, exercise.setup = "prepare-sim"}
 # Insert your R code here!
 ```
 
@@ -713,7 +713,7 @@ sim[[2]]
 
 Ok now try to get the same USM results by using the `$` notation:
 
-```{r data_struct3, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
+```{r data_struct3, exercise=TRUE, exercise.setup = "prepare-sim"}
 # Insert your R code here!
 ```
 
@@ -739,7 +739,7 @@ Because the results are formatted as a list of `data.frame`s, we can use all the
 
 We can apply any function to each `data.frame` using the \*apply family of functions (*e.g.* lapply, mapply...). For example if you want to get the maximum simulate LAI for each USM you would do:
 
-```{r lapply_sim, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
+```{r lapply_sim, exercise=TRUE, exercise.setup = "prepare-sim"}
 lapply(sim, function(x) max(x$lai_n))
 ```
 
@@ -747,7 +747,7 @@ An other way to do so is to first transform the list of `data.frame` into a sing
 
 Use `bind_rows_sim` to make a single `data.frame` out of the list of `data.frame`s:
 
-```{r data_struct4, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
+```{r data_struct4, exercise=TRUE, exercise.setup = "prepare-sim"}
 # Insert your R code here!
 ```
 
@@ -766,7 +766,7 @@ Now we can use the functions from the [tidyverse](https://www.tidyverse.org/) fo
 
 For example we can use `filter` to filter the data:
 
-```{r filter_sim, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
+```{r filter_sim, exercise=TRUE, exercise.setup = "prepare-sim"}
 sim_all = bind_rows_sim(sim)
 
 filter(sim_all, Date == as.POSIXct("2000-09-04", tz = "UTC"))
@@ -775,7 +775,7 @@ filter(sim_all, Date == as.POSIXct("2000-09-04", tz = "UTC"))
 
 Or summarize it by group. For exemple if we want the maximum lai for each USM (as we did above using `lapply`), we would do as follows:
 
-```{r summarise_sim, exercise=TRUE, exercise.setup = "prepare-sim_obs"}
+```{r summarise_sim, exercise=TRUE, exercise.setup = "prepare-sim"}
 sim_all%>%
   group_by(situation)%>%
   summarise(max_lai = max(lai_n))
@@ -1355,6 +1355,13 @@ gen_usms_xml2txt(javastics_path, workspace_path, usms_list = c("wheat","banana",
 
 The text files have been generated in subfolders of `workspace_path`, i.e. **`r workspace_path`**, one folder per USM, each taking the name of the corresponding USM.
 
+```{r prepare-gen_usms}
+# generate missing dirs, if any
+dirs <- c("wheat","banana","soybean")
+dirs_ex <- dir.exists(file.path(workspace_path,dirs))
+if (!all(dirs_ex)) gen_usms_xml2txt(javastics_path, workspace_path, usms_list = dirs[!dirs_ex], verbose = FALSE)
+```
+
 Now, print the files inside the created folders:
 ```{r list_txt_files, exercise=TRUE, exercise.setup = "prepare-gen_usms"}
 # Insert your R code here!
@@ -1390,11 +1397,8 @@ stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_path
 
 Now everything is set-up to make our simulations! The model options we will use here are stored in the `wrapper_options` object with the options we just set up in the previous section. 
 
-```{r prepare-wrapper}
-# generate missing dirs, if any
-dirs <- c("wheat","banana","soybean")
-dirs_ex <- dir.exists(file.path(workspace_path,dirs))
-if (!all(dirs_ex)) gen_usms_xml2txt(javastics_path, workspace_path, usms_list = dirs[!dirs_ex], verbose = FALSE)
+
+```{r store-wrapper-options, eval=FALSE}
 wrapper_options_file <- file.path(tmp_dir,"wrapper_options.RData")
 if (!file.exists(wrapper_options_file)) {
   wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_path, parallel = TRUE, verbose = FALSE)
@@ -1403,6 +1407,9 @@ if (!file.exists(wrapper_options_file)) {
   #print("loading")
   load(file = wrapper_options_file)
 }
+```
+
+```{r prepare-wrapper, ref.label=c("prepare-gen_usms","store-wrapper-options")}
 ```
 
 * Now use `stics_wrapper()` to simulate the USM "wheat" only (not "banana" and "soybean") using the model options stored in `wrapper_options`, and return the leaf area index and the above-ground biomass:
@@ -1468,18 +1475,25 @@ The content of `sim_list` follows the same format as the outputs returned by `ge
 
 Now we can plot the outputs of the two simulations using the CroPlotR `plot()` function by giving the simulation objects as arguments (optionally named). The results of both simulations are accessible in the `res1` and `res2` objects. The results of the simulations are stored in the `sim_list` field of each object. For example to get the results of the simulation for `res1`, we would do: `res1$sim_list`. 
 
-```{r prepare-wrapper-plot}
-wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_path, parallel = TRUE, verbose = FALSE)
-
+```{r store-comp_res, eval=FALSE}
 if (!file.exists(file.path(tmp_dir,"comp_res.RData"))) {
-  res1 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = c("lai_n", "masec_n"))
-  res2 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = "lai_n", param_values = c("dlaimax" = 0.005, "durvieF" = 80))
+  wrapper_options = stics_wrapper_options(javastics_path = javastics_path, 
+                                          data_dir = workspace_path, parallel = TRUE, 
+                                          verbose = FALSE)
+  res1 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", 
+                       var_names = c("lai_n", "masec_n"))
+  res2 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", 
+                       var_names = "lai_n", 
+                       param_values = c("dlaimax" = 0.005, "durvieF" = 80))
   
   save(list=c("res1", "res2"), file=file.path(tmp_dir,"comp_res.RData"))
 } else {
   #print("loading")
   load(file=file.path(tmp_dir,"comp_res.RData"))
 }
+```
+
+```{r prepare-wrapper-plot, ref.label=c("prepare-gen_usms","store-comp_res")}
 ```
 
 Then, to plot a simulation result, we would do:
@@ -1542,15 +1556,23 @@ The workflow for parameter estimation is made using several steps:
 - Set-up options for the optimization method,
 - run the parameter optimization (`estim_param`).
 
-```{r prepare-param-estim}
-wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_path, parallel = TRUE, verbose = FALSE)
+```{r store-param-estim, eval=FALSE}
+if (!file.exists(file.path(tmp_dir,"store-param-estim.RData"))) {
+  wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_path, parallel = TRUE, verbose = FALSE)
+  obs = get_obs(workspace = workspace_path, usm_name = "wheat", verbose = FALSE)
+  obs_filt = filter_obs(obs, "lai_n", include = TRUE)
+  param_info = list(stamflax = list(lb = 200, ub = 400))
+  optim_options = list(nb_rep = 3, maxeval = 10, xtol_rel = 1e-03, path_results = workspace_path, ranseed = 1234)
+  
+  save(list=c("wrapper_options", "obs", "obs_filt", "param_info", "optim_options"),
+       file=file.path(tmp_dir,"store-param-estim.RData"))
+} else {
+  #print("loading")
+  load(file=file.path(tmp_dir,"store-param-estim.RData"))
+}
+```
 
-obs = get_obs(workspace = workspace_path, usm_name = "wheat", verbose = FALSE)
-obs_filt = filter_obs(obs, "lai_n", include = TRUE)
-
-param_info = list(stamflax = list(lb = 200, ub = 400))
-
-optim_options = list(nb_rep = 3, maxeval = 10, xtol_rel = 1e-03, path_results = workspace_path, ranseed = 1234)
+```{r prepare-param-estim, ref.label=c("prepare-gen_usms","store-param-estim")}
 ```
 
 ### Modelling environment
@@ -1716,16 +1738,31 @@ gen_usms_xml2txt(javastics_path, workspace_path, usms_list = c("wheat","banana",
 </div>
 
 
-```{r prepare-param-estim-out}
-load(file = system.file("extdata/optim_results.Rdata", package = "SticsRPacks"))
-optim_res = res
-rm(res)
-wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_path, parallel = TRUE, verbose = FALSE)
-obs_filt = filter_obs(get_obs(workspace = workspace_path, usm_name = "wheat", verbose = FALSE), "lai_n", include = TRUE)
-sim_after_optim = stics_wrapper(param_values = optim_res$final_values, model_options = wrapper_options, sit_names = "wheat")$sim_list
-gen_usms_xml2txt(javastics_path, workspace_path, usms_list = c("wheat","banana","soybean"),
-                 verbose=FALSE)
-sim_before_optim = stics_wrapper(model_options = wrapper_options, sit_names = "wheat")$sim_list
+```{r store-param-estim-out, eval=FALSE}
+if (!file.exists(file.path(tmp_dir,"prepare-param-estim-out.RData"))) {
+  load(file = system.file("extdata/optim_results.Rdata", package = "SticsRPacks"))
+  optim_res = res
+  rm(res)
+  wrapper_options = stics_wrapper_options(javastics_path = javastics_path, 
+                                          data_dir = workspace_path, parallel = TRUE, 
+                                          verbose = FALSE)
+  obs_filt = filter_obs(get_obs(workspace = workspace_path, usm_name = "wheat", 
+                                verbose = FALSE), "lai_n", include = TRUE)
+  sim_after_optim = stics_wrapper(param_values = optim_res$final_values, 
+                                  model_options = wrapper_options, sit_names = "wheat")$sim_list
+  sim_before_optim = stics_wrapper(model_options = wrapper_options, sit_names = "wheat", 
+                                   verbose = FALSE)$sim_list
+  
+  save(list=c("optim_res", "wrapper_options", "obs_filt", "sim_after_optim", "sim_before_optim"),
+       file=file.path(tmp_dir,"prepare-param-estim-out.RData"))
+} else {
+  #print("loading")
+  load(file=file.path(tmp_dir,"prepare-param-estim-out.RData"))
+}
+```
+
+
+```{r prepare-param-estim-out, ref.label=c("prepare-gen_usms","store-param-estim-out")}
 ```
 
 ### Plots
@@ -1924,23 +1961,32 @@ Dynamic plots of variables can be aggregated to generate continuous plots.
 * Have a look at the argument `successive` of the `plot` function of the CroPlotR package.  Then plot the `azomes` variable (amount of NO3-N in soil) simulated in the previous exercise for both modes (use the `without_succ` and `with_succ` R variables that contains the results returned by the wrapper, as presented in the SOLUTION of the previous exercise). In both cases, use the `successive` argument of the `plot` function to easily compare the two plots and check that `azomes` is more continuous in the second case.  
 
 ```{r prepare-plot-successive}
-gen_usms_xml2txt(javastics_path, workspace_path, usms_list = c("demo_Wheat1","demo_BareSoil2","demo_maize3"), 
-                 verbose = FALSE)
-
-# Run without succession
-wrapper_options <- stics_wrapper_options(javastics_path = javastics_path, 
-                                         data_dir = workspace_path, 
-                                         verbose = FALSE)
-without_succ <- stics_wrapper(model_options = wrapper_options, 
-                              sit_names = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
-
-# Run with succession
-wrapper_options <- stics_wrapper_options(javastics_path = javastics_path, 
-                                         data_dir = workspace_path,
-                                         successive_usms = list(c("demo_Wheat1","demo_BareSoil2","demo_maize3")), 
-                                         verbose = FALSE)
-with_succ <- stics_wrapper(model_options = wrapper_options, 
-                           sit_names = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+if (!file.exists(file.path(tmp_dir,"prepare-plot-successive.RData"))) {
+  gen_usms_xml2txt(javastics_path, workspace_path, 
+                   usms_list = c("demo_Wheat1","demo_BareSoil2","demo_maize3"), 
+                   verbose = FALSE)
+  
+  # Run without succession
+  wrapper_options <- stics_wrapper_options(javastics_path = javastics_path, 
+                                           data_dir = workspace_path, 
+                                           verbose = FALSE)
+  without_succ <- stics_wrapper(model_options = wrapper_options, 
+                                sit_names = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+  
+  # Run with succession
+  wrapper_options <- stics_wrapper_options(javastics_path = javastics_path, 
+                                           data_dir = workspace_path,
+                                           successive_usms = list(c("demo_Wheat1","demo_BareSoil2","demo_maize3")), 
+                                           verbose = FALSE)
+  with_succ <- stics_wrapper(model_options = wrapper_options, 
+                             sit_names = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+  
+  save(list=c("without_succ", "with_succ"),
+       file=file.path(tmp_dir,"prepare-plot-successive.RData"))
+} else {
+  #print("loading")
+  load(file=file.path(tmp_dir,"prepare-plot-successive.RData"))
+}
 ```
 
 ```{r plot_successive, exercise=TRUE, exercise.setup = "prepare-plot-successive", exercise.lines=8}
@@ -1991,9 +2037,29 @@ sim <- get_sim(workspace = workspace_path, usm_name="intercrop_pea_barley",var_l
 * Examine the results and try to answer the quizz below
 
 
-```{r prepare-intercrop-2}
-run_javastics(javastics_path=javastics_path,  workspace_path = workspace_path, usms_list = c("intercrop_pea_barley"), verbose = FALSE)
-sim <- get_sim(workspace = workspace_path, usm_name="intercrop_pea_barley",var_list=c("lai_n","masec_n","mafruit"), verbose = FALSE)
+```{r run-intercrop, eval=FALSE}
+if (!file.exists(file.path(workspace_path,c("mod_spintercrop_pea_barley.sti",
+                                            "mod_saintercrop_pea_barley.sti"))) {
+  run_javastics(javastics_path=javastics_path,  workspace_path = workspace_path, 
+                usms_list = c("intercrop_pea_barley"), verbose = FALSE)
+}
+```
+
+```{r store-intercrop-2, eval=FALSE}
+if (!file.exists(file.path(tmp_dir,"prepare-intercrop-2.RData"))) {
+  sim <- get_sim(workspace = workspace_path, 
+                 usm_name="intercrop_pea_barley",
+                 var_list=c("lai_n","masec_n","mafruit"), verbose = FALSE)
+  
+  save(list=c("sim"),
+       file=file.path(tmp_dir,"prepare-intercrop-2.RData"))
+} else {
+  #print("loading")
+  load(file=file.path(tmp_dir,"prepare-intercrop-2.RData"))
+}
+```
+
+```{r prepare-intercrop-2, ref.label=c("run-intercrop","store-intercrop-2")}
 ```
 
 ```{r intercrop-2, exercise=TRUE, exercise.setup = "prepare-intercrop-2"}
@@ -2051,11 +2117,22 @@ print(sim)
 
 * Now, plot the simulation results using the standard plot function of CroPlotR
 
-```{r prepare-intercrop-6}
-sim <- get_sim(workspace = workspace_path, usm_name="intercrop_pea_barley",
-               var_list=c("lai_n","masec_n","mafruit"),
-               usms_filepath = file.path(workspace_path,"usms.xml"), javastics_path=javastics_path,
-               verbose = FALSE)
+```{r store-intercrop-6, eval=FALSE}
+if (!file.exists(file.path(tmp_dir,"prepare-intercrop-6.RData"))) {
+  sim <- get_sim(workspace = workspace_path, usm_name="intercrop_pea_barley",
+                 var_list=c("lai_n","masec_n","mafruit"),
+                 usms_filepath = file.path(workspace_path,"usms.xml"), javastics_path=javastics_path,
+                 verbose = FALSE)
+  
+  save(list=c("sim"),
+       file=file.path(tmp_dir,"prepare-intercrop-6.RData"))
+} else {
+  #print("loading")
+  load(file=file.path(tmp_dir,"prepare-intercrop-6.RData"))
+}
+```
+
+```{r prepare-intercrop-6, ref.label=c("run-intercrop","store-intercrop-6")}
 ```
 
 ```{r intercrop-6, exercise=TRUE, exercise.setup = "prepare-intercrop-6"}
