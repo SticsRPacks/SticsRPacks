@@ -3,12 +3,12 @@
 #' This will check to see if all SticsRPacks packages are up-to-date, and install the desired version if not.
 #'
 #' @param ref The desired git reference. Could be a commit, tag, or branch name. Defaults to NULL
-#' for the last release of the package.
+#' for the latest release of the package.
 #'
 #' @export
 #' @examples
 #' \dontrun{
-#' # Use the last release:
+#' # Use the latest release:
 #' SticsRPacks_update()
 #'
 #' # Using a particular commit for one:
@@ -35,7 +35,7 @@ SticsRPacks_update <- function(ref = list(SticsRFiles = NULL, CroptimizR = NULL,
 
   for(i in seq_along(ref)){
     if(is.null(ref[[i]])){
-      # If the user does not give anything, we take the last release:
+      # If the user does not give anything, we take the latest release:
       out = utils::capture.output(remotes::install_github(repo = paste0(repos[i],"@*release"), dependencies = FALSE), type = "message")
       if(any(grepl("Skipping install",out))){
         message("Package ",crayon::red(gsub("SticsRPacks/","",names(ref)[i])), " is already up-to-date")
