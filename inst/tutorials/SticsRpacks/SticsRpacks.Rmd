@@ -773,7 +773,7 @@ filter(sim_all, Date == as.POSIXct("2000-09-04", tz = "UTC"))
 ```
 
 
-Or summarize it by group. For exemple if we want the maximum lai for each USM (as we did above using `lapply`), we would do as follows:
+Or summarize it by group. For example if we want the maximum lai for each USM (as we did above using `lapply`), we would do as follows:
 
 ```{r summarise_sim, exercise=TRUE, exercise.setup = "prepare-sim"}
 sim_all%>%
@@ -1623,7 +1623,7 @@ The optimization methods available in CroptimizR have some parameters too. For e
 - `nb_rep`: Number of times the minimization process is done, each time starting with a different set of initial
 parameters values. This one is used to control whether our initial values impact our resulting optimized value or not. The more is better, but the whole optimization process is repeated `nb_rep` so it takes more and more time.
 - `maxeval`: Maximum number of evaluations of the minimized criteria. That is to say the algorithm is stopped if it did not converge to a value after `maxeval` runs.
-- `xtol_rel`: Tolerance criterion between two iterations, *i.e.* stop the algorithm when an optimization step (or an estimate of the optimum) changes every parameter by less than xtol_rel multiplied by the absolute value of the parameter.
+- `xtol_rel`: Tolerance criterion between two iterations, *i.e.* stop the algorithm when an optimization step (or an estimate of the optimum) changes every parameter by less than `xtol_rel` multiplied by the absolute value of the parameter.
 - `path_results`: path to the directory on which the results will be written (graph and .Rdata)
 - `ranseed`: set the random seed so that each execution give the same results. If you want full randomization, don't set it.
 
@@ -1685,7 +1685,7 @@ param_info = list(stamflax = list(lb = 200, ub = 400))
 
 Now that we defined all information we needed, we can use `estim_param()` to make the optimization. 
 
-As a reminder, here's the objects we previously defined:
+As a reminder, here are the objects we previously defined:
 
 - `obs_filt`: the observations to use in the optimization  
 - `stics_wrapper`: this is the wrapper function for stics
@@ -1941,7 +1941,7 @@ i) Calling `run_stics` for each USM to simulate ;
 ii) Between two calls to `run_stics`, copying the files `recup.tmp` and `snow_variables.txt` generated in the folder of the preceding USMs to the folder of the USMs to simulate
 iii) Defining the `codesuite` parameter to 1 in the file `travail.usm` of the USM to simulate
 
-It can however be useful if one want for example to include decision rules between the successive USMs to simulate.
+It can however be useful if one wants for example to include decision rules between the successive USMs to simulate.
 </div>
 
 
@@ -1997,7 +1997,7 @@ plot("Without successive"=without_succ$sim_list,
 
 Estimating parameters on successive simulations is also possible. Actually it may not require specific options in the `estim_param` function: if the `successive_usms` argument is defined in the STICS wrapper options, then the parameters will be estimated on successive simulations. 
 
-Note however that by default the same values of the parameters will be applied on all USMs. If one want to estimate the parameters for specific USMs only, or with different values depending on the USMs, one must use the `sit_list` element of the `param_info` argument.
+Note however that by default the same values of the parameters will be applied on all USMs. If one wants to estimate the parameters for specific USMs only, or with different values depending on the USMs, one must use the `sit_list` element of the `param_info` argument.
 
 
 ## Managing Intercrops
@@ -2025,7 +2025,7 @@ sim <- get_sim(workspace = workspace_path, usm_name="intercrop_pea_barley",var_l
 ```
 
 
-* Examine the results and try to answer the quizz below
+* Examine the results and try to answer the quiz below
 
 
 ```{r run-intercrop, eval=FALSE}
@@ -2144,7 +2144,7 @@ Note that many features are available for parameter estimation in CroptimizR. Th
 Among them you will find:  
 
 * the use of inequality constraints between parameters (see argument `satisfy_par_const`),
-* the simultaneous estimation of different values of the same parameters depending on the USMs (use of `sit_list`in `param_info` argument, see (here)[https://sticsrpacks.github.io/CroptimizR/articles/Parameter_estimation_Specific_and_Varietal.html] for a detailed example),
-* the use of bayesian methods (see (here)[https://sticsrpacks.github.io/CroptimizR/articles/Parameter_estimation_DREAM.html] for a detailed example)
+* the simultaneous estimation of different values of the same parameters depending on the USMs (use of `sit_list`in `param_info` argument, see [here](https://sticsrpacks.github.io/CroptimizR/articles/Parameter_estimation_Specific_and_Varietal.html) for a detailed example),
+* the use of Bayesian methods (see [here](https://sticsrpacks.github.io/CroptimizR/articles/Parameter_estimation_DREAM.html) for a detailed example)
 * the possibility to dynamically transform simulations and/or observations in case observed values do not directly correspond to simulated variables (see arguments `transform_obs`, `transform_sim` and `var_names`)
 * ...
