@@ -85,6 +85,17 @@ Alternatively, e.g. if you have an older version of RStudio or if you don't have
 
 The first time it is started the tutorial takes a few minutes to initialize in order to download all the materials and run the solutions. Subsequent runs do not need this steps, the tutorial will thus start almost immediately from the second run.
 
+## Getting help
+
+If you have any question or suggestion or if you want to report a bug, please do it via the GitHub [issues](https://github.com/SticsRPacks/SticsRPacks/issues).
+
+Thanks for that, this would greatly help us to improve this package.
+
+## Citation
+
+If you have used this package for a study that led to a publication or
+report, please cite us. You can either use the citation tool from Github if you used the last version, or use `citation("SticsRPacks")` from R otherwise.
+
 ## Code of Conduct
 
 Please note that the SticsRPacks project is released with a [Contributor Code of Conduct](https://github.com/SticsRPacks/.github/blob/master/CODE_OF_CONDUCT.md). 
