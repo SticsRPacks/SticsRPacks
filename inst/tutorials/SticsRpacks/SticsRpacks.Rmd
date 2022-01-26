@@ -1259,7 +1259,7 @@ question("What is the name of the SticsRFiles function for modifying JavaStics I
 
 ```{r set_param_xml-2-solution}
 # SOLUTION:
-get_param_xml(xml_file = file.path(workspace_path,"sols.xml"),
+get_param_xml(file = file.path(workspace_path,"sols.xml"),
               param = "codenitrif")
 ```
 
@@ -1277,7 +1277,7 @@ get_param_xml(xml_file = file.path(workspace_path,"sols.xml"),
 # SOLUTION:
 set_param_xml(xml_file = file.path(workspace_path,"sols.xml"),
               param_name = "codenitrif", param_value = 1, out_path = file.path(workspace_path,"sols_new.xml"))
-get_param_xml(xml_file = file.path(workspace_path,"sols_new.xml"),
+get_param_xml(file = file.path(workspace_path,"sols_new.xml"),
               param = "codenitrif")
 ```
 
