@@ -54,8 +54,8 @@ have loaded:
 ``` r
 library(SticsRPacks)
 #> -- Attaching packages ------------------------------------- SticsRPacks 0.2.0 --
-#> v SticsRFiles 0.4.1     v SticsOnR    0.2.2
-#> v CroptimizR  0.4.0     v CroPlotR    0.7.1
+#> v SticsRFiles 0.4.2     v SticsOnR    0.2.2
+#> v CroptimizR  0.4.0     v CroPlotR    0.7.2
 #> 
 ```
 
@@ -101,6 +101,21 @@ The first time it is started the tutorial takes a few minutes to
 initialize in order to download all the materials and run the solutions.
 Subsequent runs do not need this steps, the tutorial will thus start
 almost immediately from the second run.
+
+## Getting help
+
+If you have any question or suggestion or if you want to report a bug,
+please do it via the GitHub
+[issues](https://github.com/SticsRPacks/SticsRPacks/issues).
+
+Thanks for that, this would greatly help us to improve this package.
+
+## Citation
+
+If you have used this package for a study that led to a publication or
+report, please cite us. You can either use the citation tool from Github
+if you used the last version, or use `citation("SticsRPacks")` from R
+otherwise.
 
 ## Code of Conduct
 
