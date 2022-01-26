@@ -621,7 +621,7 @@ get_sim(workspace = workspace_path)
 
 ```{r get_sim2-solution}
 # SOLUTION
-get_sim(workspace = workspace_path, usm_name = c("banana","Turmeric"))
+get_sim(workspace = workspace_path, usm = c("banana","Turmeric"))
 ```
 
 * Get the values of the variable `lai_n` simulated for USMs `wheat` and `maize`
@@ -636,8 +636,8 @@ get_sim(workspace = workspace_path, usm_name = c("banana","Turmeric"))
 
 ```{r get_sim4-solution}
 # SOLUTION
-get_sim(workspace = workspace_path, usm_name = c("wheat", "maize"),
-        var_list = "lai_n")
+get_sim(workspace = workspace_path, usm = c("wheat", "maize"),
+        var = "lai_n")
 ```
 
 
@@ -666,12 +666,12 @@ Use the autocompletion from RStudio to get the USM name in the list. The autocom
 Let's import some simulations for a few USMs and store them in an R object called `sim`:
 ```{r, eval=FALSE, echo=TRUE}
 usms <- c("wheat","DurumWheat", "maize", "sorghum")
-sim <- get_sim(workspace = workspace_path, usm_name = usms)
+sim <- get_sim(workspace = workspace_path, usm = usms)
 ```
 
 ```{r load-sim, eval=FALSE}
 usms <- c("wheat","DurumWheat", "maize", "sorghum")
-sim <- get_sim(workspace = workspace_path, usm_name = usms, verbose = FALSE)
+sim <- get_sim(workspace = workspace_path, usm = usms, verbose = FALSE)
 sim_all = bind_rows_sim(sim)
 ```
 ```{r prepare-sim, ref.label=c("prepare-get_sim","load-sim")}
@@ -791,8 +791,8 @@ The [CroPlotR](https://sticsrpacks.github.io/CroPlotR/) package can be used to p
 ```{r store-sim, eval=FALSE}
 file_path <- file.path(tmp_dir,"sim-1.RData")
 if (!file.exists(file_path)) {
-  results <- get_sim(workspace = workspace_path, usm_name = "wheat",
-                     var_list = c("lai_n", "masec_n"), verbose = FALSE)
+  results <- get_sim(workspace = workspace_path, usm = "wheat",
+                     var = c("lai_n", "masec_n"), verbose = FALSE)
   
   save("results", file=file_path)
 } else {
@@ -902,7 +902,7 @@ As for the first exercise in the "Plotting simulations results" section, use the
 ```{r store-sim-obs1, eval=FALSE}
 file_path <- file.path(tmp_dir,"sim_obs1.RData")
 if (!file.exists(file_path)) {
-  results2 <- get_sim(workspace = workspace_path, usm_name = c("wheat", "maize"), verbose = FALSE)
+  results2 <- get_sim(workspace = workspace_path, usm = c("wheat", "maize"), verbose = FALSE)
   observations2 <- get_obs(workspace = workspace_path, usm_name = c("wheat", "maize"), verbose = FALSE)
   save(list=c("results2","observations2"), file=file_path)
 } else {
@@ -986,7 +986,7 @@ Use the R objects `results4` and `observations4` already containing respectively
 usms <- c("wheat","DurumWheat", "maize", "sorghum")
 file_path <- file.path(tmp_dir,"sim_obs2.RData")
 if (!file.exists(file_path)) {
-  results4 <- get_sim(workspace = workspace_path, usm_name = usms, verbose = FALSE)
+  results4 <- get_sim(workspace = workspace_path, usm = usms, verbose = FALSE)
   observations4 <- get_obs(workspace = workspace_path, usm_name = usms, verbose = FALSE)
   save(list=c("results4","observations4"), file=file_path)
 } else {
@@ -2021,7 +2021,7 @@ We will see in this section how intercrops are handled in SticsRPacks.
 ```{r intercrop-1-solution}
 # SOLUTION:
 run_javastics(javastics_path=javastics_path,  workspace_path = workspace_path, usms_list = c("intercrop_pea_barley"))
-sim <- get_sim(workspace = workspace_path, usm_name="intercrop_pea_barley",var_list=c("lai_n","masec_n","mafruit"))
+sim <- get_sim(workspace = workspace_path, usm="intercrop_pea_barley",var=c("lai_n","masec_n","mafruit"))
 ```
 
 
@@ -2039,8 +2039,8 @@ if (!all(file.exists(file.path(workspace_path,c("mod_spintercrop_pea_barley.sti"
 ```{r store-intercrop-2, eval=FALSE}
 if (!file.exists(file.path(tmp_dir,"prepare-intercrop-2.RData"))) {
   sim <- get_sim(workspace = workspace_path, 
-                 usm_name="intercrop_pea_barley",
-                 var_list=c("lai_n","masec_n","mafruit"), verbose = FALSE)
+                 usm="intercrop_pea_barley",
+                 var=c("lai_n","masec_n","mafruit"), verbose = FALSE)
   
   save(list=c("sim"),
        file=file.path(tmp_dir,"prepare-intercrop-2.RData"))
@@ -2082,9 +2082,9 @@ question("How are organized the results for the different intercrops",
 
 ```{r intercrop-4-solution}
 # SOLUTION:
-sim <- get_sim(workspace = workspace_path, usm_name="intercrop_pea_barley",
-               var_list=c("lai_n","masec_n","mafruit"),
-               usms_filepath = file.path(workspace_path,"usms.xml"))
+sim <- get_sim(workspace = workspace_path, usm="intercrop_pea_barley",
+               var=c("lai_n","masec_n","mafruit"),
+               usms_file = file.path(workspace_path,"usms.xml"))
 print(sim)
 # The names of the Plant files are now given in the Plant column instead of Plant_1 and Plant_2 ...
 ```
@@ -2099,9 +2099,9 @@ print(sim)
 
 ```{r intercrop-5-solution}
 # SOLUTION:
-sim <- get_sim(workspace = workspace_path, usm_name="intercrop_pea_barley",
-               var_list=c("lai_n","masec_n","mafruit"),
-               usms_filepath = file.path(workspace_path,"usms.xml"), javastics_path=javastics_path)
+sim <- get_sim(workspace = workspace_path, usm="intercrop_pea_barley",
+               var=c("lai_n","masec_n","mafruit"),
+               usms_file = file.path(workspace_path,"usms.xml"), javastics=javastics_path)
 print(sim)
 # The names of the Plants are now given in the Plant column.
 ```
@@ -2110,9 +2110,9 @@ print(sim)
 
 ```{r store-intercrop-6, eval=FALSE}
 if (!file.exists(file.path(tmp_dir,"prepare-intercrop-6.RData"))) {
-  sim <- get_sim(workspace = workspace_path, usm_name="intercrop_pea_barley",
-                 var_list=c("lai_n","masec_n","mafruit"),
-                 usms_filepath = file.path(workspace_path,"usms.xml"), javastics_path=javastics_path,
+  sim <- get_sim(workspace = workspace_path, usm="intercrop_pea_barley",
+                 var=c("lai_n","masec_n","mafruit"),
+                 usms_file = file.path(workspace_path,"usms.xml"), javastics=javastics_path,
                  verbose = FALSE)
   
   save(list=c("sim"),

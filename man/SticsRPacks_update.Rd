@@ -10,14 +10,14 @@ SticsRPacks_update(
 }
 \arguments{
 \item{ref}{The desired git reference. Could be a commit, tag, or branch name. Defaults to NULL
-for the last release of the package.}
+for the latest release of the package.}
 }
 \description{
 This will check to see if all SticsRPacks packages are up-to-date, and install the desired version if not.
 }
 \examples{
 \dontrun{
-# Use the last release:
+# Use the latest release:
 SticsRPacks_update()
 
 # Using a particular commit for one:
