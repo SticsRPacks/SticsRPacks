@@ -147,7 +147,7 @@ You can use these panels to do whatever tests you want to do to explore the feat
 
 The `Start over` button re-initialize the panel.
 
-If you don't find the solution, click on the button `Hints`, it will give you an advice. If you click again and again several advises will be given (dependgin on the exercise) and finally the expected solution of the exercise. To copy the solution in the panel, click on the `Copy to Clipboard` blue button on the right and then right-click in the black part of the panel and select "paste". You can train on the panel above.
+If you don't find the solution, click on the button `Hints`, it will give you an advice. If you click again and again several advises will be given (depending on the exercise) and finally the expected solution of the exercise. To copy the solution in the panel, click on the `Copy to Clipboard` blue button on the right and then right-click in the black part of the panel and select "paste". You can train on the panel above.
 
 <div class="alert alert-info">
 This tutorial automatically downloaded JavaStics in a temporary folder of your computer: `r javastics_path`. The path of this folder is stored in the `javastics_path` R object.
@@ -169,7 +169,7 @@ The practical sessions of the STICS training are traditionally performed using t
 Let's see how the first sessions would look like in R using SticsRPacks.
 
 
-The game is to run a single USM by activating and deactivating water and nitrogen stress in turns and to analyze the impact by looking at dynamic variables and stress indicators.
+The game is to run a single USM by activating and deactivating water and nitrogen stress in turns and to analyse the impact by looking at dynamic variables and stress indicators.
 
 Let's first initialize variables and define the setup:
 
