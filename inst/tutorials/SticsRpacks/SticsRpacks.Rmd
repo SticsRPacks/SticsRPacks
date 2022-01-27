@@ -262,7 +262,7 @@ The code to get this is the following:
 usm = "wheat"
 
 # First, import the observations and filter them:
-obs = get_obs(workspace = workspace_path, usm_name = usm)
+obs = get_obs(workspace = workspace_path, usm = usm)
 obs_filt = filter_obs(obs, "lai_n", include = TRUE)
 
 # Set-up the simulation environment:
@@ -616,7 +616,7 @@ get_sim(workspace = workspace_path)
 ```
 
 ```{r get_sim2-hint-1}
-# The argument usm_name is particularly useful in this case ...
+# The argument usm is particularly useful in this case ...
 ```
 
 ```{r get_sim2-solution}
@@ -631,7 +631,7 @@ get_sim(workspace = workspace_path, usm = c("banana","Turmeric"))
 ```
 
 ```{r get_sim4-hint-1}
-# Use the argument var_list for specifying which variable(s) to select ...
+# Use the argument var for specifying which variable(s) to select ...
 ```
 
 ```{r get_sim4-solution}
@@ -883,7 +883,7 @@ get_obs(workspace = workspace_path)
 
 ```{r get_obs2-solution}
 # SOLUTION
-get_obs(workspace = workspace_path, usm_name = c("wheat", "maize"), var_list = c("lai_n","masec_n"))
+get_obs(workspace = workspace_path, usm = c("wheat", "maize"), var = c("lai_n","masec_n"))
 ```
 
 
@@ -903,7 +903,7 @@ As for the first exercise in the "Plotting simulations results" section, use the
 file_path <- file.path(tmp_dir,"sim_obs1.RData")
 if (!file.exists(file_path)) {
   results2 <- get_sim(workspace = workspace_path, usm = c("wheat", "maize"), verbose = FALSE)
-  observations2 <- get_obs(workspace = workspace_path, usm_name = c("wheat", "maize"), verbose = FALSE)
+  observations2 <- get_obs(workspace = workspace_path, usm = c("wheat", "maize"), verbose = FALSE)
   save(list=c("results2","observations2"), file=file_path)
 } else {
   #print("loading")
@@ -987,7 +987,7 @@ usms <- c("wheat","DurumWheat", "maize", "sorghum")
 file_path <- file.path(tmp_dir,"sim_obs2.RData")
 if (!file.exists(file_path)) {
   results4 <- get_sim(workspace = workspace_path, usm = usms, verbose = FALSE)
-  observations4 <- get_obs(workspace = workspace_path, usm_name = usms, verbose = FALSE)
+  observations4 <- get_obs(workspace = workspace_path, usm = usms, verbose = FALSE)
   save(list=c("results4","observations4"), file=file_path)
 } else {
   #print("loading")
@@ -1560,7 +1560,7 @@ The workflow for parameter estimation is made using several steps:
 ```{r store-param-estim, eval=FALSE}
 if (!file.exists(file.path(tmp_dir,"store-param-estim.RData"))) {
   wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_path, parallel = TRUE, verbose = FALSE)
-  obs = get_obs(workspace = workspace_path, usm_name = "wheat", verbose = FALSE)
+  obs = get_obs(workspace = workspace_path, usm = "wheat", verbose = FALSE)
   obs_filt = filter_obs(obs, "lai_n", include = TRUE)
   param_info = list(stamflax = list(lb = 200, ub = 400))
   optim_options = list(nb_rep = 3, maxeval = 10, xtol_rel = 1e-03, out_dir = workspace_path, ranseed = 1234)
@@ -1598,7 +1598,7 @@ wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_di
 
 ```{r estim_param_obs1-solution}
 #SOLUTION:
-obs = get_obs(workspace = workspace_path, usm_name = "wheat")
+obs = get_obs(workspace = workspace_path, usm = "wheat")
 ```
 
 * Filter the observations to get only the lai using `filter_obs()`, and put it in an object called `obs_filt`:
@@ -1739,7 +1739,7 @@ if (!file.exists(file.path(tmp_dir,"prepare-param-estim-out.RData"))) {
   wrapper_options = stics_wrapper_options(javastics_path = javastics_path,
                                           data_dir = workspace_path, parallel = TRUE,
                                           verbose = FALSE)
-  obs_filt = filter_obs(get_obs(workspace = workspace_path, usm_name = "wheat",
+  obs_filt = filter_obs(get_obs(workspace = workspace_path, usm = "wheat",
                                 verbose = FALSE), "lai_n", include = TRUE)
   sim_after_optim = stics_wrapper(param_values = optim_res$final_values,
                                   model_options = wrapper_options, sit_names = "wheat")$sim_list
@@ -2015,7 +2015,7 @@ We will see in this section how intercrops are handled in SticsRPacks.
 ```
 
 ```{r intercrop-1-hint-2}
-# Use the get_sim function with the usms_list and var_list arguments to get the required results.
+# Use the get_sim function with the usms_list and var arguments to get the required results.
 ```
 
 ```{r intercrop-1-solution}
@@ -2074,7 +2074,7 @@ question("How are organized the results for the different intercrops",
          allow_retry = TRUE)
 ```
 
-* Check now how results are changed when you use the `usms_filepath` argument of the `get_sim` function
+* Check now how results are changed when you use the `usms_file` argument of the `get_sim` function
 
 ```{r intercrop-4, exercise=TRUE, exercise.setup = "prepare-intercrop-2"}
 # Insert your R code here!
