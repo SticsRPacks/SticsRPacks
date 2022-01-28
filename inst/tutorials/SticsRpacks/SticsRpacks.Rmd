@@ -185,7 +185,7 @@ var_names <- c(stress_ind_names,dyn_var_names)
 wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_PW1)
 
 # Generate the files for the simulation:
-gen_usms_xml2txt(javastics_path, workspace_PW1, usms_list = usm_name)
+gen_usms_xml2txt(javastics_path, workspace_PW1, usm = usm_name)
 
 ```
 
@@ -273,7 +273,7 @@ optim_options = list(nb_rep = 3, out_dir = workspace_path)
 param_info = list(stamflax = list(lb = 200, ub = 400))
 
 # Generate the files for the simulation:
-gen_usms_xml2txt(javastics_path, workspace_path, usms_list = usm)
+gen_usms_xml2txt(javastics_path, workspace_path, usm = usm)
 
 # Make the optimization:
 optim_res = estim_param(obs_list = obs_filt,
@@ -1330,7 +1330,7 @@ Before generating the text files, we will first restrain the number of variables
 
 ```{r gen_varmod-solution}
 #SOLUTION:
-gen_varmod(workspace_path, var_names = c("lai_n", "masec_n", "mafruit"))
+gen_varmod(workspace_path, var = c("lai_n", "masec_n", "mafruit"))
 ```
 
 It is generally useful (although not mandatory) to pre-filter the variables to avoid filtering the variables for the wrapper, the plots and the statistics.
@@ -1350,7 +1350,7 @@ Now we can generate our text files. Remember, the path of the JavaStics distribu
 
 ```{r gen_usms_xml2txt-solution}
 #SOLUTION:
-gen_usms_xml2txt(javastics_path, workspace_path, usms_list = c("wheat","banana","soybean"))
+gen_usms_xml2txt(javastics_path, workspace_path, usm = c("wheat","banana","soybean"))
 ```
 
 The text files have been generated in subfolders of `workspace_path`, i.e. **`r workspace_path`**, one folder per USM, each taking the name of the corresponding USM.
@@ -1359,7 +1359,7 @@ The text files have been generated in subfolders of `workspace_path`, i.e. **`r 
 # generate missing dirs, if any
 dirs <- c("wheat","banana","soybean")
 dirs_ex <- dir.exists(file.path(workspace_path,dirs))
-if (!all(dirs_ex)) gen_usms_xml2txt(javastics_path, workspace_path, usms_list = dirs[!dirs_ex], verbose = FALSE)
+if (!all(dirs_ex)) gen_usms_xml2txt(javastics_path, workspace_path, usm = dirs[!dirs_ex], verbose = FALSE)
 ```
 
 Now, print the files inside the created folders:
@@ -1909,7 +1909,7 @@ The `run_javastics` function CAN NOT be used to run successive USMs. In this cas
 #SOLUTION:
 
 # Generate the txt files
-gen_usms_xml2txt(javastics_path, workspace_path, usms_list = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+gen_usms_xml2txt(javastics_path, workspace_path, usm = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
 
 # Run without succession
 wrapper_options <- stics_wrapper_options(javastics_path = javastics_path,
