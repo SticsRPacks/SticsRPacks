@@ -31,7 +31,7 @@ URL: https://sticsrpacks.github.io/SticsRPacks,
     https://github.com/SticsRPacks/SticsRPacks
 BugReports: https://github.com/SticsRPacks/SticsRPacks/issues
 Depends:
-    R (>= 3.2)
+    R (>= 3.6.0)
 Imports:
     purrr,
     cli,
