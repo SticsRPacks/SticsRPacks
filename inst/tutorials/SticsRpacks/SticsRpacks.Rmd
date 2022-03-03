@@ -182,7 +182,7 @@ dyn_var_names <- c("lai_n","zrac","resmes","azomes","QNplante","masec_n")
 var_names <- c(stress_ind_names,dyn_var_names)
 
 # Set-up the simulation environment:
-wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_PW1)
+wrapper_options = stics_wrapper_options(javastics = javastics_path, workspace = workspace_PW1)
 
 # Generate the files for the simulation:
 gen_usms_xml2txt(javastics_path, workspace_PW1, usm = usm_name)
@@ -197,22 +197,22 @@ Then, let's run the simulations for the different configurations:
 # Simulate a reference situation with water and nitrogen stress
 sim_ws_ns = stics_wrapper(model_options = wrapper_options,
                           param_values = c(codeinnact=1, codeh2oact=1),
-                          var_names = var_names)$sim_list
+                          var = var_names)$sim_list
 
 # Simulate with water stress only
 sim_ws = stics_wrapper(model_options = wrapper_options,
                        param_values = c(codeinnact=2),
-                       var_names = var_names)$sim_list
+                       var = var_names)$sim_list
 
 # Simulate with N stress only
 sim_ns = stics_wrapper(model_options = wrapper_options,
                        param_values = c(codeh2oact=2),
-                       var_names = var_names)$sim_list
+                       var= var_names)$sim_list
 
 # Simulate with water stress only
 sim_without_stress = stics_wrapper(model_options = wrapper_options,
                                    param_values = c(codeinnact=2, codeh2oact=2),
-                                   var_names = var_names)$sim_list
+                                   var = var_names)$sim_list
 
 ```
 
