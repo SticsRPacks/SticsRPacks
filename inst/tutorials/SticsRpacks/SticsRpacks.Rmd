@@ -10,6 +10,9 @@ output:
     df_print: "paged"
 description: "A tutorial to learn SticsRPacks"
 runtime: shiny_prerendered
+editor_options: 
+  markdown: 
+    wrap: sentence
 ---
 
 ```{r setup, include=FALSE}
@@ -77,15 +80,21 @@ if(gen_help) {
 ```
 
 <!-- <div class="alert alert-danger"> -->
+
 <!-- Test danger 2 -->
+
 <!-- </div> -->
 
 <!-- <div class="alert alert-warning"> -->
+
 <!-- Test warning -->
+
 <!-- </div> -->
 
 <!-- <div class="alert alert-info"> -->
+
 <!-- Test info -->
+
 <!-- </div> -->
 
 ## Introduction
@@ -96,34 +105,36 @@ SticsRPacks is a set of packages for managing the STICS soil-crop model from R.
 
 It includes 4 packages:
 
-* SticsRFiles: to manipulate STICS input and output files,
-* SticsOnR: to run STICS simulations,
-* CroPlotR: to plot models results / observations and compute stats,
-* CroptimizR: to estimate model parameters.
+-   SticsRFiles: to manipulate STICS input and output files,
+-   SticsOnR: to run STICS simulations,
+-   CroPlotR: to plot models results / observations and compute stats,
+-   CroptimizR: to estimate model parameters.
 
 SticsRFiles and SticsOnR are dedicated to the STICS model, while CroPlotR and CroptimizR are generic for crop models (i.e. they can be used with any crop model that has an adequate R wrapper).
 
 The websites of the different packages can be found at:
 
-* https://SticsRPacks.github.io/SticsRFiles/
-* https://SticsRPacks.github.io/SticsOnR/
-* https://SticsRPacks.github.io/CroPlotR/
-* https://SticsRPacks.github.io/CroptimizR/
+-   <https://SticsRPacks.github.io/SticsRFiles/>
+-   <https://SticsRPacks.github.io/SticsOnR/>
+-   <https://SticsRPacks.github.io/CroPlotR/>
+-   <https://SticsRPacks.github.io/CroptimizR/>
 
 ### Finding documentation about the packages and their functions
 
 There are different sources of documentation regarding the packages and their functions:
 
-* the home pages of the packages websites (which links are given here-before), that introduce the packages main features,
-* the vignettes (`Articles` tab at the top of the packages websites home pages), that describe in detail the main features of the packages and the use of the associated functions,
-* the `Reference` tab at the top of the packages websites home pages, that lists and quickly describes all the exported functions of the packages, and gives links to their detailed documentation,
-* the command `? functionName` in the R console,  which displays the detailed documentation of a given function.
+-   the home pages of the packages websites (which links are given here-before), that introduce the packages main features,
+-   the vignettes (`Articles` tab at the top of the packages websites home pages), that describe in detail the main features of the packages and the use of the associated functions,
+-   the `Reference` tab at the top of the packages websites home pages, that lists and quickly describes all the exported functions of the packages, and gives links to their detailed documentation,
+-   the command `? functionName` in the R console, which displays the detailed documentation of a given function.
 
 Note also that completion can be used to list the different arguments of a function: if you type the name of a function in the R console followed by a bracket, e.g. `read.csv(` and then click on the `Tab` button of your keyboard, the list of arguments of the function will be displayed.
 
 ### The SticsRpacks tutorial
 
-This tutorial aims at introducing the use of these different packages with the STICS model. It was designed to be of increasing complexity, it is thus advised to follow it in order. The different sections are however independent and you can thus start it from any part using the menu on the left side (this may however take a little while since results from previous exercises must be automatically generated in this case).
+This tutorial aims at introducing the use of these different packages with the STICS model.
+It was designed to be of increasing complexity, it is thus advised to follow it in order.
+The different sections are however independent and you can thus start it from any part using the menu on the left side (this may however take a little while since results from previous exercises must be automatically generated in this case).
 
 The names and documentation of the functions to be used are given in the first exercises before letting you find them on your own as you go through the exercises.
 
@@ -142,32 +153,41 @@ Most of the exercises in the tutorial requires writing and running a few lines o
 get_var_info(keyword = "roots")
 ```
 
-You just have to type the R code in the black part and click on the `Run Code` green button on the right side to run it. The results will be printed below the panel.
+You just have to type the R code in the black part and click on the `Run Code` green button on the right side to run it.
+The results will be printed below the panel.
 You can use these panels to do whatever tests you want to do to explore the features of the packages.
 
 The `Start over` button re-initialize the panel.
 
-If you don't find the solution, click on the button `Hints`, it will give you an advice. If you click again and again several advises will be given (dependgin on the exercise) and finally the expected solution of the exercise. To copy the solution in the panel, click on the `Copy to Clipboard` blue button on the right and then right-click in the black part of the panel and select "paste". You can train on the panel above.
+If you don't find the solution, click on the button `Hints`, it will give you an advice.
+If you click again and again several advises will be given (dependgin on the exercise) and finally the expected solution of the exercise.
+To copy the solution in the panel, click on the `Copy to Clipboard` blue button on the right and then right-click in the black part of the panel and select "paste".
+You can train on the panel above.
 
-<div class="alert alert-info">
-This tutorial automatically downloaded JavaStics in a temporary folder of your computer: `r javastics_path`. The path of this folder is stored in the `javastics_path` R object.
+::: {.alert .alert-info}
+This tutorial automatically downloaded JavaStics in a temporary folder of your computer: `r javastics_path`.
+The path of this folder is stored in the `javastics_path` R object.
 
-It will be used in the following to perform the exercises. The exercises will use the USMs defined in the "example" workspace of JavaStics (stored in `r workspace_path`). The path of this workspace is stored in the `workspace_path` R object.
-
-</div>
+It will be used in the following to perform the exercises.
+The exercises will use the USMs defined in the "example" workspace of JavaStics (stored in `r workspace_path`).
+The path of this workspace is stored in the `workspace_path` R object.
+:::
 
 ## A foretaste of SticsRpacks
+
+```{=html}
 <!-- Note : indications might be added about some technical tips: for example some parts may take some time
 if they are not followed along the right order, needs for example to run simulations before exploiting outputs ... in part **Exploring and Evaluating the STICS results** -->
-
-Let see first the possibilities offered by the SticsRPacks packages through two simple illustrative examples. At this stage it is not necessary to understand the code, the aim in this section is just to show you what we can do with a few lines of R codes, you will learn how to use all the functions used here in the next sections :-). If you feel lost in this section or are hurry to start learning how to use the packages you can skip it and go to the next one!
+```
+Let see first the possibilities offered by the SticsRPacks packages through two simple illustrative examples.
+At this stage it is not necessary to understand the code, the aim in this section is just to show you what we can do with a few lines of R codes, you will learn how to use all the functions used here in the next sections :-).
+If you feel lost in this section or are hurry to start learning how to use the packages you can skip it and go to the next one!
 
 ### STICS training Practical session PW1
 
 The practical sessions of the STICS training are traditionally performed using the JavaStics GUI and Excel.
 
 Let's see how the first sessions would look like in R using SticsRPacks.
-
 
 The game is to run a single USM by activating and deactivating water and nitrogen stress in turns and to analyze the impact by looking at dynamic variables and stress indicators.
 
@@ -188,7 +208,6 @@ wrapper_options = stics_wrapper_options(javastics = javastics_path, workspace = 
 gen_usms_xml2txt(javastics_path, workspace_PW1, usm = usm_name)
 
 ```
-
 
 Then, let's run the simulations for the different configurations:
 
@@ -247,7 +266,6 @@ ggplot(df_long, aes(fill=Case, y=value, x=variables)) + geom_bar(position="dodge
 
 The last part may not be straightforward for R newcomers ... however a function to filter values of simulated variables at given dates and/or stages will come soon :-).
 
-
 ### Parameter optimization: A simple example
 
 Here is an example use-case of an optimization of the `stamflax` parameter for a wheat crop using observations of Leaf Area Index for one situation (*i.e.* one USM):
@@ -266,7 +284,7 @@ obs = get_obs(workspace = workspace_path, usm = usm)
 obs_filt = filter_obs(obs, "lai_n", include = TRUE)
 
 # Set-up the simulation environment:
-wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_path, parallel = TRUE)
+wrapper_options = stics_wrapper_options(javastics = javastics_path, workspace = workspace_path, parallel = TRUE)
 optim_options = list(nb_rep = 3, out_dir = workspace_path)
 
 # Define the parameter to optimize and the boundary values:
@@ -291,7 +309,9 @@ plot(after = sim_after_optim, before = sim_before_optim, obs = obs_filt, var = "
 
 A lot is happening here!
 
-But don't worry if you don't understand anything, you'll learn everything you need to know in this tutorial. We just want you to see that you can make a parameter optimization with less than 30 lines of code, including the plots of the improvement of the resulting simulated variable of interest against observation. And the good news is when you understand these lines of code, you'll be able to do almost anything with the packages, because it doesn't get any longer or more complex than this.
+But don't worry if you don't understand anything, you'll learn everything you need to know in this tutorial.
+We just want you to see that you can make a parameter optimization with less than 30 lines of code, including the plots of the improvement of the resulting simulated variable of interest against observation.
+And the good news is when you understand these lines of code, you'll be able to do almost anything with the packages, because it doesn't get any longer or more complex than this.
 
 OK now that we saw what we can do, let's find out how step by step.
 
@@ -310,7 +330,7 @@ cat(paste(lines, collapse="\n"))
 
 </blockquote>
 
-* Find all STICS variables characterizing roots
+-   Find all STICS variables characterizing roots
 
 ```{r get_var_info1, exercise=TRUE}
 # Insert your R code here!
@@ -325,10 +345,9 @@ cat(paste(lines, collapse="\n"))
 get_var_info(keyword = "roots")
 ```
 
-<div class="alert alert-info">
+::: {.alert .alert-info}
 See also: `get_param_info`, a function for retrieving name and information on STICS parameters.
-</div>
-
+:::
 
 ## Exploring the content of the JavaStics files
 
@@ -349,7 +368,7 @@ cat(paste(lines, collapse="\n"))
 
 </blockquote>
 
-* You will use in the following the `get_usms_list` function to get the list of USMs included in the "example" workspace of the JavaStics distribution installed by this tutorial. The path to this workspace is stored in the R object `workspace_path` (**be careful**, do not confuse the path of the JavaStics example workspace, stored in the R object `workspace_path`, and the path of the examples of the SticsRFiles package, retrieved using the `get_examples_path` function in the function documentation displayed above!).
+-   You will use in the following the `get_usms_list` function to get the list of USMs included in the "example" workspace of the JavaStics distribution installed by this tutorial. The path to this workspace is stored in the R object `workspace_path` (**be careful**, do not confuse the path of the JavaStics example workspace, stored in the R object `workspace_path`, and the path of the examples of the SticsRFiles package, retrieved using the `get_examples_path` function in the function documentation displayed above!).
 
 First, display the path of the JavaStics "example" workspace, and list its content using the `list.files` function:
 
@@ -372,6 +391,7 @@ list.files(workspace_path)
 ```
 
 Now, display the list of USMs defined in the workspace `workspace_path`
+
 ```{r get_usms_list1, exercise=TRUE}
 # Insert your R code here!
 ```
@@ -382,28 +402,32 @@ Now, display the list of USMs defined in the workspace `workspace_path`
 
 ```{r get_usms_list1-solution}
 # SOLUTION:
-get_usms_list(usm_path = file.path(workspace_path, "usms.xml"))
+get_usms_list(file = file.path(workspace_path, "usms.xml"))
 ```
 
 <!-- ```{r get_usms_list1-check} -->
+
 <!-- grade_result( -->
-<!--   pass_if(~identical(.result, get_usms_list(usm_path = file.path(workspace_path, "usms.xml")))) -->
+
+<!--   pass_if(~identical(.result, get_usms_list(file = file.path(workspace_path, "usms.xml")))) -->
+
 <!-- ) -->
+
 <!-- ``` -->
 
-* Get the list of cover-crops USMs (their name starts with `"cc_"`).
+-   Get the list of cover-crops USMs (their name starts with `"cc_"`).
 
 ```{r get_usms_list2, exercise=TRUE}
 # Insert your R code here!
 ```
 
 ```{r get_usms_list2-hint-1}
-# The argument "name" is particularly useful in this case ...
+# The argument "usm" is particularly useful in this case ...
 ```
 
 ```{r get_usms_list2-solution}
 #SOLUTION:
-get_usms_list(usm_path = file.path(workspace_path, "usms.xml"), name = "cc_")
+get_usms_list(file = file.path(workspace_path, "usms.xml"), usm = "cc_")
 ```
 
 ### Get parameters values from JavaStics input files
@@ -419,7 +443,7 @@ cat(paste(lines, collapse="\n"))
 
 </blockquote>
 
-* Get the values of clay content after decarbonation (argi) for all soils defined in the `sols.xml` file of the `workspace_path` workspace of the JavaStics distribution.
+-   Get the values of clay content after decarbonation (argi) for all soils defined in the `sols.xml` file of the `workspace_path` workspace of the JavaStics distribution.
 
 ```{r get_param_xml1, exercise=TRUE}
 # Insert your R code here!
@@ -438,7 +462,7 @@ get_param_xml(file.path(workspace_path, "sols.xml"), c("argi"))
 result <- get_param_xml(file.path(workspace_path, "sols.xml"), c("argi"))
 ```
 
-* Knowing that the result of the previous exercise has been stored in an R object called `result`, plot an histogram of the values of argi.
+-   Knowing that the result of the previous exercise has been stored in an R object called `result`, plot an histogram of the values of argi.
 
 ```{r get_param_xml2, exercise=TRUE}
 # Insert your R code here!
@@ -457,7 +481,7 @@ result <- get_param_xml(file.path(workspace_path, "sols.xml"), c("argi"))
 hist(result$sols.xml$argi)
 ```
 
-* Compute the Available Water Capacity of fine earth for soil `"solmais"` in mm. The equation is `AWC=sum((HCCF-HMINF)*epc*DAF/10)`, where `HCCF` is the vector of STICS parameters for field capacity of the different soil layers, `HMINF` for wilting point, `epc` for thickness, `DAF` for soil density, and sum is over the different layers.
+-   Compute the Available Water Capacity of fine earth for soil `"solmais"` in mm. The equation is `AWC=sum((HCCF-HMINF)*epc*DAF/10)`, where `HCCF` is the vector of STICS parameters for field capacity of the different soil layers, `HMINF` for wilting point, `epc` for thickness, `DAF` for soil density, and sum is over the different layers.
 
 ```{r get_param_xml3, exercise=TRUE}
 # Insert your R code here!
@@ -469,7 +493,7 @@ hist(result$sols.xml$argi)
 
 ```{r get_param_xml3-solution}
 # SOLUTION:
-result <- get_param_xml(file.path(workspace_path, "sols.xml"), c("HCCF", "HMINF", "epc", "DAF"), select = "sol", value = "solmais")
+result <- get_param_xml(file.path(workspace_path, "sols.xml"), c("HCCF", "HMINF", "epc", "DAF"), select = "sol", select_value = "solmais")
 sum((result$sols.xml$HCCF - result$sols.xml$HMINF) * result$sols.xml$epc * result$sols.xml$DAF / 10)
 ```
 
@@ -486,7 +510,7 @@ cat(paste(lines, collapse="\n"))
 
 </blockquote>
 
-* Compute the total amount of precipitation that has fallen in Auzeville in 2013 from the file `"Auzeville.2013"` of the JavaStics Example workspace.
+-   Compute the total amount of precipitation that has fallen in Auzeville in 2013 from the file `"Auzeville.2013"` of the JavaStics Example workspace.
 
 ```{r get_climate_txt1, exercise=TRUE}
 # Insert your R code here!
@@ -498,17 +522,16 @@ cat(paste(lines, collapse="\n"))
 
 ```{r get_climate_txt1-solution}
 #SOLUTION:
-result <- get_climate_txt(dirpath = workspace_path, filename = "Auzeville.2013")
+result <- get_climate_txt(workspace = workspace_path, file_name = "Auzeville.2013")
 sum(result$ttrr)
 ```
 
-* Compute the amount of precipitation that has fallen between dates `"2013-03-21"` and `"2013-09-20"` using the `result` R object containing the data of the `"Auzeville.2013"` file.
-
+-   Compute the amount of precipitation that has fallen between dates `"2013-03-21"` and `"2013-09-20"` using the `result` R object containing the data of the `"Auzeville.2013"` file.
 
 ```{r prepare-get_climate}
 file_path <- file.path(tmp_dir,"climate.RData")
 if (!file.exists(file_path)) {
-  result <- get_climate_txt(dirpath = workspace_path, filename = "Auzeville.2013")
+  result <- get_climate_txt(workspace = workspace_path, file_name = "Auzeville.2013")
   save("result", file=file_path)
 } else {
   load(file = file_path)
@@ -529,19 +552,18 @@ filtered_result <- dplyr::filter(result, Date > "2013-03-21", Date < "2013-09-20
 sum(filtered_result$ttrr)
 ```
 
-
 ## Running simulations from R
 
 Let see now how to run STICS simulations directly from R using the function `run_javastics` from the [SticsOnR package](https://SticsRPacks.github.io/SticsOnR/index.html).
 
-From now on we will no longer display function help in the tutorial. Use `? function_name` or explore the packages websites (in particular the Reference tab) to display it.
+From now on we will no longer display function help in the tutorial.
+Use `? function_name` or explore the packages websites (in particular the Reference tab) to display it.
 
-* Run all the USMs defined in the `example` workspace (path stored in `workspace_path`). The path to JavaStics is stored in the `javastics_path` R object. This may take a few minutes: there many USMs!
+-   Run all the USMs defined in the `example` workspace (path stored in `workspace_path`). The path to JavaStics is stored in the `javastics_path` R object. This may take a few minutes: there many USMs!
 
 ```{r run_javaStics1, exercise=TRUE, exercise.timelimit=300}
 # Insert your R code here!
 ```
-
 
 ```{r run_javaStics1-hint-1}
 # No need to use the usms_list argument!
@@ -549,15 +571,14 @@ From now on we will no longer display function help in the tutorial. Use `? func
 
 ```{r run_javaStics1-solution}
 # SOLUTION:
-run_javastics(javastics_path = javastics_path,  workspace_path = workspace_path)
+run_javastics(javastics = javastics_path,  workspace = workspace_path)
 ```
 
-* Run only the USMs banana and Turmeric.
+-   Run only the USMs banana and Turmeric.
 
 ```{r run_javaStics2, exercise=TRUE}
 # Insert your R code here!
 ```
-
 
 ```{r run_javaStics2-hint-1}
 # Use the usms_list argument!
@@ -565,42 +586,42 @@ run_javastics(javastics_path = javastics_path,  workspace_path = workspace_path)
 
 ```{r run_javaStics2-solution}
 # SOLUTION:
-run_javastics(javastics_path = javastics_path,  workspace_path = workspace_path, usms_list = c("banana","Turmeric"))
+run_javastics(javastics = javastics_path,  workspace = workspace_path, usms_list = c("banana","Turmeric"))
 ```
 
 You can check that the corresponding STICS output files have been created in the folder `r workspace_path`.
 
-
-<div class="alert alert-info">
+::: {.alert .alert-info}
 See also: `gen_varmod` function to modify var.mod file in case STICS does not simulate the variables you are interested in.
-</div>
-
+:::
 
 ## Exploring and Evaluating the STICS results
 
 ### Getting simulations results
 
-The `get_sim()` function can be used to get simulation results to R from a STICS workspace. Some options allows filtering data, e.g. for given USM names or output variables. Check the function help before trying to use it.
-
+The `get_sim()` function can be used to get simulation results to R from a STICS workspace.
+Some options allows filtering data, e.g. for given USM names or output variables.
+Check the function help before trying to use it.
 
 ```{r prepare-get_sim}
-usms <- get_usms_list(usm_path = file.path(workspace_path, "usms.xml"))
+usms <- get_usms_list(file = file.path(workspace_path, "usms.xml"))
 sim_done <- length(list.files(pattern = "^mod_s", workspace_path)) >=
   length(usms)
 
 if (!sim_done) {
   print("Running simulations, please wait")
-  run_javastics(javastics_path = javastics_path,
-                workspace_path = workspace_path, verbose = FALSE)
+  run_javastics(javastics = javastics_path,
+                workspace = workspace_path, verbose = FALSE)
 }
 ```
 
-* Get the values of all the outputs simulated during the previous exercise in the `example` workspace
+-   Get the values of all the outputs simulated during the previous exercise in the `example` workspace
 
 ```{r get_sim1, exercise=TRUE, exercise.setup = "prepare-get_sim", exercise.timelimit=300}
 # Insert your R code here!
 
 ```
+
 ```{r get_sim1-hint-1}
 # The path of results is stored in the workspace_path object
 ```
@@ -609,7 +630,7 @@ if (!sim_done) {
 get_sim(workspace = workspace_path)
 ```
 
-* Get the values of all the outputs simulated for USMs banana and Turmeric
+-   Get the values of all the outputs simulated for USMs banana and Turmeric
 
 ```{r get_sim2, exercise=TRUE, exercise.setup = "prepare-get_sim", exercise.timelimit=300}
 # Insert your R code here!
@@ -624,7 +645,7 @@ get_sim(workspace = workspace_path)
 get_sim(workspace = workspace_path, usm = c("banana","Turmeric"))
 ```
 
-* Get the values of the variable `lai_n` simulated for USMs `wheat` and `maize`
+-   Get the values of the variable `lai_n` simulated for USMs `wheat` and `maize`
 
 ```{r get_sim4, exercise=TRUE, exercise.setup = "prepare-get_sim", exercise.timelimit=300}
 # Insert your R code here!
@@ -640,30 +661,34 @@ get_sim(workspace = workspace_path, usm = c("wheat", "maize"),
         var = "lai_n")
 ```
 
-
 <!-- Voir ou le mettre, ou alors l'integrer dans les manips ? -->
 
-<div class="alert alert-info">
+::: {.alert .alert-info}
 **Further information about get_sim options:**
 
 By default, each element (i.e. data.frame per USM) of the returned object by `get_sim()` contains a `Plant` column in which are stored either `"plant_1"` or `"plant_2"` indicating if the corresponding variable values concern the principal or associated crop in case of intercrop simulation.
 
-If the `usms.xml` file path is given to the function, plant file names are set in the `Plant` column. If both the `usms.xml` file path and the JavaStics path are given to the function, plant names are set in the `Plant` column and an additional column indicates those which correspond to a `Principal` or an `Associated` crop.
-</div>
+If the `usms.xml` file path is given to the function, plant file names are set in the `Plant` column.
+If both the `usms.xml` file path and the JavaStics path are given to the function, plant names are set in the `Plant` column and an additional column indicates those which correspond to a `Principal` or an `Associated` crop.
+:::
 
 ### Data structures
 
-The simulations (and observations) are stored using a `list` of `data.frame`s. Each `data.frame` is used to store the data from a USM, with each row being a value for a given day and each column a variable (*e.g.* `lai_n`, the daily `lai`).
+The simulations (and observations) are stored using a `list` of `data.frame`s.
+Each `data.frame` is used to store the data from a USM, with each row being a value for a given day and each column a variable (*e.g.* `lai_n`, the daily `lai`).
 
-Each element (*i.e.* `data.frame`) of the `list` is named after the USM name. So we can get the simulation results (or the observations) either by indexing the list with an integer value, or by using the `$` notation followed by the name of the USM, as you would do to get a variable with a `data.frame`.
+Each element (*i.e.* `data.frame`) of the `list` is named after the USM name.
+So we can get the simulation results (or the observations) either by indexing the list with an integer value, or by using the `$` notation followed by the name of the USM, as you would do to get a variable with a `data.frame`.
 
-<div class="alert alert-info">
-Use the autocompletion from RStudio to get the USM name in the list. The autocompletion is normally triggered whenever you start writing, but you can also force it by typing `ctrl+space` or `tab` after the `$` sign, e.g. `sim$` + `tab` on your keyboard would propose the USM names in the `sim` list.
-</div>
+::: {.alert .alert-info}
+Use the autocompletion from RStudio to get the USM name in the list.
+The autocompletion is normally triggered whenever you start writing, but you can also force it by typing `ctrl+space` or `tab` after the `$` sign, e.g. `sim$` + `tab` on your keyboard would propose the USM names in the `sim` list.
+:::
 
 #### Finding data
 
 Let's import some simulations for a few USMs and store them in an R object called `sim`:
+
 ```{r, eval=FALSE, echo=TRUE}
 usms <- c("wheat","DurumWheat", "maize", "sorghum")
 sim <- get_sim(workspace = workspace_path, usm = usms)
@@ -674,6 +699,7 @@ usms <- c("wheat","DurumWheat", "maize", "sorghum")
 sim <- get_sim(workspace = workspace_path, usm = usms, verbose = FALSE)
 sim_all = bind_rows_sim(sim)
 ```
+
 ```{r prepare-sim, ref.label=c("prepare-get_sim","load-sim")}
 ```
 
@@ -692,11 +718,12 @@ You can get the USMs names using the `names` function on the `sim` object:
 names(sim)
 ```
 
-The list of USMs is ordered, so we can index into it to get the simulation results. Try to get the simulations results of the second USM using indexing (*e.g.* indexing on a vector is done using e.g. my_vec[1])
+The list of USMs is ordered, so we can index into it to get the simulation results.
+Try to get the simulations results of the second USM using indexing (*e.g.* indexing on a vector is done using e.g. my_vec[1])
 
-<div class="alert alert-info">
+::: {.alert .alert-info}
 Indexing into a list with `[` gives a subset of the list (it returns a list again), while indexing using `[[` gives you the values (the content) of the list at this index.
-</div>
+:::
 
 ```{r data_struct2, exercise=TRUE, exercise.setup = "prepare-sim"}
 # Insert your R code here!
@@ -726,24 +753,27 @@ Ok now try to get the same USM results by using the `$` notation:
 sim$maize
 ```
 
-Finally, it is possible to chain the `$` notation or/and the indexing to get the values of the variables inside the `data.frame`. For example all these notations are equivalent:
+Finally, it is possible to chain the `$` notation or/and the indexing to get the values of the variables inside the `data.frame`.
+For example all these notations are equivalent:
 
-* `sim$maize$lai_n`
-* `sim[[2]]$lai_n`
-* `sim[[2]][,2]`
-* `sim$maize[,2]`
+-   `sim$maize$lai_n`
+-   `sim[[2]]$lai_n`
+-   `sim[[2]][,2]`
+-   `sim$maize[,2]`
 
 #### Manipulate data
 
 Because the results are formatted as a list of `data.frame`s, we can use all the standard tools offered by *e.g.* the [tidyverse](https://www.tidyverse.org/).
 
-We can apply any function to each `data.frame` using the \*apply family of functions (*e.g.* lapply, mapply...). For example if you want to get the maximum simulate LAI for each USM you would do:
+We can apply any function to each `data.frame` using the \*apply family of functions (*e.g.* lapply, mapply...).
+For example if you want to get the maximum simulate LAI for each USM you would do:
 
 ```{r lapply_sim, exercise=TRUE, exercise.setup = "prepare-sim"}
 lapply(sim, function(x) max(x$lai_n))
 ```
 
-An other way to do so is to first transform the list of `data.frame` into a single `data.frame`, and add a new column called situation that defines the USM for each row. CroPlotR provides `bind_rows_sim` to do so.
+An other way to do so is to first transform the list of `data.frame` into a single `data.frame`, and add a new column called situation that defines the USM for each row.
+CroPlotR provides `bind_rows_sim` to do so.
 
 Use `bind_rows_sim` to make a single `data.frame` out of the list of `data.frame`s:
 
@@ -772,8 +802,8 @@ sim_all = bind_rows_sim(sim)
 filter(sim_all, Date == as.POSIXct("2000-09-04", tz = "UTC"))
 ```
 
-
-Or summarize it by group. For exemple if we want the maximum lai for each USM (as we did above using `lapply`), we would do as follows:
+Or summarize it by group.
+For exemple if we want the maximum lai for each USM (as we did above using `lapply`), we would do as follows:
 
 ```{r summarise_sim, exercise=TRUE, exercise.setup = "prepare-sim"}
 sim_all%>%
@@ -785,8 +815,7 @@ sim_all%>%
 
 The [CroPlotR](https://sticsrpacks.github.io/CroPlotR/) package can be used to plot simulated results as given by the `get_sim` function.
 
-* Use the values of the variables `lai_n` and `masec_n` simulated for USM `wheat` already stored in the `results` R object and plot their dynamics
-
+-   Use the values of the variables `lai_n` and `masec_n` simulated for USM `wheat` already stored in the `results` R object and plot their dynamics
 
 ```{r store-sim, eval=FALSE}
 file_path <- file.path(tmp_dir,"sim-1.RData")
@@ -820,12 +849,12 @@ if (!file.exists(file_path)) {
 plot(results)
 ```
 
-<div class="alert alert-info">
-Note that `?plot` does not refer to the `plot` function defined in CroPlotR. To get the documentation about this function, either refer to the CroPlotR website or type `?plot.cropr_simulation`
-</div>
+::: {.alert .alert-info}
+Note that `?plot` does not refer to the `plot` function defined in CroPlotR.
+To get the documentation about this function, either refer to the CroPlotR website or type `?plot.cropr_simulation`
+:::
 
-
-* Then, do the same but plotting both variables on the same graph
+-   Then, do the same but plotting both variables on the same graph
 
 ```{r plot_sim2, exercise=TRUE, exercise.setup = "prepare-plot_sim"}
 # Insert your R code here!
@@ -846,21 +875,25 @@ plot(results, overlap = list(list("lai_n","masec_n")))
 
 ### Evaluating simulations results
 
-Evaluation of simulation results is performed using observation data by plotting dynamic graphs, scatter plots and by calculating statistical criteria. Observed data can be loaded by using the SticsRFiles `get_obs()` function and provided to CroPlotR functions.
+Evaluation of simulation results is performed using observation data by plotting dynamic graphs, scatter plots and by calculating statistical criteria.
+Observed data can be loaded by using the SticsRFiles `get_obs()` function and provided to CroPlotR functions.
 
-<div class="alert alert-info">
-The data structure of the observations returned by `get_obs()` follow the same format than the simulations (*i.e.* `get_sim()` output). It is a list of `data.frame`s named after the USM name. Each row in the `data.frame` is a daily observation, and each columns is a variable. All the manipulations presented on the `sim` object in the previous section are thus also applicable on the list returned by `get_obs()`.
-</div>
-
+::: {.alert .alert-info}
+The data structure of the observations returned by `get_obs()` follow the same format than the simulations (*i.e.* `get_sim()` output).
+It is a list of `data.frame`s named after the USM name.
+Each row in the `data.frame` is a daily observation, and each columns is a variable.
+All the manipulations presented on the `sim` object in the previous section are thus also applicable on the list returned by `get_obs()`.
+:::
 
 #### Getting observation data
 
-* Get all the observation data included in the `example` workspace (`workspace_path`)
+-   Get all the observation data included in the `example` workspace (`workspace_path`)
 
 ```{r get_obs1, exercise=TRUE}
 # Insert your R code here!
 
 ```
+
 ```{r get_obs1-hint-1}
 # Path of the observation files is the same as this of simulations outputs
 ```
@@ -870,13 +903,13 @@ The data structure of the observations returned by `get_obs()` follow the same f
 get_obs(workspace = workspace_path)
 ```
 
-* Get observations of `lai_n` and `masec_n` variables for USMs `wheat` and `maize`
-
+-   Get observations of `lai_n` and `masec_n` variables for USMs `wheat` and `maize`
 
 ```{r get_obs2, exercise=TRUE}
 # Insert your R code here!
 
 ```
+
 ```{r get_obs2-hint-1}
 # Use the same syntax as for the get_sim function
 ```
@@ -886,18 +919,14 @@ get_obs(workspace = workspace_path)
 get_obs(workspace = workspace_path, usm = c("wheat", "maize"), var = c("lai_n","masec_n"))
 ```
 
-
-<div class="alert alert-info">
-**Further information about get_obs options:**
-The get_obs function supports the same optional arguments: usms.xml file path, JavaStics file path
-for getting information about plant file or plant name for USMs.
+::: {.alert .alert-info}
+**Further information about get_obs options:** The get_obs function supports the same optional arguments: usms.xml file path, JavaStics file path for getting information about plant file or plant name for USMs.
 Please refer to the `get_sim()` use section for details.
-</div>
+:::
 
-####	Dynamic plots using observation data
+#### Dynamic plots using observation data
 
 As for the first exercise in the "Plotting simulations results" section, use the values of the variables `lai_n` and `masec_n` simulated for USM `wheat` stored in the `results2` object and plot their dynamics, but this time add the observation data to the plot using the values stored in the `observations2` object.
-
 
 ```{r store-sim-obs1, eval=FALSE}
 file_path <- file.path(tmp_dir,"sim_obs1.RData")
@@ -931,17 +960,16 @@ if (!file.exists(file_path)) {
 plot(results2, var = c("lai_n","masec_n"), obs = observations2)
 ```
 
-<div class="alert alert-info">
+::: {.alert .alert-info}
 Note that to plot some given variables, you can either filter their values when reading the results or when plotting them.
-</div>
+:::
 
+#### Basic scatter plot
 
-####	Basic scatter plot
+Scatter plots are used for displaying simulated values against observed values.
+They can be produced using the same `plot()` function as for dynamics plots, with only changing the argument `type` of the `plot()` function.
 
-Scatter plots are used for displaying simulated values against observed values. They can be produced using the same `plot()` function as for dynamics plots, with only changing the argument `type` of the `plot()` function.
-
-
-* Plot now the scatter plots of the simulated and observed values of `lai_n` and `masec_n` that are stored in the `results2` and `observations2` objects.
+-   Plot now the scatter plots of the simulated and observed values of `lai_n` and `masec_n` that are stored in the `results2` and `observations2` objects.
 
 ```{r plot_simobs2, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs2"}
 # Insert your R code here!
@@ -957,11 +985,11 @@ plot(results2, var = c("lai_n","masec_n"), obs = observations2, type = "scatter"
 
 ```
 
-####	Customized scatter plots using symbols
+#### Customized scatter plots using symbols
 
 The symbols used in the scatter plots can be adapted by the user using optional specific arguments, either to plot one symbol per USMs or per group of USMs.
 
-* Plot the same scatter plot as in the previous exercise, but with one symbol per USM
+-   Plot the same scatter plot as in the previous exercise, but with one symbol per USM
 
 ```{r plot_simobs3, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs2"}
 # Insert your R code here!
@@ -977,10 +1005,9 @@ plot(results2, var = c("lai_n","masec_n"), obs = observations2, type = "scatter"
 
 ```
 
-* Now, plot the scatter plot for the same variables `lai_n` and `masec_n` but for USMs "wheat","DurumWheat", "maize" and "sorghum", and with different symbols for the 2 groups c("wheat","DurumWheat") and c("maize","sorghum")
+-   Now, plot the scatter plot for the same variables `lai_n` and `masec_n` but for USMs "wheat","DurumWheat", "maize" and "sorghum", and with different symbols for the 2 groups c("wheat","DurumWheat") and c("maize","sorghum")
 
 Use the R objects `results4` and `observations4` already containing respectively simulation outputs and observations for these USMs and variables.
-
 
 ```{r store-sim-obs2, eval=FALSE}
 usms <- c("wheat","DurumWheat", "maize", "sorghum")
@@ -1015,16 +1042,15 @@ plot(results4, var = c("lai_n","masec_n"), obs = observations4, type = "scatter"
 
 #### Statistics and associated graphs
 
-The `summary()` function can be used for computing statistical criteria measuring the fit of simulations to observations. These criteria can also be plotted using the `plot()` function. As for the `plot()` function, to get the documentation about `summary()`, either refer to the CroPlotR website or type `?summary.cropr_simulation`.
-
+The `summary()` function can be used for computing statistical criteria measuring the fit of simulations to observations.
+These criteria can also be plotted using the `plot()` function.
+As for the `plot()` function, to get the documentation about `summary()`, either refer to the CroPlotR website or type `?summary.cropr_simulation`.
 
 ##### Statistics criteria
 
 <!--* Get the values of the variables `lai_n` and `masec_n` simulated and observed for USMs  `wheat`,`DurumWheat`, `maize`, and `sorghum` and compute the statistical criteria using the `summary()` function-->
 
-* Use the values of the variables `lai_n` and `masec_n` simulated and observed for USMs  `wheat`,`DurumWheat`, `maize`, and `sorghum` from `results4` and `observations4`.
-Compute the statistical criteria using the `summary()` function
-
+-   Use the values of the variables `lai_n` and `masec_n` simulated and observed for USMs `wheat`,`DurumWheat`, `maize`, and `sorghum` from `results4` and `observations4`. Compute the statistical criteria using the `summary()` function
 
 ```{r stat_simobs1, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs_4"}
 # Insert your R code here!
@@ -1040,7 +1066,7 @@ summary(results4, obs = observations4)
 
 ```
 
-* Now do the same but compute the statistical criteria per USM
+-   Now do the same but compute the statistical criteria per USM
 
 ```{r stat_simobs2, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs_4"}
 # Insert your R code here!
@@ -1055,6 +1081,7 @@ summary(results4, obs = observations4)
 summary(results4, obs = observations4, all_situations = FALSE)
 ```
 
+```{=html}
 <!-- note
 la premiere colonne est perturbante Version 1
 si 1 jeu de simulation: superflue !!
@@ -1062,20 +1089,19 @@ utile en cas de comparaison de 2 jeu de simulations
 
 Si 2 jeux: plutôt que le nom de colonne == group, simu (pour les graphes scatter group == groupes d'usms !)
 -->
-
+```
+```{=html}
 <!-- !!!!! voir pour ajouter un cas ou on nomme le jeu de sim
 pour retrouver le nom dans la colonne "group"
 -->
-
-
-
+```
 ##### Statistics graphs
 
 Statistical criteria can be plotted by providing the results of the `summary()` function to the `plot()` function.
 
 For this purpose, the *R2* and *nRMSE* criteria will be used.
 
-* Plot the `R²` and `nRMSE` criteria computed on all the USMs in the previous exercise
+-   Plot the `R²` and `nRMSE` criteria computed on all the USMs in the previous exercise
 
 ```{r stat_simobs3, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs_4"}
 # Insert your R code here!
@@ -1087,13 +1113,13 @@ For this purpose, the *R2* and *nRMSE* criteria will be used.
 
 ```{r stat_simobs3-solution}
 # SOLUTION
-summ <- summary(results4, obs = observations4, stat = c("R2","nRMSE"))
+summ <- summary(results4, obs = observations4, stats = c("R2","nRMSE"))
 
 plot(summ, title = "for all USMs")
 
 ```
 
-* Now do the same but per USM
+-   Now do the same but per USM
 
 ```{r stat_simobs4, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs_4"}
 # Insert your R code here!
@@ -1105,7 +1131,7 @@ plot(summ, title = "for all USMs")
 
 ```{r stat_simobs4-solution}
 # SOLUTION
-summ <- summary(results4, obs = observations4, all_situations = FALSE, stat = c("R2","nRMSE"))
+summ <- summary(results4, obs = observations4, all_situations = FALSE, stats = c("R2","nRMSE"))
 
 plot(summ, title = "for each USM")
 
@@ -1113,7 +1139,7 @@ plot(summ, title = "for each USM")
 
 By default the results per USMs are plotted in bars having different columns
 
-* Now do the same but with USMs named in x axis
+-   Now do the same but with USMs named in x axis
 
 ```{r stat_simobs5, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs_4"}
 # Insert your R code here!
@@ -1125,17 +1151,16 @@ By default the results per USMs are plotted in bars having different columns
 
 ```{r stat_simobs5-solution}
 # SOLUTION
-summ <- summary(results4, obs = observations4, all_situations = FALSE, stat = c("R2","nRMSE"))
+summ <- summary(results4, obs = observations4, all_situations = FALSE, stats = c("R2","nRMSE"))
 
 plot(summ, xvar = "situation", title = "USM names as X")
 
 ```
 
-
-<div class="alert alert-info">
-* `summary()` and `plot()` functions can also be used to compare the results of different versions of simulated results (e.g. same USMs simulated with different versions of the model or different input parameters). See online documentation on [CroPlotR site](https://SticsRPacks.github.io/CroPlotR/#223-statistics-plot) for more details.
-* When plotting the statistical criteria, it is important to select a (short) list of criteria to be plotted (and possibly of output variables) in order to ensure the readability of the graphs.
-</div>
+::: {.alert .alert-info}
+-   `summary()` and `plot()` functions can also be used to compare the results of different versions of simulated results (e.g. same USMs simulated with different versions of the model or different input parameters). See online documentation on [CroPlotR site](https://SticsRPacks.github.io/CroPlotR/#223-statistics-plot) for more details.
+-   When plotting the statistical criteria, it is important to select a (short) list of criteria to be plotted (and possibly of output variables) in order to ensure the readability of the graphs.
+:::
 
 ## Advanced use {#advanced-use}
 
@@ -1146,7 +1171,6 @@ Let's go now deeper into the packages functionalities.
 ## Generating JavaStics input Files
 
 The different types of STICS input files can be generated using the [SticsRFiles package](https://SticsRPacks.github.io/SticsRFiles/index.html).
-
 
 ### Generating JavaStics input files
 
@@ -1163,7 +1187,6 @@ question("What is the name of the SticsRFiles function for generating a usms.xml
          allow_retry = TRUE)
 ```
 
-
 ```{r gen_xml-2, echo=FALSE}
 question("From which type of file the usms.xml file can be generated using this function?",
          answer("csv", correct = TRUE),
@@ -1175,7 +1198,6 @@ question("From which type of file the usms.xml file can be generated using this 
          random_answer_order = TRUE,
          allow_retry = TRUE)
 ```
-
 
 ```{r gen_xml-3, echo=FALSE}
 question("Which type of JavaStics files can not yet be generated using the gen_*_xml functions?",
@@ -1190,13 +1212,12 @@ question("Which type of JavaStics files can not yet be generated using the gen_*
          allow_retry = TRUE)
 ```
 
-<div class="alert alert-info">
+::: {.alert .alert-info}
 See also:
 
-* Look at the vignette [Generating Stics XML files from tabulated data](https://SticsRPacks.github.io/SticsRFiles/articles/Generating_Stics_XML_files.html) for more details on how to use these functions!
-* STICS input files (txt format) can be generated from a SticsRFiles R function: see section  below "Creating the text files".
-</div>
-
+-   Look at the vignette [Generating Stics XML files from tabulated data](https://SticsRPacks.github.io/SticsRFiles/articles/Generating_Stics_XML_files.html) for more details on how to use these functions!
+-   STICS input files (txt format) can be generated from a SticsRFiles R function: see section below "Creating the text files".
+:::
 
 ### Generating observation files
 
@@ -1204,7 +1225,7 @@ Observation files can be generated from a data.frame using the function `gen_obs
 
 They are not used by the STICS model but can be used to plot comparison between observed and simulated variables and to optimize STICS parameters both in JavaStics and in [CroPlotR](https://SticsRPacks.github.io/CroPlotR/index.html) and [CroptimizR](https://SticsRPacks.github.io/CroptimizR/index.html) packages as we have seen before.
 
-* Generate observation files from the data stored in the `df` data.frame using the `gen_obs` function and check their content using the `get_obs` function.
+-   Generate observation files from the data stored in the `df` data.frame using the `gen_obs` function and check their content using the `get_obs` function.
 
 ```{r gen_obs, exercise=TRUE}
 df <- data.frame(usm_name = c("usm1","usm1","usm2"), ian = c(2020,2021,2021), mo = c(12,7,7), jo = c(25,27,20),jul = c(359,573,566),`lai_n` = c(0.5,4.5,4.2), mafruit = c(NA,6.5,6.1))
@@ -1224,13 +1245,13 @@ df <- data.frame(usm_name = c("usm1","usm1","usm2"), ian = c(2020,2021,2021), mo
 
 ```{r gen_obs-solution}
 #SOLUTION:
-gen_obs(obs_table = df)
+gen_obs(df = df)
 get_obs(workspace = getwd())
 ```
 
-<div class="alert alert-info">
+::: {.alert .alert-info}
 Note that a subset of the observation files defined in the observation data.frame can be generated using the usms_list argument of gen_obs.
-</div>
+:::
 
 ## Modifying JavaStics input files
 
@@ -1247,7 +1268,7 @@ question("What is the name of the SticsRFiles function for modifying JavaStics I
          allow_retry = TRUE)
 ```
 
-* Check the values of the nitrification code (`codenitrif`) for the soils defined in the `sols.xml` file of the JavaStics distribution example workspace (path to the JavaStics distribution example workspace is stored in the R object `workspace_path`)
+-   Check the values of the nitrification code (`codenitrif`) for the soils defined in the `sols.xml` file of the JavaStics distribution example workspace (path to the JavaStics distribution example workspace is stored in the R object `workspace_path`)
 
 ```{r set_param_xml-2, exercise=TRUE}
 # Insert your R code here!
@@ -1259,11 +1280,11 @@ question("What is the name of the SticsRFiles function for modifying JavaStics I
 
 ```{r set_param_xml-2-solution}
 # SOLUTION:
-get_param_xml(xml_file = file.path(workspace_path,"sols.xml"),
-              param_name = "codenitrif")
+get_param_xml(file = file.path(workspace_path,"sols.xml"),
+              param = "codenitrif")
 ```
 
-* Then, generate in the JavaStics distribution example workspace a new soil file called `sols_new.xml` for which all nitrification codes are set to 1 and check their values using the `get_param_xml` function.
+-   Then, generate in the JavaStics distribution example workspace a new soil file called `sols_new.xml` for which all nitrification codes are set to 1 and check their values using the `get_param_xml` function.
 
 ```{r set_param_xml-3, exercise=TRUE}
 # Insert your R code here!
@@ -1275,50 +1296,58 @@ get_param_xml(xml_file = file.path(workspace_path,"sols.xml"),
 
 ```{r set_param_xml-3-solution}
 # SOLUTION:
-set_param_xml(xml_file = file.path(workspace_path,"sols.xml"),
-              param_name = "codenitrif", param_value = 1, out_path = file.path(workspace_path,"sols_new.xml"))
-get_param_xml(xml_file = file.path(workspace_path,"sols_new.xml"),
-              param_name = "codenitrif")
+set_param_xml(file = file.path(workspace_path,"sols.xml"),
+              param = "codenitrif", values = 1, save_as = file.path(workspace_path,"sols_new.xml"))
+get_param_xml(file = file.path(workspace_path,"sols_new.xml"),
+              param = "codenitrif")
 ```
 
-<div class="alert alert-info">
+::: {.alert .alert-info}
 Note that STICS input files (txt format) can also be modified from R using the `set_param_txt()` function.
-</div>
+:::
 
 ## Running simulations from R using stics_wrapper
 
 ### The need of a wrapper
 
-We saw earlier how to run a simulation using `run_javastics()`. This function simply calls JavaStics from the command line to run simulations. This does the same as running an USM by opening the JavaStics user interface, but from R.
+We saw earlier how to run a simulation using `run_javastics()`.
+This function simply calls JavaStics from the command line to run simulations.
+This does the same as running an USM by opening the JavaStics user interface, but from R.
 
-You are probably familiar with the xml files used as inputs for JavaStics (*e.g.* `sols.xml` or `usms.xml`). These files define all the parameters values for one or several USMs, with potentially several soils, management practices and climate. Then when we run a given USM, JavaStics reads the parameters values from the xml files, and writes new text files with only the values associated to this particular USM. Then it calls the STICS model that reads those text files, runs the simulation, and writes the outputs.
+You are probably familiar with the xml files used as inputs for JavaStics (*e.g.* `sols.xml` or `usms.xml`).
+These files define all the parameters values for one or several USMs, with potentially several soils, management practices and climate.
+Then when we run a given USM, JavaStics reads the parameters values from the xml files, and writes new text files with only the values associated to this particular USM.
+Then it calls the STICS model that reads those text files, runs the simulation, and writes the outputs.
 
 So when we run a USM from JavaStics we have four different steps:
 
-1. JavaStics reads the parameters values for the USM from the xml files
-1. JavaStics writes text files with the parameters values that only describe this USM
-1. JavaStics calls the STICS model (*i.e* the STICS executable)
-1. the STICS model reads the parameters values from the text files, runs a simulation, and writes the output files (*i.e.* `mod_bXXX.sti` and `mod_sXXX.sti`)
+1.  JavaStics reads the parameters values for the USM from the xml files
+2.  JavaStics writes text files with the parameters values that only describe this USM
+3.  JavaStics calls the STICS model (*i.e* the STICS executable)
+4.  the STICS model reads the parameters values from the text files, runs a simulation, and writes the output files (*i.e.* `mod_bXXX.sti` and `mod_sXXX.sti`)
 
 This method is simpler for the user because it hides the technical details, but it has some downsides: it is slow because we have to create the text files each time we make a simulation, and we cannot parallelize the simulations because we share the same text files.
 
 But no worries, SticsRPacks provides a solution to this!
 
-Instead of creating the text files one USM at a time, we can create them for all USMs once into one folder for each, and then we directly call the STICS model (*i.e* without using JavaStics) on these files. Using this method we are now able to run the simulations way faster, and in parallel!
+Instead of creating the text files one USM at a time, we can create them for all USMs once into one folder for each, and then we directly call the STICS model (*i.e* without using JavaStics) on these files.
+Using this method we are now able to run the simulations way faster, and in parallel!
 
-So how do we do that? Well, we use three steps:
+So how do we do that?
+Well, we use three steps:
 
-- create the text files (`gen_usms_xml2txt()`)
-- set-up our modeling environment (`stics_wrapper_options()`)
-- run the simulations and import the results (`stics_wrapper()`)
+-   create the text files (`gen_usms_xml2txt()`)
+-   set-up our modeling environment (`stics_wrapper_options()`)
+-   run the simulations and import the results (`stics_wrapper()`)
 
 ### Creating the text files
 
-The first step is to create the text files for each USMs in a separate directory. To do so, we will use the function `gen_usms_xml2txt()`.
+The first step is to create the text files for each USMs in a separate directory.
+To do so, we will use the function `gen_usms_xml2txt()`.
 
 Before generating the text files, we will first restrain the number of variables we want STICS to output using `gen_varmod`.
 
-* Use the `gen_varmod` function to tell STICS we only want to simulate "lai_n", "masec_n" and "mafruit"
+-   Use the `gen_varmod` function to tell STICS we only want to simulate "lai_n", "masec_n" and "mafruit"
 
 ```{r gen_varmod, exercise=TRUE}
 # Insert your R code here!
@@ -1335,9 +1364,10 @@ gen_varmod(workspace_path, var = c("lai_n", "masec_n", "mafruit"))
 
 It is generally useful (although not mandatory) to pre-filter the variables to avoid filtering the variables for the wrapper, the plots and the statistics.
 
-Now we can generate our text files. Remember, the path of the JavaStics distribution downloaded by this tutorial is stored in the `javastics_path` R object, and the path to the example workspace in `workspace_path`.
+Now we can generate our text files.
+Remember, the path of the JavaStics distribution downloaded by this tutorial is stored in the `javastics_path` R object, and the path to the example workspace in `workspace_path`.
 
-* Use the function `gen_usms_xml2txt()` to generate the text files for the USMs "wheat", "banana" and "soybean" in sub-folders of the `workspace_path` folder:
+-   Use the function `gen_usms_xml2txt()` to generate the text files for the USMs "wheat", "banana" and "soybean" in sub-folders of the `workspace_path` folder:
 
 ```{r gen_usms_xml2txt, exercise=TRUE}
 # Insert your R code here!
@@ -1363,6 +1393,7 @@ if (!all(dirs_ex)) gen_usms_xml2txt(javastics_path, workspace_path, usm = dirs[!
 ```
 
 Now, print the files inside the created folders:
+
 ```{r list_txt_files, exercise=TRUE, exercise.setup = "prepare-gen_usms"}
 # Insert your R code here!
 ```
@@ -1375,33 +1406,35 @@ list.files(dirs, full.names = TRUE)
 
 ### Setting-up the modeling environment
 
-Before running the simulations using STICS, we have to define some information about our modeling environment. This is done using `stics_wrapper_options()`. This function, defined in SticsOnR, helps us define where is our installation of JavaStics, which STICS executable to use (*e.g.* if you are using an executable from a research branch), which workspace to use, etc...
+Before running the simulations using STICS, we have to define some information about our modeling environment.
+This is done using `stics_wrapper_options()`.
+This function, defined in SticsOnR, helps us define where is our installation of JavaStics, which STICS executable to use (*e.g.* if you are using an executable from a research branch), which workspace to use, etc...
 
-* Use `stics_wrapper_options()` to set-up our modeling environment using a parallel computation over the USMs for which we generated text files here-before:
+-   Use `stics_wrapper_options()` to set-up our modeling environment using a parallel computation over the USMs for which we generated text files here-before:
 
 ```{r stics_wrapper_options1, exercise=TRUE}
 # Insert your R code here!
 ```
 
 ```{r stics_wrapper_options1-hint-1}
-# Use `javastics_path = javastics_path` and `data_dir = workspace_path`
+# Use `javastics = javastics_path` and `workspace = workspace_path`
 # (remember, the folders including the text files for each USMs have been created in the folder workspace_path)
 ```
 
 ```{r stics_wrapper_options1-solution}
 #SOLUTION:
-stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_path, parallel = TRUE)
+stics_wrapper_options(javastics = javastics_path, workspace = workspace_path, parallel = TRUE)
 ```
 
 ### Running the simulations
 
-Now everything is set-up to make our simulations! The model options we will use here are stored in the `wrapper_options` object with the options we just set up in the previous section.
-
+Now everything is set-up to make our simulations!
+The model options we will use here are stored in the `wrapper_options` object with the options we just set up in the previous section.
 
 ```{r store-wrapper-options, eval=FALSE}
 wrapper_options_file <- file.path(tmp_dir,"wrapper_options.RData")
 if (!file.exists(wrapper_options_file)) {
-  wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_path, parallel = TRUE, verbose = FALSE)
+  wrapper_options = stics_wrapper_options(javastics = javastics_path, workspace = workspace_path, parallel = TRUE, verbose = FALSE)
   save(list = "wrapper_options", file = wrapper_options_file)
 } else {
   #print("loading")
@@ -1412,7 +1445,7 @@ if (!file.exists(wrapper_options_file)) {
 ```{r prepare-wrapper, ref.label=c("prepare-gen_usms","store-wrapper-options")}
 ```
 
-* Now use `stics_wrapper()` to simulate leaf area index and above-ground biomass for the USM "wheat" only (not "banana" and "soybean") using the model options stored in `wrapper_options`, and print the results:
+-   Now use `stics_wrapper()` to simulate leaf area index and above-ground biomass for the USM "wheat" only (not "banana" and "soybean") using the model options stored in `wrapper_options`, and print the results:
 
 ```{r stics_wrapper1, exercise=TRUE, exercise.setup = "prepare-wrapper"}
 # Insert your R code here!
@@ -1432,31 +1465,34 @@ if (!file.exists(wrapper_options_file)) {
 
 ```{r stics_wrapper1-solution, exercise.setup = "prepare-wrapper"}
 #SOLUTION:
-res1 <- stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = c("lai_n", "masec_n"))
+res1 <- stics_wrapper(model_options = wrapper_options, situation = "wheat", var = c("lai_n", "masec_n"))
 print(res1)
 ```
 
-<div class="alert alert-info">
-* By default, if the `sit_names` argument is not given to `stics_wrapper()`, `stics_wrapper()` will run all the USMs defined in the sub-folders of the `data_dir` folder (`data_dir` is defined in `stics_wrapper_options()`).
-* By default, if the `var_names` argument is not given to `stics_wrapper()`, `stics_wrapper()` will return results for all the variables defined in the var.mod files included in the sub-folders of the `data_dir` folder.
-</div>
+::: {.alert .alert-info}
+-   By default, if the `situation` argument is not given to `stics_wrapper()`, `stics_wrapper()` will run all the USMs defined in the sub-folders of the `workspace` folder (`workspace` is defined in `stics_wrapper_options()`).
+-   By default, if the `var` argument is not given to `stics_wrapper()`, `stics_wrapper()` will return results for all the variables defined in the var.mod files included in the sub-folders of the `workspace` folder.
+:::
 
 ### Data structure
 
 The data structure returned by `stics_wrapper` is a list of two:
 
-- `error`: `TRUE` if there was an error during the simulation, `FALSE` otherwise
-- `sim_list`: a list of the simulation results
+-   `error`: `TRUE` if there was an error during the simulation, `FALSE` otherwise
+-   `sim_list`: a list of the simulation results
 
-The content of `sim_list` follows the same format as the outputs returned by `get_obs` and `get_sim`: it is a list of `data.frame`s. Each `data.frame` corresponds to the simulation results of a USM, with each row being a value for a given day, and each column a variable. The data can be accessed using indexing or the `$` syntax, *i.e.*: `res$sim_list$wheat` would return a `data.frame` with the simulation results for the USM called "wheat".
+The content of `sim_list` follows the same format as the outputs returned by `get_obs` and `get_sim`: it is a list of `data.frame`s.
+Each `data.frame` corresponds to the simulation results of a USM, with each row being a value for a given day, and each column a variable.
+The data can be accessed using indexing or the `$` syntax, *i.e.*: `res$sim_list$wheat` would return a `data.frame` with the simulation results for the USM called "wheat".
 
 ### Parameter forcing
 
 Sometimes it is useful to compare the outputs of the model with a different value for one or several parameters to better understand its impact or check if it is used.
 
-`stics_wrapper()` provides an easy way to do so with the `param_values` argument. This argument is given as a named vector.
+`stics_wrapper()` provides an easy way to do so with the `param_values` argument.
+This argument is given as a named vector.
 
-* Make a simulation on the "wheat" USM and output just the lai, but this time with `dlaimax = 0.005` and `durvieF = 80`:
+-   Make a simulation on the "wheat" USM and output just the lai, but this time with `dlaimax = 0.005` and `durvieF = 80`:
 
 ```{r stics_wrapper2, exercise=TRUE, exercise.setup = "prepare-wrapper"}
 # Insert your R code here!
@@ -1468,23 +1504,26 @@ Sometimes it is useful to compare the outputs of the model with a different valu
 
 ```{r stics_wrapper2-solution, exercise.setup = "prepare-wrapper"}
 #SOLUTION:
-res2 <- stics_wrapper(model_options = wrapper_options, sit_names = "wheat", var_names = "lai_n", param_values = c("dlaimax" = 0.005, "durvieF" = 80))
+res2 <- stics_wrapper(model_options = wrapper_options, situation = "wheat", var = "lai_n", param_values = c("dlaimax" = 0.005, "durvieF" = 80))
 print(res2)
 ```
 
 ### Plot the comparison
 
-Now we can plot the outputs of the two simulations using the CroPlotR `plot()` function. The results of both simulations are accessible in the `res1` and `res2` objects. Remember, the simulated variables values are stored in the `sim_list` field of each object. For example, to get the values of the simulated variables for `res1`, we would do: `res1$sim_list`.
+Now we can plot the outputs of the two simulations using the CroPlotR `plot()` function.
+The results of both simulations are accessible in the `res1` and `res2` objects.
+Remember, the simulated variables values are stored in the `sim_list` field of each object.
+For example, to get the values of the simulated variables for `res1`, we would do: `res1$sim_list`.
 
 ```{r store-comp_res, eval=FALSE}
 if (!file.exists(file.path(tmp_dir,"comp_res.RData"))) {
-  wrapper_options = stics_wrapper_options(javastics_path = javastics_path,
-                                          data_dir = workspace_path, parallel = TRUE,
+  wrapper_options = stics_wrapper_options(javastics = javastics_path,
+                                          workspace = workspace_path, parallel = TRUE,
                                           verbose = FALSE)
-  res1 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat",
-                       var_names = c("lai_n", "masec_n"))
-  res2 = stics_wrapper(model_options = wrapper_options, sit_names = "wheat",
-                       var_names = "lai_n",
+  res1 = stics_wrapper(model_options = wrapper_options, situation = "wheat",
+                       var = c("lai_n", "masec_n"))
+  res2 = stics_wrapper(model_options = wrapper_options, situation = "wheat",
+                       var = "lai_n",
                        param_values = c("dlaimax" = 0.005, "durvieF" = 80))
 
   save(list=c("res1", "res2"), file=file.path(tmp_dir,"comp_res.RData"))
@@ -1506,8 +1545,7 @@ plot(res1$sim_list)
 
 It is also possible to compare the results of several simulations by giving them as arguments to the function one after the other.
 
-
-* Plot the comparison between the outputs of both simulations:
+-   Plot the comparison between the outputs of both simulations:
 
 ```{r stics_wrapper-plot1, exercise=TRUE, exercise.setup = "prepare-wrapper-plot"}
 # Insert your R code here!
@@ -1522,13 +1560,13 @@ It is also possible to compare the results of several simulations by giving them
 plot(res1$sim_list,res2$sim_list)
 ```
 
-<div class="alert alert-info">
+::: {.alert .alert-info}
 Only the `lai` variable was requested on the second simulation, that's why there is only the results of the first simulation for masec.
-</div>
+:::
 
 We can also name the simulations in our plot by naming them when passed as arguments to `plot()`.
 
-* Plot the comparison between the outputs of both simulations, and name the first simulation "original" and the second simulation "dlaimax=0.005, durvieF=80":
+-   Plot the comparison between the outputs of both simulations, and name the first simulation "original" and the second simulation "dlaimax=0.005, durvieF=80":
 
 ```{r stics_wrapper-plot2, exercise=TRUE, exercise.setup = "prepare-wrapper-plot"}
 # Insert your R code here!
@@ -1547,19 +1585,20 @@ plot("original" = res1$sim_list,"dlaimax=0.005, durvieF=80" = res2$sim_list)
 
 ### Workflow
 
-Model calibration is an important part of most modeling work, but it can be complex and cumbersome. SticsRPacks provides a nice, standardized and easy way to estimate the values of parameters using observations through the CroptimizR `estim_param()` function.
+Model calibration is an important part of most modeling work, but it can be complex and cumbersome.
+SticsRPacks provides a nice, standardized and easy way to estimate the values of parameters using observations through the CroptimizR `estim_param()` function.
 
 The workflow for parameter estimation is made using several steps:
 
-- Modeling environment set-up (`stics_wrapper_options()`). `estim_param()` uses `stics_wrapper()` under the hood to run each simulation, so we must set-up our modeling environment first as we saw before.
-- Import the observations for each USM (`get_obs()` + `filter_obs()`).
-- Choose the parameter(s) to optimize and their boundary values.
-- Set-up options for the optimization method,
-- run the parameter optimization (`estim_param`).
+-   Modeling environment set-up (`stics_wrapper_options()`). `estim_param()` uses `stics_wrapper()` under the hood to run each simulation, so we must set-up our modeling environment first as we saw before.
+-   Import the observations for each USM (`get_obs()` + `filter_obs()`).
+-   Choose the parameter(s) to optimize and their boundary values.
+-   Set-up options for the optimization method,
+-   run the parameter optimization (`estim_param`).
 
 ```{r store-param-estim, eval=FALSE}
 if (!file.exists(file.path(tmp_dir,"store-param-estim.RData"))) {
-  wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_path, parallel = TRUE, verbose = FALSE)
+  wrapper_options = stics_wrapper_options(javastics = javastics_path, workspace = workspace_path, parallel = TRUE, verbose = FALSE)
   obs = get_obs(workspace = workspace_path, usm = "wheat", verbose = FALSE)
   obs_filt = filter_obs(obs, "lai_n", include = TRUE)
   param_info = list(stamflax = list(lb = 200, ub = 400))
@@ -1578,15 +1617,16 @@ if (!file.exists(file.path(tmp_dir,"store-param-estim.RData"))) {
 
 ### Modelling environment
 
-We will simply re-use the modeling environment from the previous exercise: `wrapper_options`. This is how we did it:
+We will simply re-use the modeling environment from the previous exercise: `wrapper_options`.
+This is how we did it:
 
-```r
-wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_dir = workspace_path, parallel = TRUE)
+``` {.r}
+wrapper_options = stics_wrapper_options(javastics = javastics_path, workspace = workspace_path, parallel = TRUE)
 ```
 
 ### Observations
 
-* Import the observations for the "wheat" USM, and put it in an object called `obs`:
+-   Import the observations for the "wheat" USM, and put it in an object called `obs`:
 
 ```{r estim_param_obs1, exercise=TRUE, exercise.setup = "prepare-param-estim"}
 # Insert your R code here!
@@ -1601,7 +1641,7 @@ wrapper_options = stics_wrapper_options(javastics_path = javastics_path, data_di
 obs = get_obs(workspace = workspace_path, usm = "wheat")
 ```
 
-* Filter the observations to get only the lai using `filter_obs()`, and put it in an object called `obs_filt`:
+-   Filter the observations to get only the lai using `filter_obs()`, and put it in an object called `obs_filt`:
 
 ```{r estim_param_obs2, exercise=TRUE, exercise.setup = "prepare-param-estim"}
 # Insert your R code here!
@@ -1618,24 +1658,24 @@ obs_filt = filter_obs(obs, "lai_n", include = TRUE)
 
 ### Parameters of the optimization method
 
-The optimization methods available in CroptimizR have some parameters too. For example the simplex method has the following:
+The optimization methods available in CroptimizR have some parameters too.
+For example the simplex method has the following:
 
-- `nb_rep`: Number of times the minimization process is done, each time starting with a different set of initial
-parameters values. This one is used to control whether our initial values impact our resulting optimized value or not. The more is better, but the whole optimization process is repeated `nb_rep` so it takes more and more time.
-- `maxeval`: Maximum number of evaluations of the minimized criteria. That is to say the algorithm is stopped if it did not converge to a value after `maxeval` runs.
-- `xtol_rel`: Tolerance criterion between two iterations, *i.e.* stop the algorithm when an optimization step (or an estimate of the optimum) changes every parameter by less than xtol_rel multiplied by the absolute value of the parameter.
-- `out_dir`: path to the directory on which the results will be written (graph and .Rdata)
-- `ranseed`: set the random seed so that each execution give the same results. If you want full randomization, don't set it.
+-   `nb_rep`: Number of times the minimization process is done, each time starting with a different set of initial parameters values. This one is used to control whether our initial values impact our resulting optimized value or not. The more is better, but the whole optimization process is repeated `nb_rep` so it takes more and more time.
+-   `maxeval`: Maximum number of evaluations of the minimized criteria. That is to say the algorithm is stopped if it did not converge to a value after `maxeval` runs.
+-   `xtol_rel`: Tolerance criterion between two iterations, *i.e.* stop the algorithm when an optimization step (or an estimate of the optimum) changes every parameter by less than xtol_rel multiplied by the absolute value of the parameter.
+-   `out_dir`: path to the directory on which the results will be written (graph and .Rdata)
+-   `ranseed`: set the random seed so that each execution give the same results. If you want full randomization, don't set it.
 
 Only `out_dir` is mandatory, all the others have default values.
 
-<div class="alert alert-note">
+::: {.alert .alert-note}
 More information can be found on the CroptimizR vignettes, e.g. [here](https://SticsRPacks.github.io/CroptimizR/articles/Parameter_estimation_simple_case.html).
-</div>
+:::
 
 These parameters are passed to `estim_param` as a named list.
 
-* Make a named list to set values for these parameters and put the results in an object named `optim_options`. We require 3 repetitions and maxeval=10 (to make it quick ... in real life you should set maxeval to a large value to let the process converge). You can use any directory to store the results. If you don't particularly care where to put them, you can put them in `workspace_path`.
+-   Make a named list to set values for these parameters and put the results in an object named `optim_options`. We require 3 repetitions and maxeval=10 (to make it quick ... in real life you should set maxeval to a large value to let the process converge). You can use any directory to store the results. If you don't particularly care where to put them, you can put them in `workspace_path`.
 
 ```{r estim_param_options, exercise=TRUE}
 # Insert your R code here!
@@ -1652,21 +1692,22 @@ optim_options = list(nb_rep = 3, maxeval=10, out_dir = workspace_path)
 
 ### Choose parameter
 
-We have to choose which parameter will be optimized, and what are their respective boundary values. To do so, we define a list of list for each parameter like so:
+We have to choose which parameter will be optimized, and what are their respective boundary values.
+To do so, we define a list of list for each parameter like so:
 
-```r
+``` {.r}
 param_info = list()
 param_info$dlaimax = list(lb = 0.0005, ub = 0.0025)
 param_info$durvieF = list(lb = 100, ub = 450)
 ```
 
-<div class="alert alert-note">
+::: {.alert .alert-note}
 You can get more information about parameters using `get_param_info`.
-</div>
+:::
 
 Let's try to optimize the value of the `stamflax` parameter.
 
-* Create the parameter list for `stamflax` and name it `param_info`.
+-   Create the parameter list for `stamflax` and name it `param_info`.
 
 ```{r estim_param_param, exercise=TRUE}
 # Insert your R code here!
@@ -1687,13 +1728,17 @@ Now that we defined all information we needed, we can use `estim_param()` to mak
 
 As a reminder, here's the objects we previously defined:
 
-- `obs_filt`: the observations to use in the optimization
-- `stics_wrapper`: this is the wrapper function for stics
-- `wrapper_options`: the options passed to `stics_wrapper`
-- `optim_options`: the parameters for the optimization method
-- `param_info`: the parameter(s) names and boundary values
+-   `obs_filt`: the observations to use in the optimization
 
-* Now estimate the value of `stamflax` using `estim_param()` and the previous objects we defined, and put the results in an object called `optim_res`.
+-   `stics_wrapper`: this is the wrapper function for stics
+
+-   `wrapper_options`: the options passed to `stics_wrapper`
+
+-   `optim_options`: the parameters for the optimization method
+
+-   `param_info`: the parameter(s) names and boundary values
+
+-   Now estimate the value of `stamflax` using `estim_param()` and the previous objects we defined, and put the results in an object called `optim_res`.
 
 ```{r estim_param2, exercise=TRUE, exercise.setup = "prepare-param-estim", exercise.timelimit=300}
 # Insert your R code here!
@@ -1712,32 +1757,39 @@ optim_res = estim_param(obs_list = obs_filt,
                         param_info = param_info)
 ```
 
-<div class="alert alert-note">
-The optimization process can take a while. Time to drink a ☕ maybe!
+::: {.alert .alert-note}
+The optimization process can take a while.
+Time to drink a ☕ maybe!
 
-If you don't want to wait for the optimization process, we got you covered. You can still continue to the next exercises because we cached the output for you (we stored the result of `estim_param()` in the object `optim_res`, but running it with the default value of `maxeval`).
-</div>
+If you don't want to wait for the optimization process, we got you covered.
+You can still continue to the next exercises because we cached the output for you (we stored the result of `estim_param()` in the object `optim_res`, but running it with the default value of `maxeval`).
+:::
 
-<div class="alert alert-info">
-* The default parameter estimation method used in `estim_param()` is the minimization of a least square criterion using the Nelder-Mead simplex. However, different methods and criteria can be used. Look [here](https://sticsrpacks.github.io/CroptimizR/articles/Available_parameter_estimation_algorithms.html) for more details about the available methods and criteria.
-* The results provided by `estim_param()` depend on the method used. Graphs and .Rdata produced are stored in `optim_options$out_dir`. `estim_param()` also displays some results on the standard output (see here-before) and returns a list including the main results (stored here in the `optim_res` object). In the case of the simplex method this list includes:
+::: {.alert .alert-info}
+-   The default parameter estimation method used in `estim_param()` is the minimization of a least square criterion using the Nelder-Mead simplex.
+    However, different methods and criteria can be used.
+    Look [here](https://sticsrpacks.github.io/CroptimizR/articles/Available_parameter_estimation_algorithms.html) for more details about the available methods and criteria.
 
-  * the values of the estimated parameters (`final_values`),
-  * the initial values used for each repetition (`init_values`),
-  * the optimized value of the criterion for each repetition (`crit_values`),
-  * ...
+-   The results provided by `estim_param()` depend on the method used.
+    Graphs and .Rdata produced are stored in `optim_options$out_dir`.
+    `estim_param()` also displays some results on the standard output (see here-before) and returns a list including the main results (stored here in the `optim_res` object).
+    In the case of the simplex method this list includes:
 
-* The `info_level` argument of `estim_param` allows to control the quantity of information returned and stored (see `? estim_param` for more details).
-</div>
+    -   the values of the estimated parameters (`final_values`),
+    -   the initial values used for each repetition (`init_values`),
+    -   the optimized value of the criterion for each repetition (`crit_values`),
+    -   ...
 
+-   The `info_level` argument of `estim_param` allows to control the quantity of information returned and stored (see `? estim_param` for more details).
+:::
 
 ```{r store-param-estim-out, eval=FALSE}
 if (!file.exists(file.path(tmp_dir,"prepare-param-estim-out.RData"))) {
   load(file = system.file("extdata/optim_results.Rdata", package = "SticsRPacks"))
   optim_res = res
   rm(res)
-  wrapper_options = stics_wrapper_options(javastics_path = javastics_path,
-                                          data_dir = workspace_path, parallel = TRUE,
+  wrapper_options = stics_wrapper_options(javastics = javastics_path,
+                                          workspace = workspace_path, parallel = TRUE,
                                           verbose = FALSE)
   obs_filt = filter_obs(get_obs(workspace = workspace_path, usm = "wheat",
                                 verbose = FALSE), "lai_n", include = TRUE)
@@ -1753,7 +1805,6 @@ if (!file.exists(file.path(tmp_dir,"prepare-param-estim-out.RData"))) {
 }
 ```
 
-
 ```{r prepare-param-estim-out, ref.label=c("prepare-gen_usms","store-param-estim-out")}
 ```
 
@@ -1762,7 +1813,7 @@ if (!file.exists(file.path(tmp_dir,"prepare-param-estim-out.RData"))) {
 Now that our parameter value is optimized, we can re-run the model with this value to check the results.
 To do so, we call again `stics_wrapper` with the optimized value passed as argument.
 
-* Use `stics_wrapper` to make a new simulation of the `wheat` USM with our optimized value `optim_res$final_values`, and store the simulated results (i.e. the content of `sim_list`) in an object called `sim_after_optim`.
+-   Use `stics_wrapper` to make a new simulation of the `wheat` USM with our optimized value `optim_res$final_values`, and store the simulated results (i.e. the content of `sim_list`) in an object called `sim_after_optim`.
 
 ```{r estim_param3, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
 # Insert your R code here!
@@ -1785,12 +1836,12 @@ To do so, we call again `stics_wrapper` with the optimized value passed as argum
 
 ```{r estim_param3-solution}
 #SOLUTION:
-sim_after_optim = stics_wrapper(param_values = optim_res$final_values, model_options = wrapper_options, sit_names = "wheat")$sim_list
+sim_after_optim = stics_wrapper(param_values = optim_res$final_values, model_options = wrapper_options, situation = "wheat")$sim_list
 ```
 
 Now we can plot the output using `plot()`.
 
-* Use `plot()` to make a dynamic plot of the simulations along with the observations (`obs_filt`) for the `lai_n` variable.
+-   Use `plot()` to make a dynamic plot of the simulations along with the observations (`obs_filt`) for the `lai_n` variable.
 
 ```{r estim_param4, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
 # Insert your R code here!
@@ -1807,7 +1858,7 @@ plot(sim = sim_after_optim, obs = obs_filt, var = "lai_n")
 
 We can also make a scatter plot for a different display of the fit between observations and simulations.
 
-* Make the same plot but as a scatter plot instead of a dynamic plot
+-   Make the same plot but as a scatter plot instead of a dynamic plot
 
 ```{r estim_param5, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
 # Insert your R code here!
@@ -1824,9 +1875,10 @@ plot(sim = sim_after_optim, obs = obs_filt, type = "scatter", var = "lai_n")
 
 ### Before/after comparison
 
-It is often interesting to compare the simulations before and after the optimization to investigate if it worked properly. To do so, we just have to simulate both, and to plot the results using `plot()`.
+It is often interesting to compare the simulations before and after the optimization to investigate if it worked properly.
+To do so, we just have to simulate both, and to plot the results using `plot()`.
 
-* Make a simulation using `stics_wrapper` with the original values of the parameters, and store the simulated results (i.e. the content of `sim_list`) in an object called `sim_before_optim`.
+-   Make a simulation using `stics_wrapper` with the original values of the parameters, and store the simulated results (i.e. the content of `sim_list`) in an object called `sim_before_optim`.
 
 ```{r estim_param6, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
 # Insert your R code here!
@@ -1838,12 +1890,12 @@ It is often interesting to compare the simulations before and after the optimiza
 
 ```{r estim_param6-solution}
 #SOLUTION:
-sim_before_optim = stics_wrapper(model_options = wrapper_options, sit_names = "wheat")$sim_list
+sim_before_optim = stics_wrapper(model_options = wrapper_options, situation = "wheat")$sim_list
 ```
 
 Now we can compare the simulations using `plot()` and `summary()`.
 
-* Make a plot to compare both simulations for `lai_n`
+-   Make a plot to compare both simulations for `lai_n`
 
 ```{r estim_param7, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
 # Insert your R code here!
@@ -1858,7 +1910,7 @@ Now we can compare the simulations using `plot()` and `summary()`.
 plot(before_optim=sim_before_optim, after_optim=sim_after_optim, obs= obs_filt, var = "lai_n")
 ```
 
-* Compute the nRMSE and Bias of both simulations for `lai_n` using `summary()`
+-   Compute the nRMSE and Bias of both simulations for `lai_n` using `summary()`
 
 ```{r estim_param8, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
 # Insert your R code here!
@@ -1872,7 +1924,6 @@ plot(before_optim=sim_before_optim, after_optim=sim_after_optim, obs= obs_filt, 
 # use the "stat" argument of summary to select the criteria to compute ...
 ```
 
-
 ```{r estim_param8-solution}
 #SOLUTION:
 summary(before_optim=sim_before_optim, after_optim=sim_after_optim, obs = obs_filt, stat=c("nRMSE", "Bias"))
@@ -1880,13 +1931,16 @@ summary(before_optim=sim_before_optim, after_optim=sim_after_optim, obs = obs_fi
 
 ## Managing successive USMs
 
-In STICS, USMs can be run successively so that soil and plant initial conditions of a USM are defined from the state of soil and plant as simulated on a preceding USM. This is for example very useful to simulated crop rotations. For that, starting and ending dates of simulations for the different successive USMs must be adequately defined (if USM1 ends at day d_end1, USM2 must start at day d_end1+1 ... see STICS documentation for more details).
+In STICS, USMs can be run successively so that soil and plant initial conditions of a USM are defined from the state of soil and plant as simulated on a preceding USM.
+This is for example very useful to simulated crop rotations.
+For that, starting and ending dates of simulations for the different successive USMs must be adequately defined (if USM1 ends at day d_end1, USM2 must start at day d_end1+1 ... see STICS documentation for more details).
 
 ### Simulating successive crops
 
-The `run_javastics` function CAN NOT be used to run successive USMs. In this case, it is advised to use the `stics_wrapper()` function.
+The `run_javastics` function CAN NOT be used to run successive USMs.
+In this case, it is advised to use the `stics_wrapper()` function.
 
-* Have a look at the argument `successive_usms` of the function `stics_wrapper_options()`. Then, simulate USMs `demo_Wheat1`, `demo_BareSoil2`and `demo_maize3` (defined in the JavaStics distribution example workspace) both in independent and successive ways using `stics_wrapper`. Check that the last values of the simulated mafruit for `demo_maize3` differ between the two different simulation modes (independent or successive USMs).
+-   Have a look at the argument `successive_usms` of the function `stics_wrapper_options()`. Then, simulate USMs `demo_Wheat1`, `demo_BareSoil2`and `demo_maize3` (defined in the JavaStics distribution example workspace) both in independent and successive ways using `stics_wrapper`. Check that the last values of the simulated mafruit for `demo_maize3` differ between the two different simulation modes (independent or successive USMs).
 
 ```{r sim_successive, exercise=TRUE, exercise.lines=20}
 # Insert your R code here!
@@ -1912,17 +1966,17 @@ The `run_javastics` function CAN NOT be used to run successive USMs. In this cas
 gen_usms_xml2txt(javastics_path, workspace_path, usm = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
 
 # Run without succession
-wrapper_options <- stics_wrapper_options(javastics_path = javastics_path,
-                                         data_dir = workspace_path)
+wrapper_options <- stics_wrapper_options(javastics = javastics_path,
+                                         workspace = workspace_path)
 without_succ <- stics_wrapper(model_options = wrapper_options,
-                              sit_names = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+                              situation = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
 
 # Run with succession
-wrapper_options <- stics_wrapper_options(javastics_path = javastics_path,
-                                         data_dir = workspace_path,
+wrapper_options <- stics_wrapper_options(javastics = javastics_path,
+                                         workspace = workspace_path,
                                          successive_usms = list(c("demo_Wheat1","demo_BareSoil2","demo_maize3")))
 with_succ <- stics_wrapper(model_options = wrapper_options,
-                           sit_names = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+                           situation = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
 
 # Compare both
 print(paste("mafruit demo_maize3 without succession:",
@@ -1932,25 +1986,22 @@ print(paste("mafruit demo_maize3 with succession:",
 
 ```
 
-
-<div class="alert alert-info">
+::: {.alert .alert-info}
 Successive USMs can also be simulated using the `run_stics` function.
 This is however a bit more complex since the user has in this case to explicitly handle the succession by:
 
-i) Calling `run_stics` for each USM to simulate ;
+i)  Calling `run_stics` for each USM to simulate ;
 ii) Between two calls to `run_stics`, copying the files `recup.tmp` and `snow_variables.txt` generated in the folder of the preceding USMs to the folder of the USMs to simulate
 iii) Defining the `codesuite` parameter to 1 in the file `travail.usm` of the USM to simulate
 
 It can however be useful if one want for example to include decision rules between the successive USMs to simulate.
-</div>
-
-
+:::
 
 ### Plotting successive simulations
 
 Dynamic plots of variables can be aggregated to generate continuous plots.
 
-* Have a look at the argument `successive` of the `plot` function of the CroPlotR package.  Then plot the `azomes` variable (amount of NO3-N in soil) simulated in the previous exercise for both modes (use the `without_succ` and `with_succ` R variables that contains the results returned by the wrapper, as presented in the SOLUTION of the previous exercise). Check that `azomes` is more continuous in the second case.
+-   Have a look at the argument `successive` of the `plot` function of the CroPlotR package. Then plot the `azomes` variable (amount of NO3-N in soil) simulated in the previous exercise for both modes (use the `without_succ` and `with_succ` R variables that contains the results returned by the wrapper, as presented in the SOLUTION of the previous exercise). Check that `azomes` is more continuous in the second case.
 
 ```{r prepare-plot-successive}
 if (!file.exists(file.path(tmp_dir,"prepare-plot-successive.RData"))) {
@@ -1959,19 +2010,19 @@ if (!file.exists(file.path(tmp_dir,"prepare-plot-successive.RData"))) {
                    verbose = FALSE)
 
   # Run without succession
-  wrapper_options <- stics_wrapper_options(javastics_path = javastics_path,
-                                           data_dir = workspace_path,
+  wrapper_options <- stics_wrapper_options(javastics = javastics_path,
+                                           workspace = workspace_path,
                                            verbose = FALSE)
   without_succ <- stics_wrapper(model_options = wrapper_options,
-                                sit_names = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+                                situation = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
 
   # Run with succession
-  wrapper_options <- stics_wrapper_options(javastics_path = javastics_path,
-                                           data_dir = workspace_path,
+  wrapper_options <- stics_wrapper_options(javastics = javastics_path,
+                                           workspace = workspace_path,
                                            successive_usms = list(c("demo_Wheat1","demo_BareSoil2","demo_maize3")),
                                            verbose = FALSE)
   with_succ <- stics_wrapper(model_options = wrapper_options,
-                             sit_names = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+                             situation = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
 
   save(list=c("without_succ", "with_succ"),
        file=file.path(tmp_dir,"prepare-plot-successive.RData"))
@@ -1995,16 +2046,17 @@ plot("Without successive"=without_succ$sim_list,
 
 ### Estimating parameters on successive simulations
 
-Estimating parameters on successive simulations is also possible. Actually it may not require specific options in the `estim_param` function: if the `successive_usms` argument is defined in the STICS wrapper options, then the parameters will be estimated on successive simulations.
+Estimating parameters on successive simulations is also possible.
+Actually it may not require specific options in the `estim_param` function: if the `successive_usms` argument is defined in the STICS wrapper options, then the parameters will be estimated on successive simulations.
 
-Note however that by default the same values of the parameters will be applied on all USMs. If one want to estimate the parameters for specific USMs only, or with different values depending on the USMs, one must use the `sit_list` element of the `param_info` argument.
-
+Note however that by default the same values of the parameters will be applied on all USMs.
+If one want to estimate the parameters for specific USMs only, or with different values depending on the USMs, one must use the `sit_list` element of the `param_info` argument.
 
 ## Managing Intercrops
 
 We will see in this section how intercrops are handled in SticsRPacks.
 
-* Run the "intercrop_pea_barley" USM of the JavaStics distribution example workspace from R, get the results of lai_n, masec_n and mafruit for both crops and store them in an R object called `sim` (path to JavaStics is stored in the `javastics_path` R object and path to the example workspace is stored in `workspace_path`)
+-   Run the "intercrop_pea_barley" USM of the JavaStics distribution example workspace from R, get the results of lai_n, masec_n and mafruit for both crops and store them in an R object called `sim` (path to JavaStics is stored in the `javastics_path` R object and path to the example workspace is stored in `workspace_path`)
 
 ```{r intercrop-1, exercise=TRUE}
 # Insert your R code here!
@@ -2020,18 +2072,16 @@ We will see in this section how intercrops are handled in SticsRPacks.
 
 ```{r intercrop-1-solution}
 # SOLUTION:
-run_javastics(javastics_path=javastics_path,  workspace_path = workspace_path, usms_list = c("intercrop_pea_barley"))
+run_javastics(javastics=javastics_path,  workspace = workspace_path, usms_list = c("intercrop_pea_barley"))
 sim <- get_sim(workspace = workspace_path, usm="intercrop_pea_barley",var=c("lai_n","masec_n","mafruit"))
 ```
 
-
-* Examine the results and try to answer the quizz below
-
+-   Examine the results and try to answer the quizz below
 
 ```{r run-intercrop, eval=FALSE}
 if (!all(file.exists(file.path(workspace_path,c("mod_spintercrop_pea_barley.sti",
                                             "mod_saintercrop_pea_barley.sti"))))) {
-  run_javastics(javastics_path=javastics_path,  workspace_path = workspace_path,
+  run_javastics(javastics=javastics_path,  workspace = workspace_path,
                 usms_list = c("intercrop_pea_barley"), verbose = FALSE)
 }
 ```
@@ -2074,7 +2124,7 @@ question("How are organized the results for the different intercrops",
          allow_retry = TRUE)
 ```
 
-* Check now how results are changed when you use the `usms_file` argument of the `get_sim` function
+-   Check now how results are changed when you use the `usms_file` argument of the `get_sim` function
 
 ```{r intercrop-4, exercise=TRUE, exercise.setup = "prepare-intercrop-2"}
 # Insert your R code here!
@@ -2089,9 +2139,7 @@ print(sim)
 # The names of the Plant files are now given in the Plant column instead of Plant_1 and Plant_2 ...
 ```
 
-
-* And, finally, how results are changed when you use in addition the `javastics_path` argument of the `get_sim` function
-
+-   And, finally, how results are changed when you use in addition the `javastics_path` argument of the `get_sim` function
 
 ```{r intercrop-5, exercise=TRUE, exercise.setup = "prepare-intercrop-2"}
 # Insert your R code here!
@@ -2106,7 +2154,7 @@ print(sim)
 # The names of the Plants are now given in the Plant column.
 ```
 
-* Now, plot the simulation results using the standard plot function of CroPlotR
+-   Now, plot the simulation results using the standard plot function of CroPlotR
 
 ```{r store-intercrop-6, eval=FALSE}
 if (!file.exists(file.path(tmp_dir,"prepare-intercrop-6.RData"))) {
@@ -2135,16 +2183,16 @@ if (!file.exists(file.path(tmp_dir,"prepare-intercrop-6.RData"))) {
 plot(sim)
 ```
 
-
-
 ## Advanced parameter estimation
 
-Note that many features are available for parameter estimation in CroptimizR. This is not the sake of this tutorial to present all of them. They are detailed either in the `estim_param` function documentation and/or in the CroptimizR vignettes.
+Note that many features are available for parameter estimation in CroptimizR.
+This is not the sake of this tutorial to present all of them.
+They are detailed either in the `estim_param` function documentation and/or in the CroptimizR vignettes.
 
 Among them you will find:
 
-* the use of inequality constraints between parameters (see argument `satisfy_par_const`),
-* the simultaneous estimation of different values of the same parameters depending on the USMs (use of `sit_list`in `param_info` argument, see (here)[https://sticsrpacks.github.io/CroptimizR/articles/Parameter_estimation_Specific_and_Varietal.html] for a detailed example),
-* the use of bayesian methods (see (here)[https://sticsrpacks.github.io/CroptimizR/articles/Parameter_estimation_DREAM.html] for a detailed example)
-* the possibility to dynamically transform simulations and/or observations in case observed values do not directly correspond to simulated variables (see arguments `transform_obs`, `transform_sim` and `var_names`)
-* ...
+-   the use of inequality constraints between parameters (see argument `satisfy_par_const`),
+-   the simultaneous estimation of different values of the same parameters depending on the USMs (use of `sit_list`in `param_info` argument, see (here)[<https://sticsrpacks.github.io/CroptimizR/articles/Parameter_estimation_Specific_and_Varietal.html>] for a detailed example),
+-   the use of bayesian methods (see (here)[<https://sticsrpacks.github.io/CroptimizR/articles/Parameter_estimation_DREAM.html>] for a detailed example)
+-   the possibility to dynamically transform simulations and/or observations in case observed values do not directly correspond to simulated variables (see arguments `transform_obs`, `transform_sim` and `var_names`)
+-   ...
