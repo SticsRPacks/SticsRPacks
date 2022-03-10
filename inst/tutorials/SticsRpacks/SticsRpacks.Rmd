@@ -1452,7 +1452,7 @@ if (!file.exists(wrapper_options_file)) {
 ```
 
 ```{r stics_wrapper1-hint-1}
-# The sit_names argument is used to choose the USMs to simulate.
+# The situation argument is used to choose the USMs to simulate.
 ```
 
 ```{r stics_wrapper1-hint-2}
@@ -1794,8 +1794,8 @@ if (!file.exists(file.path(tmp_dir,"prepare-param-estim-out.RData"))) {
   obs_filt = filter_obs(get_obs(workspace = workspace_path, usm = "wheat",
                                 verbose = FALSE), "lai_n", include = TRUE)
   sim_after_optim = stics_wrapper(param_values = optim_res$final_values,
-                                  model_options = wrapper_options, sit_names = "wheat")$sim_list
-  sim_before_optim = stics_wrapper(model_options = wrapper_options, sit_names = "wheat")$sim_list
+                                  model_options = wrapper_options, situation = "wheat")$sim_list
+  sim_before_optim = stics_wrapper(model_options = wrapper_options, situation = "wheat")$sim_list
 
   save(list=c("optim_res", "wrapper_options", "obs_filt", "sim_after_optim", "sim_before_optim"),
        file=file.path(tmp_dir,"prepare-param-estim-out.RData"))
@@ -1824,7 +1824,7 @@ To do so, we call again `stics_wrapper` with the optimized value passed as argum
 ```
 
 ```{r estim_param3-hint-2}
-# Use the sit_names argument of stics_wrapper() to select the USM to simulate.
+# Use the situation argument of stics_wrapper() to select the USM to simulate.
 ```
 
 ```{r estim_param3-hint-3}
