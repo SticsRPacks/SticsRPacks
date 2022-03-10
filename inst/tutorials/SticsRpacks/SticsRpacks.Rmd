@@ -1926,7 +1926,7 @@ plot(before_optim=sim_before_optim, after_optim=sim_after_optim, obs= obs_filt, 
 
 ```{r estim_param8-solution}
 #SOLUTION:
-summary(before_optim=sim_before_optim, after_optim=sim_after_optim, obs = obs_filt, stat=c("nRMSE", "Bias"))
+summary(before_optim=sim_before_optim, after_optim=sim_after_optim, obs = obs_filt, stats=c("nRMSE", "Bias"))
 ```
 
 ## Managing successive USMs
