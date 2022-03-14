@@ -1974,7 +1974,7 @@ without_succ <- stics_wrapper(model_options = wrapper_options,
 # Run with succession
 wrapper_options <- stics_wrapper_options(javastics = javastics_path,
                                          workspace = workspace_path,
-                                         successive_usms = list(c("demo_Wheat1","demo_BareSoil2","demo_maize3")))
+                                         successive = list(c("demo_Wheat1","demo_BareSoil2","demo_maize3")))
 with_succ <- stics_wrapper(model_options = wrapper_options,
                            situation = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
 
@@ -2019,7 +2019,7 @@ if (!file.exists(file.path(tmp_dir,"prepare-plot-successive.RData"))) {
   # Run with succession
   wrapper_options <- stics_wrapper_options(javastics = javastics_path,
                                            workspace = workspace_path,
-                                           successive_usms = list(c("demo_Wheat1","demo_BareSoil2","demo_maize3")),
+                                           successive = list(c("demo_Wheat1","demo_BareSoil2","demo_maize3")),
                                            verbose = FALSE)
   with_succ <- stics_wrapper(model_options = wrapper_options,
                              situation = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
