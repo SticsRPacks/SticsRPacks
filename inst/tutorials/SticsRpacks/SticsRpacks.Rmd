@@ -2006,7 +2006,7 @@ Dynamic plots of variables can be aggregated to generate continuous plots.
 ```{r prepare-plot-successive}
 if (!file.exists(file.path(tmp_dir,"prepare-plot-successive.RData"))) {
   gen_usms_xml2txt(javastics_path, workspace_path,
-                   usms_list = c("demo_Wheat1","demo_BareSoil2","demo_maize3"),
+                   usm = c("demo_Wheat1","demo_BareSoil2","demo_maize3"),
                    verbose = FALSE)
 
   # Run without succession
