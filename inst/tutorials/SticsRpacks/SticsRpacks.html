@@ -210,14 +210,6 @@ gen_usms_xml2txt(javastics_path, workspace_PW1, usm = usm_name)</code></pre>
 sim_ws_ns = stics_wrapper(model_options = wrapper_options,
                           param_values = c(codeinnact=1, codeh2oact=1),
                           var = var_names)$sim_list</code></pre>
-<pre><code>## Warning: The `data_dir` argument of `stics_wrapper_options()` is deprecated as of SticsOnR 0.5.0.
-## Please use the `workspace` argument instead.
-## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</code></pre>
-<pre><code>## Warning: The `javastics_path` argument of `stics_wrapper_options()` is deprecated as of SticsOnR 0.5.0.
-## Please use the `javastics` argument instead.
-## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</code></pre>
 <pre><code>## Warning: Error running the Stics model for USM ___maize_ref_2013 . 
 ##    Error: could not open ficini.txt unit=           36</code></pre>
 <pre class="r"><code># Simulate with water stress only
@@ -314,7 +306,12 @@ Helper function that returns names and descriptions of STICS output variables fr
 Usage
 </h4>
 <pre>
-get_var_info(var = NULL, keyword = NULL, version = "last")
+get_var_info(
+  var = NULL,
+  keyword = NULL,
+  stics_version = "latest",
+  version = lifecycle::deprecated()
+)
 </pre>
 <h4>
 Arguments
@@ -326,7 +323,7 @@ Arguments
 </td>
 <td>
 <p>
-Character vector containing a (part of the) name of a STICS output variable.
+Vector of variable names (or partial names). Optional, if not provided, the function returns information for all variables.
 </p>
 </td>
 </tr>
@@ -342,11 +339,21 @@ Search by keyword instead of variable name (search in the name and description f
 </tr>
 <tr valign="top">
 <td>
+<code>stics_version</code>
+</td>
+<td>
+<p>
+Name of the Stics version. Optional, can be used to search parameters information relative to a specific Stics version. By default the latest version returned by <code>get_stics_versions_compat()</code> is used.
+</p>
+</td>
+</tr>
+<tr valign="top">
+<td>
 <code>version</code>
 </td>
 <td>
 <p>
-The stics version. See <code>get_stics_versions_compat()</code> to get all compatible versions. Default to “last”, a special code to get the last version.
+<a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated"><img src="../help/figures/lifecycle-deprecated.svg" alt='[Deprecated]' /></a> <code>version</code> is no longer supported, use <code>stics_version</code> instead.
 </p>
 </td>
 </tr>
@@ -372,10 +379,10 @@ Examples
 SticsRFiles::get_var_info("lai")
 
 # Find by keyword (fuzzy search in variable name and description):
-SticsRFiles::get_var_info(keyword= "lai")
+SticsRFiles::get_var_info(keyword = "lai")
 
 # Find for a particular version:
-SticsRFiles::get_var_info("lai", version= "V9.0")
+SticsRFiles::get_var_info("lai", stics_version = "V9.0")
 
 ## End(Not run)
 
@@ -417,7 +424,12 @@ Extracting a usm names list from an usms.xml file
 Usage
 </h4>
 <pre>
-get_usms_list(usm_path, name = NULL)
+get_usms_list(
+  file,
+  usm = NULL,
+  usm_path = lifecycle::deprecated(),
+  name = lifecycle::deprecated()
+)
 </pre>
 <h4>
 Arguments
@@ -425,11 +437,31 @@ Arguments
 <table summary="R argblock">
 <tr valign="top">
 <td>
+<code>file</code>
+</td>
+<td>
+<p>
+Path (including name) of the USM xml file
+</p>
+</td>
+</tr>
+<tr valign="top">
+<td>
+<code>usm</code>
+</td>
+<td>
+<p>
+Vector of USM names (or partial names). Optional, if not provided, the function returns the names of all the USMs included in the given file.
+</p>
+</td>
+</tr>
+<tr valign="top">
+<td>
 <code>usm_path</code>
 </td>
 <td>
 <p>
-usm file path (e.g. “usms.xml”)
+<a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated"><img src="../help/figures/lifecycle-deprecated.svg" alt='[Deprecated]' /></a> <code>usm_path</code> is no longer supported, use <code>file</code> instead.
 </p>
 </td>
 </tr>
@@ -439,7 +471,7 @@ usm file path (e.g. “usms.xml”)
 </td>
 <td>
 <p>
-A vector of usm name(s) or partial name(s), optional
+<a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated"><img src="../help/figures/lifecycle-deprecated.svg" alt='[Deprecated]' /></a> <code>name</code> is no longer supported, use <code>usm</code> instead.
 </p>
 </td>
 </tr>
@@ -454,12 +486,11 @@ A vector of usm names
 Examples
 </h4>
 <pre>
-path = get_examples_path( file_type = "xml")
+path &lt;- get_examples_path(file_type = "xml")
 
-usms_list &lt;- get_usms_list(usm_path = file.path(path, "usms.xml"))
+usms_list &lt;- get_usms_list(file = file.path(path, "usms.xml"))
 
-usms_list &lt;- get_usms_list(usm_path = file.path(path, "usms.xml"), name = c("usm1", "usm2"))
-
+usms_list &lt;- get_usms_list(file = file.path(path, "usms.xml"), usm = c("usm1", "usm2"))
 </pre>
 </blockquote>
 <ul>
@@ -527,7 +558,16 @@ Extracting parameter values for a list of xml files and parameters
 Usage
 </h4>
 <pre>
-get_param_xml(xml_file, param_name = NULL, select = NULL, value = NULL, ...)
+get_param_xml(
+  file,
+  param = NULL,
+  select = NULL,
+  select_value = NULL,
+  xml_file = lifecycle::deprecated(),
+  param_name = lifecycle::deprecated(),
+  value = lifecycle::deprecated(),
+  ...
+)
 </pre>
 <h4>
 Arguments
@@ -535,21 +575,21 @@ Arguments
 <table summary="R argblock">
 <tr valign="top">
 <td>
-<code>xml_file</code>
+<code>file</code>
 </td>
 <td>
 <p>
-An xml file, or a vector/list of
+Vector of the xml file paths from which parameters values must be extracted
 </p>
 </td>
 </tr>
 <tr valign="top">
 <td>
-<code>param_name</code>
+<code>param</code>
 </td>
 <td>
 <p>
-parameter names vector (i.e.: parameter name or option code, optional)
+Vector of parameter names. Optional, if not provided, the function returns information for all parameters.
 </p>
 </td>
 </tr>
@@ -565,11 +605,41 @@ node name or attribute name to use for selection (optional, default to no select
 </tr>
 <tr valign="top">
 <td>
+<code>select_value</code>
+</td>
+<td>
+<p>
+Vector of values used for select (see examples). Optional, should be provided only if select is provided.
+</p>
+</td>
+</tr>
+<tr valign="top">
+<td>
+<code>xml_file</code>
+</td>
+<td>
+<p>
+<a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated"><img src="../help/figures/lifecycle-deprecated.svg" alt='[Deprecated]' /></a> <code>xml_file</code> is no longer supported, use <code>file</code> instead.
+</p>
+</td>
+</tr>
+<tr valign="top">
+<td>
+<code>param_name</code>
+</td>
+<td>
+<p>
+<a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated"><img src="../help/figures/lifecycle-deprecated.svg" alt='[Deprecated]' /></a> <code>param_name</code> is no longer supported, use <code>param</code> instead.
+</p>
+</td>
+</tr>
+<tr valign="top">
+<td>
 <code>value</code>
 </td>
 <td>
 <p>
-value used for select (optional)
+<a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated"><img src="../help/figures/lifecycle-deprecated.svg" alt='[Deprecated]' /></a> <code>value</code> is no longer supported, use <code>select_value</code> instead.
 </p>
 </td>
 </tr>
@@ -596,52 +666,37 @@ Examples
 <pre>
 ## Not run: 
 # Soil file
-xml_path = file.path(get_examples_path( file_type = "xml"),"sols.xml")
+file &lt;- file.path(get_examples_path(file_type = "xml"), "sols.xml")
 
 # For all soils
-get_param_xml(xml_path)
-get_param_xml(xml_path, "argi")
-get_param_xml(xml_path, c("argi", "norg"))
+get_param_xml(file)
+get_param_xml(file, "argi")
+get_param_xml(file, c("argi", "norg"))
 
 # For one soil selection
-get_param_xml(xml_path, "argi",
-select = "sol", value = "solcanne")
+get_param_xml(file, "argi", select = "sol", select_value = "solcanne")
 
 # For soils and parameters vectors
 # scalar parameters per soil
-get_param_xml(xml_path, c("argi", "norg"),
-select = "sol", value = c("solcanne", "solbanane"))
-
-$sols.xml
-$sols.xml$argi
-[1] 30.2 70.0
-
-$sols.xml$norg
-[1] 0.27 0.20
+get_param_xml(file, c("argi", "norg"),
+  select = "sol", select_value = c("solcanne", "solbanane")
+)
 
 # vector parameters per soil (5 values, one per soil layer)
-get_param_xml(xml_path, c("epc", "HCCF"),
-select = "sol", value = c("solcanne", "solbanane"))
-
-$sols.xml
-$sols.xml$epc
-[1] 20 20 20 20 20 10 10 10 10 40
-
-$sols.xml$HCCF
-[1] 46.8 46.4 48.5 50.1 50.1 41.0 41.0 41.0 42.0 42.0
+get_param_xml(file, c("epc", "HCCF"),
+  select = "sol", select_value = c("solcanne", "solbanane")
+)
 
 # Crop management file
-xml_path = file.path(get_examples_path( file_type = "xml"),"file_tec.xml")
+file &lt;- file.path(get_examples_path(file_type = "xml"), "file_tec.xml")
 
-get_param_xml(xml_path)
+get_param_xml(file)
 
 # Getting parameters for irrigation (date and quantity)
-get_param_xml(xml_path, c("julapI_or_sum_upvt", "amount"))
-
+get_param_xml(file, c("julapI_or_sum_upvt", "amount"))
 
 # Getting all parameters for a given formalism: "irrigation"
-get_param_xml(xml_path, select = "formalisme", value = "irrigation")
-
+get_param_xml(file, select = "formalisme", select_value = "irrigation")
 
 ## End(Not run)
 </pre>
@@ -710,7 +765,13 @@ Read the meteorology input for STICS (“climat.txt”)
 Usage
 </h4>
 <pre>
-get_climate_txt(dirpath = getwd(), filename = "climat.txt", preserve = TRUE)
+get_climate_txt(
+  workspace = getwd(),
+  file_name = "climat.txt",
+  preserve = TRUE,
+  dirpath = lifecycle::deprecated(),
+  filename = lifecycle::deprecated()
+)
 </pre>
 <h4>
 Arguments
@@ -718,17 +779,17 @@ Arguments
 <table summary="R argblock">
 <tr valign="top">
 <td>
-<code>dirpath</code>
+<code>workspace</code>
 </td>
 <td>
 <p>
-Directory path
+Path of the workspace containing the Stics climate file to read
 </p>
 </td>
 </tr>
 <tr valign="top">
 <td>
-<code>filename</code>
+<code>file_name</code>
 </td>
 <td>
 <p>
@@ -743,6 +804,26 @@ The meteorology file name (default to <code>climat.txt</code>).
 <td>
 <p>
 Logical, <code style="white-space: pre;">TRUE`` for keeping the stics columns related to date (year, month, day, julian), or only keep the date as a </code>POSIXct<code style="white-space: pre;">otherwise. Default to</code>TRUE’.
+</p>
+</td>
+</tr>
+<tr valign="top">
+<td>
+<code>dirpath</code>
+</td>
+<td>
+<p>
+<a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated"><img src="../help/figures/lifecycle-deprecated.svg" alt='[Deprecated]' /></a> <code>dirpath</code> is no longer supported, use <code>workspace</code> instead.
+</p>
+</td>
+</tr>
+<tr valign="top">
+<td>
+<code>filename</code>
+</td>
+<td>
+<p>
+<a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated"><img src="../help/figures/lifecycle-deprecated.svg" alt='[Deprecated]' /></a> <code>filename</code> is no longer supported, use <code>file_name</code> instead.
 </p>
 </td>
 </tr>
@@ -764,9 +845,8 @@ Examples
 </h4>
 <pre>
 library(SticsRFiles)
-path &lt;- get_examples_path( file_type = "txt")
+path &lt;- get_examples_path(file_type = "txt")
 Meteo &lt;- get_climate_txt(path)
-
 </pre>
 </blockquote>
 <ul>
@@ -2071,7 +2151,7 @@ print(paste(&quot;mafruit demo_maize3 with succession:&quot;,
 <div class="tutorial-exercise-support" data-label="prepare-plot-successive" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="5">
 <pre class="text"><code>if (!file.exists(file.path(tmp_dir,&quot;prepare-plot-successive.RData&quot;))) {
   gen_usms_xml2txt(javastics_path, workspace_path,
-                   usms_list = c(&quot;demo_Wheat1&quot;,&quot;demo_BareSoil2&quot;,&quot;demo_maize3&quot;),
+                   usm = c(&quot;demo_Wheat1&quot;,&quot;demo_BareSoil2&quot;,&quot;demo_maize3&quot;),
                    verbose = FALSE)
 
   # Run without succession
@@ -2565,15 +2645,15 @@ output$`tutorial-exercise-stat_simobs5-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "gen_xml-1", question = structure("What is the name of the SticsRFiles function for generating a usms.xml file?", html = TRUE, class = c("html", "character")), answers = list(structure(list(id = "lnr_ans_e2334bb",     option = "gen_usms_xml2txt", value = "gen_usms_xml2txt",     label = structure("gen_usms_xml2txt", html = TRUE, class = c("html",     "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_9544e41",     option = "get_usms_files", value = "get_usms_files", label = structure("get_usms_files", html = TRUE, class = c("html",     "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_bf9c3",     option = "gen_usms_xml", value = "gen_usms_xml", label = structure("gen_usms_xml", html = TRUE, class = c("html",     "character")), correct = TRUE, message = NULL), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_ddcfcdd",     option = "gen_usms", value = "gen_usms", label = structure("gen_usms", html = TRUE, class = c("html",     "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer", "tutorial_quiz_answer"))), button_labels = list(submit = structure("Submit Answer", html = TRUE, class = c("html", "character")), try_again = structure("Try Again", html = TRUE, class = c("html", "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", "character")), try_again = structure("Look at the Reference tab of the SticsRFiles website...", html = TRUE, class = c("html", "character")), incorrect = structure("Look at the Reference tab of the SticsRFiles website...", html = TRUE, class = c("html", "character")), message = NULL, post_message = NULL), ids = list(    answer = "gen_xml-1-answer", question = "gen_xml-1"), loading = structure("<strong>Loading:<\u002fstrong> \nWhat is the name of the SticsRFiles function for generating a usms.xml file?\n<br/><br/><br/>", html = TRUE, class = c("html", "character")), random_answer_order = TRUE, allow_retry = TRUE,     seed = 1063496651.50477, options = list()), class = c("learnr_radio", "tutorial_question")))
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "gen_xml-1", question = structure("What is the name of the SticsRFiles function for generating a usms.xml file?", html = TRUE, class = c("html", "character")), answers = list(structure(list(id = "lnr_ans_8656c6c",     option = "gen_usms_xml2txt", value = "gen_usms_xml2txt",     label = structure("gen_usms_xml2txt", html = TRUE, class = c("html",     "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_4c248db",     option = "get_usms_files", value = "get_usms_files", label = structure("get_usms_files", html = TRUE, class = c("html",     "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_4743ed0",     option = "gen_usms_xml", value = "gen_usms_xml", label = structure("gen_usms_xml", html = TRUE, class = c("html",     "character")), correct = TRUE, message = NULL), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_3e3870b",     option = "gen_usms", value = "gen_usms", label = structure("gen_usms", html = TRUE, class = c("html",     "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer", "tutorial_quiz_answer"))), button_labels = list(submit = structure("Submit Answer", html = TRUE, class = c("html", "character")), try_again = structure("Try Again", html = TRUE, class = c("html", "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", "character")), try_again = structure("Look at the Reference tab of the SticsRFiles website...", html = TRUE, class = c("html", "character")), incorrect = structure("Look at the Reference tab of the SticsRFiles website...", html = TRUE, class = c("html", "character")), message = NULL, post_message = NULL), ids = list(    answer = "gen_xml-1-answer", question = "gen_xml-1"), loading = structure("<strong>Loading:<\u002fstrong> \nWhat is the name of the SticsRFiles function for generating a usms.xml file?\n<br/><br/><br/>", html = TRUE, class = c("html", "character")), random_answer_order = TRUE, allow_retry = TRUE,     seed = 1847891428.13951, options = list()), class = c("learnr_radio", "tutorial_question")))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::question_prerendered_chunk(structure(list(type = "learnr_checkbox", label = "gen_xml-2",     question = structure("From which type of file the usms.xml file can be generated using this function?", html = TRUE, class = c("html",     "character")), answers = list(structure(list(id = "lnr_ans_974ec9d",         option = "csv", value = "csv", label = structure("csv", html = TRUE, class = c("html",         "character")), correct = TRUE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_fefddec",         option = "word", value = "word", label = structure("word", html = TRUE, class = c("html",         "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_c2de7e8",         option = "excel", value = "excel", label = structure("excel", html = TRUE, class = c("html",         "character")), correct = TRUE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_c7f8bb4",         option = "XML", value = "XML", label = structure("XML", html = TRUE, class = c("html",         "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer"))), button_labels = list(submit = structure("Submit Answer", html = TRUE, class = c("html",     "character")), try_again = structure("Try Again", html = TRUE, class = c("html",     "character"))), messages = list(correct = structure("Great!", html = TRUE, class = c("html",     "character")), try_again = structure("Look at the vignette &quot;Generating Stics XML files from tabulated data&quot; of the SticsRFiles website (Article tab)...", html = TRUE, class = c("html",     "character")), incorrect = structure("Look at the vignette &quot;Generating Stics XML files from tabulated data&quot; of the SticsRFiles website (Article tab)...", html = TRUE, class = c("html",     "character")), message = NULL, post_message = NULL), ids = list(        answer = "gen_xml-2-answer", question = "gen_xml-2"),     loading = structure("<strong>Loading:<\u002fstrong> \nFrom which type of file the usms.xml file can be generated using this function?\n<br/><br/><br/>", html = TRUE, class = c("html",     "character")), random_answer_order = TRUE, allow_retry = TRUE,     seed = 1952504198.59079, options = list()), class = c("learnr_checkbox", "tutorial_question")))
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_checkbox", label = "gen_xml-2",     question = structure("From which type of file the usms.xml file can be generated using this function?", html = TRUE, class = c("html",     "character")), answers = list(structure(list(id = "lnr_ans_6c0e2bc",         option = "csv", value = "csv", label = structure("csv", html = TRUE, class = c("html",         "character")), correct = TRUE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_ff5aa70",         option = "word", value = "word", label = structure("word", html = TRUE, class = c("html",         "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_7b38068",         option = "excel", value = "excel", label = structure("excel", html = TRUE, class = c("html",         "character")), correct = TRUE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_c6426bf",         option = "XML", value = "XML", label = structure("XML", html = TRUE, class = c("html",         "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer"))), button_labels = list(submit = structure("Submit Answer", html = TRUE, class = c("html",     "character")), try_again = structure("Try Again", html = TRUE, class = c("html",     "character"))), messages = list(correct = structure("Great!", html = TRUE, class = c("html",     "character")), try_again = structure("Look at the vignette &quot;Generating Stics XML files from tabulated data&quot; of the SticsRFiles website (Article tab)...", html = TRUE, class = c("html",     "character")), incorrect = structure("Look at the vignette &quot;Generating Stics XML files from tabulated data&quot; of the SticsRFiles website (Article tab)...", html = TRUE, class = c("html",     "character")), message = NULL, post_message = NULL), ids = list(        answer = "gen_xml-2-answer", question = "gen_xml-2"),     loading = structure("<strong>Loading:<\u002fstrong> \nFrom which type of file the usms.xml file can be generated using this function?\n<br/><br/><br/>", html = TRUE, class = c("html",     "character")), random_answer_order = TRUE, allow_retry = TRUE,     seed = 1785775419.66843, options = list()), class = c("learnr_checkbox", "tutorial_question")))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::question_prerendered_chunk(structure(list(type = "learnr_checkbox", label = "gen_xml-3",     question = structure("Which type of JavaStics files can not yet be generated using the gen_*_xml functions?", html = TRUE, class = c("html",     "character")), answers = list(structure(list(id = "lnr_ans_56f735c",         option = "Soil files", value = "Soil files", label = structure("Soil files", html = TRUE, class = c("html",         "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_34e3096",         option = "Weather data files", value = "Weather data files",         label = structure("Weather data files", html = TRUE, class = c("html",         "character")), correct = TRUE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_607515d",         option = "General parameter files", value = "General parameter files",         label = structure("General parameter files", html = TRUE, class = c("html",         "character")), correct = TRUE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_a00e7f8",         option = "Technical files", value = "Technical files",         label = structure("Technical files", html = TRUE, class = c("html",         "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_2c126b1",         option = "Weather station files", value = "Weather station files",         label = structure("Weather station files", html = TRUE, class = c("html",         "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer"))), button_labels = list(submit = structure("Submit Answer", html = TRUE, class = c("html",     "character")), try_again = structure("Try Again", html = TRUE, class = c("html",     "character"))), messages = list(correct = structure("Incredible!", html = TRUE, class = c("html",     "character")), try_again = structure("Look at the vignette &quot;Generating Stics XML files from tabulated data&quot; of the SticsRFiles website (Article tab)...", html = TRUE, class = c("html",     "character")), incorrect = structure("Look at the vignette &quot;Generating Stics XML files from tabulated data&quot; of the SticsRFiles website (Article tab)...", html = TRUE, class = c("html",     "character")), message = NULL, post_message = NULL), ids = list(        answer = "gen_xml-3-answer", question = "gen_xml-3"),     loading = structure("<strong>Loading:<\u002fstrong> \nWhich type of JavaStics files can not yet be generated using the gen_*_xml functions?\n<br/><br/><br/>", html = TRUE, class = c("html",     "character")), random_answer_order = TRUE, allow_retry = TRUE,     seed = 1668410688.22309, options = list()), class = c("learnr_checkbox", "tutorial_question")))
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_checkbox", label = "gen_xml-3",     question = structure("Which type of JavaStics files can not yet be generated using the gen_*_xml functions?", html = TRUE, class = c("html",     "character")), answers = list(structure(list(id = "lnr_ans_dcc406",         option = "Soil files", value = "Soil files", label = structure("Soil files", html = TRUE, class = c("html",         "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_6015b8a",         option = "Weather data files", value = "Weather data files",         label = structure("Weather data files", html = TRUE, class = c("html",         "character")), correct = TRUE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_843af82",         option = "General parameter files", value = "General parameter files",         label = structure("General parameter files", html = TRUE, class = c("html",         "character")), correct = TRUE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_4c529a3",         option = "Technical files", value = "Technical files",         label = structure("Technical files", html = TRUE, class = c("html",         "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_4093956",         option = "Weather station files", value = "Weather station files",         label = structure("Weather station files", html = TRUE, class = c("html",         "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer"))), button_labels = list(submit = structure("Submit Answer", html = TRUE, class = c("html",     "character")), try_again = structure("Try Again", html = TRUE, class = c("html",     "character"))), messages = list(correct = structure("Incredible!", html = TRUE, class = c("html",     "character")), try_again = structure("Look at the vignette &quot;Generating Stics XML files from tabulated data&quot; of the SticsRFiles website (Article tab)...", html = TRUE, class = c("html",     "character")), incorrect = structure("Look at the vignette &quot;Generating Stics XML files from tabulated data&quot; of the SticsRFiles website (Article tab)...", html = TRUE, class = c("html",     "character")), message = NULL, post_message = NULL), ids = list(        answer = "gen_xml-3-answer", question = "gen_xml-3"),     loading = structure("<strong>Loading:<\u002fstrong> \nWhich type of JavaStics files can not yet be generated using the gen_*_xml functions?\n<br/><br/><br/>", html = TRUE, class = c("html",     "character")), random_answer_order = TRUE, allow_retry = TRUE,     seed = 1365294620.36424, options = list()), class = c("learnr_checkbox", "tutorial_question")))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -2584,7 +2664,7 @@ output$`tutorial-exercise-gen_obs-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "set_param_xml-1",     question = structure("What is the name of the SticsRFiles function for modifying JavaStics Input files (XML format)?", html = TRUE, class = c("html",     "character")), answers = list(structure(list(id = "lnr_ans_4bf19b5",         option = "set_param_xml", value = "set_param_xml", label = structure("set_param_xml", html = TRUE, class = c("html",         "character")), correct = TRUE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_114a3d",         option = "set_param_txt", value = "set_param_txt", label = structure("set_param_txt", html = TRUE, class = c("html",         "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_3ae96be",         option = "gen_usms_xml", value = "gen_usms_xml", label = structure("gen_usms_xml", html = TRUE, class = c("html",         "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_3c13ae4",         option = "gen_usms", value = "gen_usms", label = structure("gen_usms", html = TRUE, class = c("html",         "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer"))), button_labels = list(submit = structure("Submit Answer", html = TRUE, class = c("html",     "character")), try_again = structure("Try Again", html = TRUE, class = c("html",     "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html",     "character")), try_again = structure("Look at the Reference tab of the SticsRFiles website...", html = TRUE, class = c("html",     "character")), incorrect = structure("Look at the Reference tab of the SticsRFiles website...", html = TRUE, class = c("html",     "character")), message = NULL, post_message = NULL), ids = list(        answer = "set_param_xml-1-answer", question = "set_param_xml-1"),     loading = structure("<strong>Loading:<\u002fstrong> \nWhat is the name of the SticsRFiles function for modifying JavaStics Input files (XML format)?\n<br/><br/><br/>", html = TRUE, class = c("html",     "character")), random_answer_order = TRUE, allow_retry = TRUE,     seed = 380953079.822605, options = list()), class = c("learnr_radio", "tutorial_question")))
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "set_param_xml-1",     question = structure("What is the name of the SticsRFiles function for modifying JavaStics Input files (XML format)?", html = TRUE, class = c("html",     "character")), answers = list(structure(list(id = "lnr_ans_f7301ed",         option = "set_param_xml", value = "set_param_xml", label = structure("set_param_xml", html = TRUE, class = c("html",         "character")), correct = TRUE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_86e0590",         option = "set_param_txt", value = "set_param_txt", label = structure("set_param_txt", html = TRUE, class = c("html",         "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_2c8af54",         option = "gen_usms_xml", value = "gen_usms_xml", label = structure("gen_usms_xml", html = TRUE, class = c("html",         "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_c8ea5ed",         option = "gen_usms", value = "gen_usms", label = structure("gen_usms", html = TRUE, class = c("html",         "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer"))), button_labels = list(submit = structure("Submit Answer", html = TRUE, class = c("html",     "character")), try_again = structure("Try Again", html = TRUE, class = c("html",     "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html",     "character")), try_again = structure("Look at the Reference tab of the SticsRFiles website...", html = TRUE, class = c("html",     "character")), incorrect = structure("Look at the Reference tab of the SticsRFiles website...", html = TRUE, class = c("html",     "character")), message = NULL, post_message = NULL), ids = list(        answer = "set_param_xml-1-answer", question = "set_param_xml-1"),     loading = structure("<strong>Loading:<\u002fstrong> \nWhat is the name of the SticsRFiles function for modifying JavaStics Input files (XML format)?\n<br/><br/><br/>", html = TRUE, class = c("html",     "character")), random_answer_order = TRUE, allow_retry = TRUE,     seed = 1934216932.59931, options = list()), class = c("learnr_radio", "tutorial_question")))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -2770,7 +2850,7 @@ output$`tutorial-exercise-intercrop-2-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "intercrop-3",     question = structure("How are organized the results for the different intercrops", html = TRUE, class = c("html",     "character")), answers = list(structure(list(id = "lnr_ans_c57bc3",         option = "In a single data.frame per USM, the results for the different crops being flagged by Plant and Dominance columns",         value = "In a single data.frame per USM, the results for the different crops being flagged by Plant and Dominance columns",         label = structure("In a single data.frame per USM, the results for the different crops being flagged by Plant and Dominance columns", html = TRUE, class = c("html",         "character")), correct = TRUE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_6f29f02",         option = "In different data.frames, depending on the crop",         value = "In different data.frames, depending on the crop",         label = structure("In different data.frames, depending on the crop", html = TRUE, class = c("html",         "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer"))), button_labels = list(submit = structure("Submit Answer", html = TRUE, class = c("html",     "character")), try_again = structure("Try Again", html = TRUE, class = c("html",     "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html",     "character")), try_again = structure("You&#39;re not lucky ... the correct proposition is the other one!", html = TRUE, class = c("html",     "character")), incorrect = structure("You&#39;re not lucky ... the correct proposition is the other one!", html = TRUE, class = c("html",     "character")), message = NULL, post_message = NULL), ids = list(        answer = "intercrop-3-answer", question = "intercrop-3"),     loading = structure("<strong>Loading:<\u002fstrong> \nHow are organized the results for the different intercrops\n<br/><br/><br/>", html = TRUE, class = c("html",     "character")), random_answer_order = TRUE, allow_retry = TRUE,     seed = 1015154246.52728, options = list()), class = c("learnr_radio", "tutorial_question")))
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "intercrop-3",     question = structure("How are organized the results for the different intercrops", html = TRUE, class = c("html",     "character")), answers = list(structure(list(id = "lnr_ans_2799f56",         option = "In a single data.frame per USM, the results for the different crops being flagged by Plant and Dominance columns",         value = "In a single data.frame per USM, the results for the different crops being flagged by Plant and Dominance columns",         label = structure("In a single data.frame per USM, the results for the different crops being flagged by Plant and Dominance columns", html = TRUE, class = c("html",         "character")), correct = TRUE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_c0e3c1b",         option = "In different data.frames, depending on the crop",         value = "In different data.frames, depending on the crop",         label = structure("In different data.frames, depending on the crop", html = TRUE, class = c("html",         "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer"))), button_labels = list(submit = structure("Submit Answer", html = TRUE, class = c("html",     "character")), try_again = structure("Try Again", html = TRUE, class = c("html",     "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html",     "character")), try_again = structure("You&#39;re not lucky ... the correct proposition is the other one!", html = TRUE, class = c("html",     "character")), incorrect = structure("You&#39;re not lucky ... the correct proposition is the other one!", html = TRUE, class = c("html",     "character")), message = NULL, post_message = NULL), ids = list(        answer = "intercrop-3-answer", question = "intercrop-3"),     loading = structure("<strong>Loading:<\u002fstrong> \nHow are organized the results for the different intercrops\n<br/><br/><br/>", html = TRUE, class = c("html",     "character")), random_answer_order = TRUE, allow_retry = TRUE,     seed = 271636487.873509, options = list()), class = c("learnr_radio", "tutorial_question")))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
