@@ -697,7 +697,7 @@ sim <- get_sim(workspace = workspace_path, usm = usms)
 ```{r load-sim, eval=FALSE}
 usms <- c("wheat","DurumWheat", "maize", "sorghum")
 sim <- get_sim(workspace = workspace_path, usm = usms, verbose = FALSE)
-sim_all = bind_rows_sim(sim)
+sim_all = bind_rows(sim)
 ```
 
 ```{r prepare-sim, ref.label=c("prepare-get_sim","load-sim")}
@@ -772,22 +772,21 @@ For example if you want to get the maximum simulate LAI for each USM you would d
 lapply(sim, function(x) max(x$lai_n))
 ```
 
-An other way to do so is to first transform the list of `data.frame` into a single `data.frame`, and add a new column called situation that defines the USM for each row.
-CroPlotR provides `bind_rows_sim` to do so.
+An other way to do so is to first transform the list of `data.frame` into a single `data.frame`, and add a new column called situation that defines the USM for each row. CroPlotR provides its own version of `bind_rows` to do exactly that.
 
-Use `bind_rows_sim` to make a single `data.frame` out of the list of `data.frame`s:
+Use `bind_rows` to make a single `data.frame` out of the list of `data.frame`s:
 
 ```{r data_struct4, exercise=TRUE, exercise.setup = "prepare-sim"}
 # Insert your R code here!
 ```
 
 ```{r data_struct4-hint-1}
-# Use `bind_rows_sim` on `sim`
+# Use `bind_rows` on `sim`
 ```
 
 ```{r data_struct4-solution}
 # SOLUTION
-bind_rows_sim(sim)
+bind_rows(sim)
 ```
 
 The resulting `data.frame` has a new column to keep track of which USM each row is from.
@@ -797,7 +796,7 @@ Now we can use the functions from the [tidyverse](https://www.tidyverse.org/) fo
 For example we can use `filter` to filter the data:
 
 ```{r filter_sim, exercise=TRUE, exercise.setup = "prepare-sim"}
-sim_all = bind_rows_sim(sim)
+sim_all = bind_rows(sim)
 
 filter(sim_all, Date == as.POSIXct("2000-09-04", tz = "UTC"))
 ```
