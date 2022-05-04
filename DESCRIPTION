@@ -1,34 +1,20 @@
 Package: SticsRPacks
-Title: Easily Install and Load 'SticsRPacks' Packages
-Date: 2020-01-15
+Title: Easily Install and Load `SticsRPacks` Packages
+Date: 2021-10-07
 Version: 0.2.0
-Authors@R:
-    c(person(given = "Rémi",
-             family = "Vezy",
-             role = c("aut", "cre"),
-             email = "remi.vezy@cirad.fr"),
-     person(given = "Samuel",
-            family = "Buis",
-            role = c("aut"),
-            email = "samuel.buis@inra.fr"),
-     person(given = "Patrice",
-            family = "Le Charpentier",
-            role = c("aut"),
-            email = "patrice.lecharpentier@inra.fr"),
-     person(given = "Michel",
-            family = "Giner",
-            role = c("aut"),
-            email = "michel.giner@cirad.fr"),
-     person(given = "SticsRPacks",
-             role = c("cph", "fnd")))
+Authors@R: c(
+       person(given = "Remi", family = "Vezy", email = "remi.vezy@cirad.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0808-1461")),
+       person(given = "Samuel", family = "Buis", email = "samuel.buis@inrae.fr", role= "aut", comment = c(ORCID = "0000-0002-8676-5447")),
+	   person(given = "Patrice", family = "Lecharpentier", email = "patrice.lecharpentier@inrae.fr", role= "aut", comment = c(ORCID = "0000-0002-4044-4322")),
+	   person(given = "Michel", family = "Giner", email = "michel.giner@cirad.fr", role= "aut", comment = c(ORCID = "0000-0002-9310-2377")))
 Description: A set of packages that work in
-    harmony because they share common data representations and 'API'
+    harmony because they share common data representations and "API"
     design. This package is designed to make it easy to install and load
-    multiple 'SticsRPacks' packages in a single step. Learn more about
-    'SticsRPacks' at <https://sticsrpacks.github.io/SticsRPacks/>.
+    multiple `SticsRPacks` packages in a single step. Learn more about
+    `SticsRPacks` at <https://sticsrpacks.github.io/SticsRPacks/>.
 License: GPL-3 | file LICENSE
-URL: https://sticsrpacks.github.io/SticsRPacks,
-    https://github.com/SticsRPacks/SticsRPacks
+URL: https://github.com/SticsRPacks/SticsRPacks,
+ https://doi.org/10.5281/zenodo.4442330
 BugReports: https://github.com/SticsRPacks/SticsRPacks/issues
 Depends:
     R (>= 3.6.0)
