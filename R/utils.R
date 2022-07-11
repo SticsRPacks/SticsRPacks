@@ -56,3 +56,13 @@ style_grey <- function(level, ...) {
     crayon::make_style(grDevices::grey(level), grey = TRUE)
   )
 }
+
+
+get_forge_userpass <- function(type = "public") {
+  # public or internal (EPS)
+
+  if(type == "public") return("stics_user:w10lptr6405")
+
+  if(type == "internal") return("stics_eps:w10lptr6405")
+
+}
