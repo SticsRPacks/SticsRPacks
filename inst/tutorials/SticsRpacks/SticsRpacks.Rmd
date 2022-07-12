@@ -90,8 +90,8 @@ if (!dir.exists(work_dir)) dir.create(work_dir)
 if (!dir.exists(tmp_dir)) {
   dir.create(tmp_dir)
 } else {
-  #tmp_files <- list.files(path = tmp_dir, pattern = "\\.RData$", full.names = TRUE)
-  #file.remove(tmp_files)
+  tmp_files <- list.files(path = tmp_dir, pattern = "\\.RData$", full.names = TRUE)
+  file.remove(tmp_files)
 }
 
 # Creating JavaStics dir
