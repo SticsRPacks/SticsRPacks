@@ -36,7 +36,7 @@ Imports:
     utils,
 	learnr
 Remotes:
-    github::florianhartig/BayesianTools/BayesianTools,
+    github::florianhartig/BayesianTools,
     github::hol430/ApsimOnR,
     github::SticsRPacks/SticsRFiles@*release,
     github::SticsRPacks/SticsOnR@*release,
