@@ -19,6 +19,7 @@ BugReports: https://github.com/SticsRPacks/SticsRPacks/issues
 Depends:
     R (>= 3.6.0)
 Imports:
+    BayesianTools,
     purrr,
     cli,
     crayon,
@@ -34,9 +35,16 @@ Imports:
     CroPlotR,
     remotes,
     utils,
-	learnr
+	learnr,
+	methods,
+	nloptr,
+	lhs,
+	stringr,
+	rstudioapi,
+	tictoc,
+	lifecycle
 Remotes:
-    github::florianhartig/BayesianTools,
+    github::florianhartig/BayesianTools/BayesianTools,
     github::hol430/ApsimOnR,
     github::SticsRPacks/SticsRFiles@*release,
     github::SticsRPacks/SticsOnR@*release,
