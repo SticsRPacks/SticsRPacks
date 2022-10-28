@@ -1,30 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://sticsrpacks.github.io/sticsrpacks//index.html</loc>
+    <loc>https://sticsrpacks.github.io/sticsrpacks/404.html</loc>
   </url>
   <url>
-    <loc>https://sticsrpacks.github.io/sticsrpacks//reference/SticsRPacks-package.html</loc>
+    <loc>https://sticsrpacks.github.io/sticsrpacks/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>https://sticsrpacks.github.io/sticsrpacks//reference/SticsRPacks_conflicts.html</loc>
+    <loc>https://sticsrpacks.github.io/sticsrpacks/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://sticsrpacks.github.io/sticsrpacks//reference/SticsRPacks_deps.html</loc>
+    <loc>https://sticsrpacks.github.io/sticsrpacks/authors.html</loc>
   </url>
   <url>
-    <loc>https://sticsrpacks.github.io/sticsrpacks//reference/SticsRPacks_logo.html</loc>
+    <loc>https://sticsrpacks.github.io/sticsrpacks/index.html</loc>
   </url>
   <url>
-    <loc>https://sticsrpacks.github.io/sticsrpacks//reference/SticsRPacks_packages.html</loc>
+    <loc>https://sticsrpacks.github.io/sticsrpacks/news/index.html</loc>
   </url>
   <url>
-    <loc>https://sticsrpacks.github.io/sticsrpacks//reference/SticsRPacks_sitrep.html</loc>
+    <loc>https://sticsrpacks.github.io/sticsrpacks/reference/SticsRPacks-package.html</loc>
   </url>
   <url>
-    <loc>https://sticsrpacks.github.io/sticsrpacks//reference/SticsRPacks_update.html</loc>
+    <loc>https://sticsrpacks.github.io/sticsrpacks/reference/SticsRPacks_conflicts.html</loc>
   </url>
   <url>
-    <loc>https://sticsrpacks.github.io/sticsrpacks//reference/SticsRPacks_update_deps.html</loc>
+    <loc>https://sticsrpacks.github.io/sticsrpacks/reference/SticsRPacks_deps.html</loc>
+  </url>
+  <url>
+    <loc>https://sticsrpacks.github.io/sticsrpacks/reference/SticsRPacks_logo.html</loc>
+  </url>
+  <url>
+    <loc>https://sticsrpacks.github.io/sticsrpacks/reference/SticsRPacks_packages.html</loc>
+  </url>
+  <url>
+    <loc>https://sticsrpacks.github.io/sticsrpacks/reference/SticsRPacks_sitrep.html</loc>
+  </url>
+  <url>
+    <loc>https://sticsrpacks.github.io/sticsrpacks/reference/SticsRPacks_update.html</loc>
+  </url>
+  <url>
+    <loc>https://sticsrpacks.github.io/sticsrpacks/reference/SticsRPacks_update_deps.html</loc>
+  </url>
+  <url>
+    <loc>https://sticsrpacks.github.io/sticsrpacks/reference/index.html</loc>
   </url>
 </urlset>
