@@ -35,7 +35,9 @@ Imports:
     remotes,
     utils,
 	learnr
-Remotes: 
+Remotes:
+    github::florianhartig/BayesianTools/BayesianTools,
+    github::hol430/ApsimOnR,
     github::SticsRPacks/SticsRFiles@*release,
     github::SticsRPacks/SticsOnR@*release,
     github::SticsRPacks/CroptimizR@*release,
