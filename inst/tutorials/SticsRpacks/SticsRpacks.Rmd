@@ -49,8 +49,8 @@ if(SticsRFiles:::get_version_num(stics_version) < 10) {
   javastics_dir <- "JavaSTICS-1.5.0-STICS-10.0.0"
   workspace_path <- "JavaSTICS-1.5.0-STICS-10.0.0/example"
   # to remove when the V10.0.0 will be out
-  user_passwd <- SticsRPacks:::get_forge_userpass("internal")
-  download_url <- "https://w3.avignon.inra.fr/forge/attachments/download/2932/"
+  user_passwd <- SticsRPacks:::get_forge_userpass("public")
+  download_url <- "https://w3.avignon.inrae.fr/forge/attachments/download/2995/"
   workspace_PW1 = "tutorials/SticsRpacks/PW1"
   java <- Sys.getenv("JAVA")
 
@@ -94,16 +94,21 @@ if (!dir.exists(tmp_dir)) {
   file.remove(tmp_files)
 }
 
-# Creating JavaStics dir
 javastics_path <- file.path(work_dir, javastics_dir, fsep ="/")
 
-if (!dir.exists(javastics_path)) dir.create(javastics_path)
+if(SticsRFiles:::get_version_num(stics_version) < 10) { 
+  # Creating JavaStics dir
+  if (!dir.exists(javastics_path)) dir.create(javastics_path)
+  out_path <- javastics_path
+} else {
+  out_path <- work_dir
+}
 
 files_list <- list.files(javastics_path)
 if(length(files_list) == 0 || !any(grepl("JavaStics.exe",files_list))) {
   zip_path <- file.path(work_dir,paste0(javastics_dir,".zip"))
   system(paste0("curl -u ",user_passwd," ", download_url, javastics_dir,".zip --output ", zip_path))
-  unzip(zip_path, exdir = javastics_path)
+  unzip(zip_path, exdir = out_path)
 }
 
 # fixing workspaces path

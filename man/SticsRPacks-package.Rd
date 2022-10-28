@@ -4,34 +4,29 @@
 \name{SticsRPacks-package}
 \alias{SticsRPacks}
 \alias{SticsRPacks-package}
-\title{SticsRPacks: Easily Install and Load 'SticsRPacks' Packages}
+\title{SticsRPacks: Easily Install and Load `SticsRPacks` Packages}
 \description{
-\if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-A set of packages that work in harmony because they share common data representations and 'API' design. This package is designed to make it easy to install and load multiple 'SticsRPacks' packages in a single step. Learn more about 'SticsRPacks' at <https://sticsrpacks.github.io/SticsRPacks/>.
+A set of packages that work in harmony because they share common data representations and "API" design. This package is designed to make it easy to install and load multiple `SticsRPacks` packages in a single step. Learn more about `SticsRPacks` at \url{https://sticsrpacks.github.io/SticsRPacks/}.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://sticsrpacks.github.io/SticsRPacks}
   \item \url{https://github.com/SticsRPacks/SticsRPacks}
+  \item \doi{10.5281/zenodo.4442330}
   \item Report bugs at \url{https://github.com/SticsRPacks/SticsRPacks/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Rémi Vezy \email{remi.vezy@cirad.fr}
+\strong{Maintainer}: Remi Vezy \email{remi.vezy@cirad.fr} (\href{https://orcid.org/0000-0002-0808-1461}{ORCID})
 
 Authors:
 \itemize{
-  \item Samuel Buis \email{samuel.buis@inra.fr}
-  \item Patrice Le Charpentier \email{patrice.lecharpentier@inra.fr}
-  \item Michel Giner \email{michel.giner@cirad.fr}
-}
-
-Other contributors:
-\itemize{
-  \item SticsRPacks [copyright holder, funder]
+  \item Samuel Buis \email{samuel.buis@inrae.fr} (\href{https://orcid.org/0000-0002-8676-5447}{ORCID})
+  \item Patrice Lecharpentier \email{patrice.lecharpentier@inrae.fr} (\href{https://orcid.org/0000-0002-4044-4322}{ORCID})
+  \item Michel Giner \email{michel.giner@cirad.fr} (\href{https://orcid.org/0000-0002-9310-2377}{ORCID})
 }
 
 }
