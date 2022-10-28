@@ -43,7 +43,7 @@ Imports:
 	tictoc,
 	lifecycle
 Remotes:
-    github::florianhartig/BayesianTools@*release,
+    github::florianhartig/BayesianTools@*release/BayesianTools,
     github::hol430/ApsimOnR,
     github::SticsRPacks/SticsRFiles@*release,
     github::SticsRPacks/SticsOnR@*release,
