@@ -40,7 +40,6 @@ Imports:
 	nloptr,
 	lhs,
 	stringr,
-	rstudioapi,
 	tictoc,
 	lifecycle
 Remotes:

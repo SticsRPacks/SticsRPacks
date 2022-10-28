@@ -1,7 +1,7 @@
 on:
   release:
     types: [published]
-    
+
 name: pkgdown
 
 jobs:
@@ -32,8 +32,10 @@ jobs:
 
       - name: Install dependencies
         run: |
+          install.packages("remotes")
           remotes::install_deps(dependencies = TRUE)
           install.packages("pkgdown", type = "binary")
+          install.packages("rsconnect")
         shell: Rscript {0}
 
       - name: Install package
