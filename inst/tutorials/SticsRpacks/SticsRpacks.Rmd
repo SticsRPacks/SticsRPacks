@@ -46,11 +46,11 @@ if(SticsRFiles:::get_version_num(stics_version) < 10) {
   
 } else { 
   # same as zip archive name
-  javastics_dir <- "JavaSTICS-1.5.0-STICS-10.0.0"
-  workspace_path <- "JavaSTICS-1.5.0-STICS-10.0.0/example"
+  javastics_dir <- "JavaSTICS-1.5.1-STICS-10.0.0"
+  workspace_path <- "JavaSTICS-1.5.1-STICS-10.0.0/example"
   # to remove when the V10.0.0 will be out
   user_passwd <- SticsRPacks:::get_forge_userpass("public")
-  download_url <- "https://w3.avignon.inrae.fr/forge/attachments/download/2995/"
+  download_url <- "https://w3.avignon.inrae.fr/forge/attachments/download/3005/"
   workspace_PW1 = "tutorials/SticsRpacks/PW1"
   java <- Sys.getenv("JAVA")
 

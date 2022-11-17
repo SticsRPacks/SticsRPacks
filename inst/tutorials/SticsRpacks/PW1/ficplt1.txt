@@ -226,14 +226,14 @@ SeuilLAIapex
 -999
 tigefeuilcoupe
 -999
+irazomax
+0.566
 codeindetermin
 1
 cgrain
 0.050
 cgrainv0
 0.111
-irazomax
-0.566
 codeir
 2
 irmax
@@ -503,7 +503,7 @@ stflodrp
 stdrpdes
 650
 jvc
--999
+0
 stdordebour
 -999
 sensiphot
@@ -609,7 +609,7 @@ stflodrp
 stdrpdes
 650
 jvc
--999
+0
 stdordebour
 -999
 sensiphot
@@ -715,7 +715,7 @@ stflodrp
 stdrpdes
 650
 jvc
--999
+0
 stdordebour
 -999
 sensiphot
@@ -821,7 +821,7 @@ stflodrp
 stdrpdes
 650
 jvc
--999
+0
 stdordebour
 -999
 sensiphot
@@ -927,7 +927,7 @@ stflodrp
 stdrpdes
 650
 jvc
--999
+0
 stdordebour
 -999
 sensiphot
@@ -1033,7 +1033,7 @@ stflodrp
 stdrpdes
 650
 jvc
--999
+0
 stdordebour
 -999
 sensiphot
@@ -1139,7 +1139,7 @@ stflodrp
 stdrpdes
 650
 jvc
--999
+0
 stdordebour
 -999
 sensiphot
@@ -1245,7 +1245,7 @@ stflodrp
 stdrpdes
 650
 jvc
--999
+0
 stdordebour
 -999
 sensiphot
@@ -1351,7 +1351,7 @@ stflodrp
 stdrpdes
 650
 jvc
--999
+0
 stdordebour
 -999
 sensiphot
@@ -1457,7 +1457,7 @@ stflodrp
 stdrpdes
 650
 jvc
--999
+0
 stdordebour
 -999
 sensiphot
@@ -1563,7 +1563,7 @@ stflodrp
 stdrpdes
 650
 jvc
--999
+0
 stdordebour
 -999
 sensiphot
@@ -1669,7 +1669,7 @@ stflodrp
 stdrpdes
 650
 jvc
--999
+0
 stdordebour
 -999
 sensiphot
@@ -1775,7 +1775,7 @@ stflodrp
 stdrpdes
 650
 jvc
--999
+0
 stdordebour
 -999
 sensiphot
@@ -1881,7 +1881,7 @@ stflodrp
 stdrpdes
 650
 jvc
--999
+0
 stdordebour
 -999
 sensiphot
@@ -1987,7 +1987,7 @@ stflodrp
 stdrpdes
 650
 jvc
--999
+0
 stdordebour
 -999
 sensiphot
@@ -2093,7 +2093,7 @@ stflodrp
 stdrpdes
 650
 jvc
--999
+0
 stdordebour
 -999
 sensiphot
