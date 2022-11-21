@@ -1,7 +1,7 @@
-# SticsRPacks 0.4.1
+# SticsRPacks 0.3.1
 
 Little changes following the latest version of JavaSTICS 1.5.1, fixing plant files
-structure for fixing some options parameters in the graphical interface.
+structure for some options parameters in the graphical interface.
 The model functioning was not affected.
 
 
