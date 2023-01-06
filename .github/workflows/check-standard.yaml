@@ -54,10 +54,11 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          pak-version: rc
+          pak-version: devel
           # about pak-version:
           # Ubuntu doesn't install the proper version of XML see https://github.com/r-lib/actions/issues/559. Remove when fixed.
           # see also: https://stackoverflow.com/questions/73243945/pkgdown-action-failing-at-build-xml
+          # Also, pak standard error for pkgs using a subdir (we have Bayesian Tools), which is fixed in devel (2023-01)
           extra-packages: any::rcmdcheck
           needs: check
 
