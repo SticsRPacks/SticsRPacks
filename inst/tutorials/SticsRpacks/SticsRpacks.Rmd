@@ -285,7 +285,8 @@ sim_without_stress = stics_wrapper(model_options = wrapper_options,
 Now we can use the simulated results to plot the dynamic variables of interest for the different configurations:
 
 ```{r PW1-plot-dyn, echo=TRUE, eval=TRUE, message=FALSE}
-plot(sim_ws_ns=sim_ws_ns, sim_ws=sim_ws, sim_ns=sim_ns, sim_without_stress=sim_without_stress, var = dyn_var_names )
+p <- plot(sim_ws_ns=sim_ws_ns, sim_ws=sim_ws, sim_ns=sim_ns, sim_without_stress=sim_without_stress, var = dyn_var_names )
+print(p)
 ```
 
 Finally, we can plot the stress indicators averaged over vegetative and reproductive phases:
@@ -305,8 +306,8 @@ df <- CroPlotR::bind_rows(
 
 # Plot bar graph with ggplot ... sorry, not yet available using CroPlotR ...
 df_long <- tidyr::pivot_longer(df, stress_ind_names, names_to = "variables")
-ggplot(df_long, aes(fill=Case, y=value, x=variables)) + geom_bar(position="dodge", stat="identity")
-
+p <- ggplot(df_long, aes(fill=Case, y=value, x=variables)) + geom_bar(position="dodge", stat="identity")
+print(p)
 ```
 
 ... and let the users interpret these results!
@@ -351,7 +352,8 @@ optim_res = estim_param(obs_list = obs_filt,
 sim_after_optim = stics_wrapper(param_values = optim_res$final_values, model_options = wrapper_options)$sim_list
 sim_before_optim = stics_wrapper(model_options = wrapper_options)$sim_list
 
-plot(after = sim_after_optim, before = sim_before_optim, obs = obs_filt, var = "lai_n")
+p <- plot(after = sim_after_optim, before = sim_before_optim, obs = obs_filt, var = "lai_n")
+print(p)
 ```
 
 A lot is happening here!
@@ -886,7 +888,8 @@ if (!file.exists(file_path)) {
 
 ```{r plot_sim1-solution}
 # SOLUTION
-plot(results)
+p <- plot(results)
+print(p)
 ```
 
 ::: {.alert .alert-info}
@@ -910,7 +913,8 @@ To get the documentation about this function, either refer to the CroPlotR websi
 
 ```{r plot_sim2-solution}
 # SOLUTION
-plot(results, overlap = list(list("lai_n","masec_n")))
+p <- plot(results, overlap = list(list("lai_n","masec_n")))
+print(p)
 ```
 
 ### Evaluating simulations results
@@ -997,7 +1001,8 @@ if (!file.exists(file_path)) {
 
 ```{r plot_simobs1-solution}
 # SOLUTION
-plot(results2, var = c("lai_n","masec_n"), obs = observations2)
+p <- plot(results2, var = c("lai_n","masec_n"), obs = observations2)
+print(p)
 ```
 
 ::: {.alert .alert-info}
@@ -1021,8 +1026,8 @@ They can be produced using the same `plot()` function as for dynamics plots, wit
 
 ```{r plot_simobs2-solution}
 # SOLUTION
-plot(results2, var = c("lai_n","masec_n"), obs = observations2, type = "scatter")
-
+p <- plot(results2, var = c("lai_n","masec_n"), obs = observations2, type = "scatter")
+print(p)
 ```
 
 #### Customized scatter plots using symbols
@@ -1041,8 +1046,8 @@ The symbols used in the scatter plots can be adapted by the user using optional 
 
 ```{r plot_simobs3-solution}
 # SOLUTION
-plot(results2, var = c("lai_n","masec_n"), obs = observations2, type = "scatter", shape_sit = "symbol")
-
+p <- plot(results2, var = c("lai_n","masec_n"), obs = observations2, type = "scatter", shape_sit = "symbol")
+print(p)
 ```
 
 -   Now, plot the scatter plot for the same variables `lai_n` and `masec_n` but for USMs "wheat","DurumWheat", "maize" and "sorghum", and with different symbols for the 2 groups c("wheat","DurumWheat") and c("maize","sorghum")
@@ -1076,8 +1081,8 @@ if (!file.exists(file_path)) {
 ```{r plot_simobs4-solution}
 # SOLUTION
 groups <- list(list("wheat","DurumWheat"), list("maize", "sorghum"))
-plot(results4, var = c("lai_n","masec_n"), obs = observations4, type = "scatter", shape_sit = "group", situation_group = groups)
-
+p <- plot(results4, var = c("lai_n","masec_n"), obs = observations4, type = "scatter", shape_sit = "group", situation_group = groups)
+print(p)
 ```
 
 #### Statistics and associated graphs
@@ -1155,8 +1160,8 @@ For this purpose, the *R2* and *nRMSE* criteria will be used.
 # SOLUTION
 summ <- summary(results4, obs = observations4, stats = c("R2","nRMSE"))
 
-plot(summ, title = "for all USMs")
-
+p <- plot(summ, title = "for all USMs")
+print(p)
 ```
 
 -   Now do the same but per USM
@@ -1173,8 +1178,8 @@ plot(summ, title = "for all USMs")
 # SOLUTION
 summ <- summary(results4, obs = observations4, all_situations = FALSE, stats = c("R2","nRMSE"))
 
-plot(summ, title = "for each USM")
-
+p <- plot(summ, title = "for each USM")
+print(p)
 ```
 
 By default the results per USMs are plotted in bars having different columns
@@ -1193,8 +1198,8 @@ By default the results per USMs are plotted in bars having different columns
 # SOLUTION
 summ <- summary(results4, obs = observations4, all_situations = FALSE, stats = c("R2","nRMSE"))
 
-plot(summ, xvar = "situation", title = "USM names as X")
-
+p <- plot(summ, xvar = "situation", title = "USM names as X")
+print(p)
 ```
 
 ::: {.alert .alert-info}
@@ -1580,7 +1585,8 @@ Then, to plot a simulation result, we would do:
 
 ```{r stics_wrapper-plot-ex, exercise=TRUE, exercise.setup = "prepare-wrapper-plot"}
 # Execute the code below to create a plot of the results:
-plot(res1$sim_list)
+p <- plot(res1$sim_list)
+print(p)
 ```
 
 It is also possible to compare the results of several simulations by giving them as arguments to the function one after the other.
@@ -1597,7 +1603,8 @@ It is also possible to compare the results of several simulations by giving them
 
 ```{r stics_wrapper-plot1-solution}
 #SOLUTION:
-plot(res1$sim_list,res2$sim_list)
+p <- plot(res1$sim_list,res2$sim_list)
+print(p)
 ```
 
 ::: {.alert .alert-info}
@@ -1618,7 +1625,8 @@ We can also name the simulations in our plot by naming them when passed as argum
 
 ```{r stics_wrapper-plot2-solution}
 #SOLUTION:
-plot("original" = res1$sim_list,"dlaimax=0.005, durvieF=80" = res2$sim_list)
+p <- plot("original" = res1$sim_list,"dlaimax=0.005, durvieF=80" = res2$sim_list)
+print(p)
 ```
 
 ## Estimating parameters
@@ -1893,7 +1901,8 @@ Now we can plot the output using `plot()`.
 
 ```{r estim_param4-solution}
 #SOLUTION:
-plot(sim = sim_after_optim, obs = obs_filt, var = "lai_n")
+p <- plot(sim = sim_after_optim, obs = obs_filt, var = "lai_n")
+print(p)
 ```
 
 We can also make a scatter plot for a different display of the fit between observations and simulations.
@@ -1910,7 +1919,8 @@ We can also make a scatter plot for a different display of the fit between obser
 
 ```{r estim_param5-solution}
 #SOLUTION:
-plot(sim = sim_after_optim, obs = obs_filt, type = "scatter", var = "lai_n")
+p <- plot(sim = sim_after_optim, obs = obs_filt, type = "scatter", var = "lai_n")
+print(p)
 ```
 
 ### Before/after comparison
@@ -1947,7 +1957,8 @@ Now we can compare the simulations using `plot()` and `summary()`.
 
 ```{r estim_param7-solution}
 #SOLUTION:
-plot(before_optim=sim_before_optim, after_optim=sim_after_optim, obs= obs_filt, var = "lai_n")
+p <- plot(before_optim=sim_before_optim, after_optim=sim_after_optim, obs= obs_filt, var = "lai_n")
+print(p)
 ```
 
 -   Compute the nRMSE and Bias of both simulations for `lai_n` using `summary()`
@@ -2078,10 +2089,11 @@ if (!file.exists(file.path(tmp_dir,"prepare-plot-successive.RData"))) {
 
 ```{r plot_successive-solution}
 #SOLUTION:
-plot("Without successive"=without_succ$sim_list,
+p <- plot("Without successive"=without_succ$sim_list,
      "With successive"=with_succ$sim_list,
      var = "azomes",
      successive = list(list("demo_Wheat1","demo_BareSoil2","demo_maize3")))
+print(p)
 ```
 
 ### Estimating parameters on successive simulations
@@ -2220,7 +2232,8 @@ if (!file.exists(file.path(tmp_dir,"prepare-intercrop-6.RData"))) {
 
 ```{r intercrop-6-solution}
 # SOLUTION:
-plot(sim)
+p <- plot(sim)
+print(p)
 ```
 
 ## Advanced parameter estimation
