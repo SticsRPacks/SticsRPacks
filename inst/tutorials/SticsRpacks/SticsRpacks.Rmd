@@ -34,6 +34,12 @@ attributes(linux) <- NULL
 
 gen_help = TRUE
 
+get_java_version <- function(linux = TRUE) {
+  if(linux){
+    version <- as.numeric(system('java -version 2>&1 | head -n 1 | cut -d\\" -f 2 | cut -d\\. -f1', intern = TRUE))
+    return(version)
+  }
+}
 
 if(SticsRFiles:::get_version_num(stics_version) < 10) { 
   javastics_dir <- "JavaSTICS-1.41-stics-9.2"
@@ -52,15 +58,17 @@ if(SticsRFiles:::get_version_num(stics_version) < 10) {
   user_passwd <- SticsRPacks:::get_forge_userpass("public")
   download_url <- "https://w3.avignon.inrae.fr/forge/attachments/download/3005/"
   workspace_PW1 = "tutorials/SticsRpacks/PW1"
-  java <- Sys.getenv("JAVA")
-
+  #java <- Sys.getenv("JAVA")
+  
   if (linux) {
-    if(java == "")
-      stop("The default system java virtual machine\n",system("java -version 2>&1", intern = TRUE)[1], 
-      "\nis not correct for running JavaStics\n", 
-      "A java 11 path is needed to be specified in a .Renviron file, in a JAVA variable.\n",
-      "for example:\n",
-      "JAVA=\"/usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java\"")
+    java_version <- get_java_version(linux = linux)
+    if(java_version < 11)
+      stop("The default system java virtual machine is ",system("java -version 2>&1", intern = TRUE)[1], 
+           #"\nThis is not correct for running JavaStics\n", 
+           "\nA java 11 version installation is needed for running JavaSTICS, \n",
+           "or as an alternate version and the java path can be set\n",
+           "in the .Renviron file, as for example: \n",
+           "JAVA=\"/usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java\"")
   }
 }
 
@@ -651,8 +659,8 @@ sim_done <- length(list.files(pattern = "^mod_s", workspace_path)) >=
 
 if (!sim_done) {
   print("Running simulations, please wait")
-    run_javastics(javastics = javastics_path,
-                  workspace = workspace_path, verbose = FALSE)
+  run_javastics(javastics = javastics_path,
+                workspace = workspace_path, verbose = FALSE)
 }
 ```
 
@@ -1807,18 +1815,18 @@ You can still continue to the next exercises because we cached the output for yo
 
 ::: {.alert .alert-info}
 -   The default parameter estimation method used in `estim_param()` is the minimization of a least square criterion using the Nelder-Mead simplex.
-    However, different methods and criteria can be used.
-    Look [here](https://sticsrpacks.github.io/CroptimizR/articles/Available_parameter_estimation_algorithms.html) for more details about the available methods and criteria.
+However, different methods and criteria can be used.
+Look [here](https://sticsrpacks.github.io/CroptimizR/articles/Available_parameter_estimation_algorithms.html) for more details about the available methods and criteria.
 
 -   The results provided by `estim_param()` depend on the method used.
-    Graphs and .Rdata produced are stored in `optim_options$out_dir`.
-    `estim_param()` also displays some results on the standard output (see here-before) and returns a list including the main results (stored here in the `optim_res` object).
-    In the case of the simplex method this list includes:
+Graphs and .Rdata produced are stored in `optim_options$out_dir`.
+`estim_param()` also displays some results on the standard output (see here-before) and returns a list including the main results (stored here in the `optim_res` object).
+In the case of the simplex method this list includes:
 
-    -   the values of the estimated parameters (`final_values`),
-    -   the initial values used for each repetition (`init_values`),
-    -   the optimized value of the criterion for each repetition (`crit_values`),
-    -   ...
+-   the values of the estimated parameters (`final_values`),
+-   the initial values used for each repetition (`init_values`),
+-   the optimized value of the criterion for each repetition (`crit_values`),
+-   ...
 
 -   The `info_level` argument of `estim_param` allows to control the quantity of information returned and stored (see `? estim_param` for more details).
 :::
@@ -2121,8 +2129,8 @@ sim <- get_sim(workspace = workspace_path, usm="intercrop_pea_barley",var=c("lai
 ```{r run-intercrop, eval=FALSE}
 if (!all(file.exists(file.path(workspace_path,c("mod_spintercrop_pea_barley.sti",
                                                 "mod_saintercrop_pea_barley.sti"))))) {
-    run_javastics(javastics=javastics_path,  workspace = workspace_path,
-                  usm = c("intercrop_pea_barley"), verbose = FALSE)
+  run_javastics(javastics=javastics_path,  workspace = workspace_path,
+                usm = c("intercrop_pea_barley"), verbose = FALSE)
 }
 ```
 
