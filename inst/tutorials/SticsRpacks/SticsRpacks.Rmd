@@ -4,7 +4,6 @@ output:
   learnr::tutorial:
     theme: cerulean
     ace_theme: pastel_on_dark
-    anchor_sections: FALSE
     progressive: FALSE
     allow_skip: true
     df_print: "paged"
