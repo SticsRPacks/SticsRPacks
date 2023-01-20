@@ -33,12 +33,23 @@ attributes(linux) <- NULL
 
 gen_help = TRUE
 
-get_java_version <- function(linux = TRUE) {
-  if(linux){
-    version <- as.numeric(system('java -version 2>&1 | head -n 1 | cut -d\\" -f 2 | cut -d\\. -f1', intern = TRUE))
-    return(version)
+get_java_version <- function(linux = TRUE, cmd = "java") {
+  version <- NULL
+  if(linux) {
+    version_str <-
+      suppressWarnings(system(paste(cmd, '-version 2>&1 | head -n 1 | cut -d\\" -f 2 | cut -d\\. -f1'),
+             intern = TRUE))
+    if(length(grep("not found", version_str)) > 0) {
+      version <- NULL
+    } else  {
+      version <- as.numeric(version_str)
+    }
   }
+  if (length(version)==0) version <- NULL
+  return(version)
 }
+
+java <- "java"
 
 if(SticsRFiles:::get_version_num(stics_version) < 10) { 
   javastics_dir <- "JavaSTICS-1.41-stics-9.2"
@@ -47,7 +58,7 @@ if(SticsRFiles:::get_version_num(stics_version) < 10) {
   user_passwd <- SticsRPacks:::get_forge_userpass("public")
   download_url <- "https://w3.avignon.inra.fr/forge/attachments/download/2482/"
   workspace_PW1 <- "tutorials/SticsRpacks/PW1_V9.2"
-  java <- "java"
+  
   
 } else { 
   # same as zip archive name
@@ -60,22 +71,35 @@ if(SticsRFiles:::get_version_num(stics_version) < 10) {
   #java <- Sys.getenv("JAVA")
   
   if (linux) {
-    java_version <- get_java_version(linux = linux)
+    java_path <- Sys.getenv("JAVA")
+    
+    if(java_path != "") java <- java_path
+    
+    
+    java_version <- get_java_version(linux = linux, cmd = java)
+    
+    if(is.null(java_version)) 
+      stop("A java version 11 must be installed")
+    
+    
     if(java_version < 11)
-      stop("The default system java virtual machine is ",system("java -version 2>&1", intern = TRUE)[1], 
+      stop("The default system java virtual machine is ",system(paste(java,"-version 2>&1"), intern = TRUE)[1], 
            #"\nThis is not correct for running JavaStics\n", 
            "\nA java 11 version installation is needed for running JavaSTICS, \n",
            "or as an alternate version and the java path can be set\n",
            "in the .Renviron file, as for example: \n",
            "JAVA=\"/usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java\"")
+    
+    
   }
+  
 }
 
 
 knitr::opts_chunk$set(echo = FALSE,
-                      java_cmd <- java,
-                      linux <- linux,
-                      stics_version <- stics_version)
+                      java_cmd = java,
+                      linux = linux,
+                      stics_version = stics_version)
 
 tutorial_options(exercise.lines = 5, exercise.timelimit = 60)
 
@@ -246,7 +270,39 @@ The game is to run a single USM by activating and deactivating water and nitroge
 
 Let's first initialize variables and define the setup:
 
-```{r PW1-setup, echo=TRUE, eval=TRUE, message=FALSE}
+```{r PW1-display-setup, echo=TRUE, eval=FALSE, message=FALSE}
+
+# Let's define the USM and variables of interest to use in this example
+usm_name <- "maize_ref_2013"
+stress_ind_names <- c("turfac1moy", "turfac2moy", "swfac1moy", "swfac2moy", "inn1moy", "inn2moy")
+dyn_var_names <- c("lai_n","zrac","resmes","azomes","QNplante","masec_n")
+var_names <- c(stress_ind_names,dyn_var_names)
+
+# Set-up the simulation environment:
+wrapper_options = stics_wrapper_options(javastics = javastics_path, workspace = workspace_PW1)
+
+# Generate the files for the simulation:
+gen_usms_xml2txt(javastics_path, workspace_PW1, usm = usm_name)
+
+```
+
+```{r PW1-linux-setup, echo=FALSE, eval=knitr::opts_chunk$get("linux"), message=FALSE}
+
+# Let's define the USM and variables of interest to use in this example
+usm_name <- "maize_ref_2013"
+stress_ind_names <- c("turfac1moy", "turfac2moy", "swfac1moy", "swfac2moy", "inn1moy", "inn2moy")
+dyn_var_names <- c("lai_n","zrac","resmes","azomes","QNplante","masec_n")
+var_names <- c(stress_ind_names,dyn_var_names)
+
+# Set-up the simulation environment:
+wrapper_options = stics_wrapper_options(javastics = javastics_path, workspace = workspace_PW1)
+
+# Generate the files for the simulation:
+gen_usms_xml2txt(javastics_path, workspace_PW1, usm = usm_name, java_cmd = knitr::opts_chunk$get("java_cmd"))
+
+```
+
+```{r PW1-setup, echo=FALSE, eval=!knitr::opts_chunk$get("linux"), message=FALSE}
 
 # Let's define the USM and variables of interest to use in this example
 usm_name <- "maize_ref_2013"
@@ -2097,9 +2153,9 @@ if (!file.exists(file.path(tmp_dir,"prepare-plot-successive.RData"))) {
 ```{r plot_successive-solution}
 #SOLUTION:
 p <- plot("Without successive"=without_succ$sim_list,
-     "With successive"=with_succ$sim_list,
-     var = "azomes",
-     successive = list(list("demo_Wheat1","demo_BareSoil2","demo_maize3")))
+          "With successive"=with_succ$sim_list,
+          var = "azomes",
+          successive = list(list("demo_Wheat1","demo_BareSoil2","demo_maize3")))
 print(p)
 ```
 
