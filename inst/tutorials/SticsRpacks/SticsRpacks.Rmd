@@ -800,18 +800,15 @@ usms <- c("wheat","DurumWheat", "maize", "sorghum")
 sim <- get_sim(workspace = workspace_path, usm = usms)
 ```
 
-```{r load-sim, eval=FALSE}
+```{r load-sim, exercise.setup = "prepare-get_sim"}
 usms <- c("wheat","DurumWheat", "maize", "sorghum")
 sim <- get_sim(workspace = workspace_path, usm = usms, verbose = FALSE)
 sim_all = CroPlotR::bind_rows(sim)
 ```
 
-```{r prepare-sim, ref.label=c("prepare-get_sim","load-sim")}
-```
-
 You can get the USMs names using the `names` function on the `sim` object:
 
-```{r data_struct1, exercise=TRUE, exercise.setup = "prepare-sim"}
+```{r data_struct1, exercise=TRUE, exercise.setup = "load-sim"}
 # Insert your R code here!
 ```
 
@@ -831,7 +828,7 @@ Try to get the simulations results of the second USM using indexing (*e.g.* inde
 Indexing into a list with `[` gives a subset of the list (it returns a list again), while indexing using `[[` gives you the values (the content) of the list at this index.
 :::
 
-```{r data_struct2, exercise=TRUE, exercise.setup = "prepare-sim"}
+```{r data_struct2, exercise=TRUE, exercise.setup = "load-sim"}
 # Insert your R code here!
 ```
 
@@ -846,7 +843,7 @@ sim[[2]]
 
 Ok now try to get the same USM results by using the `$` notation:
 
-```{r data_struct3, exercise=TRUE, exercise.setup = "prepare-sim"}
+```{r data_struct3, exercise=TRUE, exercise.setup = "load-sim"}
 # Insert your R code here!
 ```
 
@@ -874,7 +871,7 @@ Because the results are formatted as a list of `data.frame`s, we can use all the
 We can apply any function to each `data.frame` using the \*apply family of functions (*e.g.* lapply, mapply...).
 For example if you want to get the maximum simulate LAI for each USM you would do:
 
-```{r lapply_sim, exercise=TRUE, exercise.setup = "prepare-sim"}
+```{r lapply_sim, exercise=TRUE, exercise.setup = "load-sim"}
 lapply(sim, function(x) max(x$lai_n))
 ```
 
@@ -882,7 +879,7 @@ An other way to do so is to first transform the list of `data.frame` into a sing
 
 Use `CroPlotR::bind_rows` to make a single `data.frame` out of the list of `data.frame`s:
 
-```{r data_struct4, exercise=TRUE, exercise.setup = "prepare-sim"}
+```{r data_struct4, exercise=TRUE, exercise.setup = "load-sim"}
 # Insert your R code here!
 ```
 
@@ -901,7 +898,7 @@ Now we can use the functions from the [tidyverse](https://www.tidyverse.org/) fo
 
 For example we can use `filter` to filter the data:
 
-```{r filter_sim, exercise=TRUE, exercise.setup = "prepare-sim"}
+```{r filter_sim, exercise=TRUE, exercise.setup = "load-sim"}
 sim_all = CroPlotR::bind_rows(sim)
 
 filter(sim_all, Date == as.POSIXct("2000-09-04", tz = "UTC"))
@@ -910,7 +907,7 @@ filter(sim_all, Date == as.POSIXct("2000-09-04", tz = "UTC"))
 Or summarize it by group.
 For exemple if we want the maximum lai for each USM (as we did above using `lapply`), we would do as follows:
 
-```{r summarise_sim, exercise=TRUE, exercise.setup = "prepare-sim"}
+```{r summarise_sim, exercise=TRUE, exercise.setup = "load-sim"}
 sim_all%>%
   group_by(situation)%>%
   summarise(max_lai = max(lai_n))
@@ -922,7 +919,7 @@ The [CroPlotR](https://sticsrpacks.github.io/CroPlotR/) package can be used to p
 
 -   Use the values of the variables `lai_n` and `masec_n` simulated for USM `wheat` already stored in the `results` R object and plot their dynamics
 
-```{r store-sim, eval=FALSE}
+```{r store-sim, exercise.setup = "prepare-get_sim"}
 file_path <- file.path(tmp_dir,"sim-1.RData")
 if (!file.exists(file_path)) {
   results <- get_sim(workspace = workspace_path, usm = "wheat",
@@ -934,10 +931,7 @@ if (!file.exists(file_path)) {
 }
 ```
 
-```{r prepare-plot_sim, ref.label=c("prepare-get_sim","store-sim")}
-```
-
-```{r plot_sim1, exercise=TRUE, exercise.setup = "prepare-plot_sim"}
+```{r plot_sim1, exercise=TRUE, exercise.setup = "store-sim"}
 # Insert your R code here!
 ```
 
@@ -962,7 +956,7 @@ To get the documentation about this function, either refer to the CroPlotR websi
 
 -   Then, do the same but plotting both variables on the same graph
 
-```{r plot_sim2, exercise=TRUE, exercise.setup = "prepare-plot_sim"}
+```{r plot_sim2, exercise=TRUE, exercise.setup = "store-sim"}
 # Insert your R code here!
 ```
 
@@ -1035,7 +1029,7 @@ Please refer to the `get_sim()` use section for details.
 
 As for the first exercise in the "Plotting simulations results" section, use the values of the variables `lai_n` and `masec_n` simulated for USM `wheat` stored in the `results2` object and plot their dynamics, but this time add the observation data to the plot using the values stored in the `observations2` object.
 
-```{r store-sim-obs1, eval=FALSE}
+```{r store-sim-obs1, exercise.setup = "prepare-get_sim"}
 file_path <- file.path(tmp_dir,"sim_obs1.RData")
 if (!file.exists(file_path)) {
   results2 <- get_sim(workspace = workspace_path, usm = c("wheat", "maize"), verbose = FALSE)
@@ -1047,10 +1041,7 @@ if (!file.exists(file_path)) {
 }
 ```
 
-```{r prepare-plot_sim_obs2, ref.label=c("prepare-get_sim","store-sim-obs1")}
-```
-
-```{r plot_simobs1, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs2"}
+```{r plot_simobs1, exercise=TRUE, exercise.setup = "store-sim-obs1"}
 # Insert your R code here!
 ```
 
@@ -1079,7 +1070,7 @@ They can be produced using the same `plot()` function as for dynamics plots, wit
 
 -   Plot now the scatter plots of the simulated and observed values of `lai_n` and `masec_n` that are stored in the `results2` and `observations2` objects.
 
-```{r plot_simobs2, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs2"}
+```{r plot_simobs2, exercise=TRUE, exercise.setup = "store-sim-obs1"}
 # Insert your R code here!
 ```
 
@@ -1099,7 +1090,7 @@ The symbols used in the scatter plots can be adapted by the user using optional 
 
 -   Plot the same scatter plot as in the previous exercise, but with one symbol per USM
 
-```{r plot_simobs3, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs2"}
+```{r plot_simobs3, exercise=TRUE, exercise.setup = "store-sim-obs1"}
 # Insert your R code here!
 ```
 
@@ -1117,7 +1108,7 @@ print(p)
 
 Use the R objects `results4` and `observations4` already containing respectively simulation outputs and observations for these USMs and variables.
 
-```{r store-sim-obs2, eval=FALSE}
+```{r store-sim-obs2, exercise.setup = "prepare-get_sim"}
 usms <- c("wheat","DurumWheat", "maize", "sorghum")
 file_path <- file.path(tmp_dir,"sim_obs2.RData")
 if (!file.exists(file_path)) {
@@ -1130,10 +1121,7 @@ if (!file.exists(file_path)) {
 }
 ```
 
-```{r prepare-plot_sim_obs_4, ref.label=c("prepare-get_sim","store-sim-obs2")}
-```
-
-```{r plot_simobs4, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs_4"}
+```{r plot_simobs4, exercise=TRUE, exercise.setup = "store-sim-obs2"}
 # Insert your R code here!
 ```
 
@@ -1160,7 +1148,7 @@ As for the `plot()` function, to get the documentation about `summary()`, either
 
 -   Use the values of the variables `lai_n` and `masec_n` simulated and observed for USMs `wheat`,`DurumWheat`, `maize`, and `sorghum` from `results4` and `observations4`. Compute the statistical criteria using the `summary()` function
 
-```{r stat_simobs1, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs_4"}
+```{r stat_simobs1, exercise=TRUE, exercise.setup = "store-sim-obs2"}
 # Insert your R code here!
 ```
 
@@ -1176,7 +1164,7 @@ summary(results4, obs = observations4)
 
 -   Now do the same but compute the statistical criteria per USM
 
-```{r stat_simobs2, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs_4"}
+```{r stat_simobs2, exercise=TRUE, exercise.setup = "store-sim-obs2"}
 # Insert your R code here!
 ```
 
@@ -1211,7 +1199,7 @@ For this purpose, the *R2* and *nRMSE* criteria will be used.
 
 -   Plot the `R²` and `nRMSE` criteria computed on all the USMs in the previous exercise
 
-```{r stat_simobs3, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs_4"}
+```{r stat_simobs3, exercise=TRUE, exercise.setup = "store-sim-obs2"}
 # Insert your R code here!
 ```
 
@@ -1229,7 +1217,7 @@ print(p)
 
 -   Now do the same but per USM
 
-```{r stat_simobs4, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs_4"}
+```{r stat_simobs4, exercise=TRUE, exercise.setup = "store-sim-obs2"}
 # Insert your R code here!
 ```
 
@@ -1249,7 +1237,7 @@ By default the results per USMs are plotted in bars having different columns
 
 -   Now do the same but with USMs named in x axis
 
-```{r stat_simobs5, exercise=TRUE, exercise.setup = "prepare-plot_sim_obs_4"}
+```{r stat_simobs5, exercise=TRUE, exercise.setup = "store-sim-obs2"}
 # Insert your R code here!
 ```
 
@@ -1539,7 +1527,7 @@ stics_wrapper_options(javastics = javastics_path, workspace = workspace_path, pa
 Now everything is set-up to make our simulations!
 The model options we will use here are stored in the `wrapper_options` object with the options we just set up in the previous section.
 
-```{r store-wrapper-options, eval=FALSE}
+```{r store-wrapper-options, eval=TRUE, exercise.setup = "prepare-gen_usms"}
 wrapper_options_file <- file.path(tmp_dir,"wrapper_options.RData")
 if (!file.exists(wrapper_options_file)) {
   wrapper_options = stics_wrapper_options(javastics = javastics_path, workspace = workspace_path, parallel = TRUE, verbose = FALSE)
@@ -1550,12 +1538,9 @@ if (!file.exists(wrapper_options_file)) {
 }
 ```
 
-```{r prepare-wrapper, ref.label=c("prepare-gen_usms","store-wrapper-options")}
-```
-
 -   Now use `stics_wrapper()` to simulate leaf area index and above-ground biomass for the USM "wheat" only (not "banana" and "soybean") using the model options stored in `wrapper_options`, and print the results:
 
-```{r stics_wrapper1, exercise=TRUE, exercise.setup = "prepare-wrapper"}
+```{r stics_wrapper1, exercise=TRUE, exercise.setup = "store-wrapper-options"}
 # Insert your R code here!
 ```
 
@@ -1602,7 +1587,7 @@ This argument is given as a named vector.
 
 -   Make a simulation on the "wheat" USM and output just the lai, but this time with `dlaimax = 0.005` and `durvieF = 80`:
 
-```{r stics_wrapper2, exercise=TRUE, exercise.setup = "prepare-wrapper"}
+```{r stics_wrapper2, exercise=TRUE, exercise.setup = "store-wrapper-options"}
 # Insert your R code here!
 ```
 
@@ -1623,7 +1608,7 @@ The results of both simulations are accessible in the `res1` and `res2` objects.
 Remember, the simulated variables values are stored in the `sim_list` field of each object.
 For example, to get the values of the simulated variables for `res1`, we would do: `res1$sim_list`.
 
-```{r store-comp_res, eval=FALSE}
+```{r store-comp_res, exercise.setup = "prepare-gen_usms"}
 if (!file.exists(file.path(tmp_dir,"comp_res.RData"))) {
   wrapper_options = stics_wrapper_options(javastics = javastics_path,
                                           workspace = workspace_path, parallel = TRUE,
@@ -1641,12 +1626,9 @@ if (!file.exists(file.path(tmp_dir,"comp_res.RData"))) {
 }
 ```
 
-```{r prepare-wrapper-plot, ref.label=c("prepare-gen_usms","store-comp_res")}
-```
-
 Then, to plot a simulation result, we would do:
 
-```{r stics_wrapper-plot-ex, exercise=TRUE, exercise.setup = "prepare-wrapper-plot"}
+```{r stics_wrapper-plot-ex, exercise=TRUE, exercise.setup = "store-comp_res"}
 # Execute the code below to create a plot of the results:
 p <- plot(res1$sim_list)
 print(p)
@@ -1656,7 +1638,7 @@ It is also possible to compare the results of several simulations by giving them
 
 -   Plot the comparison between the outputs of both simulations:
 
-```{r stics_wrapper-plot1, exercise=TRUE, exercise.setup = "prepare-wrapper-plot"}
+```{r stics_wrapper-plot1, exercise=TRUE, exercise.setup = "store-comp_res"}
 # Insert your R code here!
 ```
 
@@ -1678,7 +1660,7 @@ We can also name the simulations in our plot by naming them when passed as argum
 
 -   Plot the comparison between the outputs of both simulations, and name the first simulation "original" and the second simulation "dlaimax=0.005, durvieF=80":
 
-```{r stics_wrapper-plot2, exercise=TRUE, exercise.setup = "prepare-wrapper-plot"}
+```{r stics_wrapper-plot2, exercise=TRUE, exercise.setup = "store-comp_res"}
 # Insert your R code here!
 ```
 
@@ -1707,7 +1689,7 @@ The workflow for parameter estimation is made using several steps:
 -   Set-up options for the optimization method,
 -   run the parameter optimization (`estim_param`).
 
-```{r store-param-estim, eval=FALSE}
+```{r store-param-estim, exercise.setup = "prepare-gen_usms"}
 if (!file.exists(file.path(tmp_dir,"store-param-estim.RData"))) {
   wrapper_options = stics_wrapper_options(javastics = javastics_path, workspace = workspace_path, parallel = TRUE, verbose = FALSE)
   obs = get_obs(workspace = workspace_path, usm = "wheat", verbose = FALSE)
@@ -1723,8 +1705,6 @@ if (!file.exists(file.path(tmp_dir,"store-param-estim.RData"))) {
 }
 ```
 
-```{r prepare-param-estim, ref.label=c("prepare-gen_usms","store-param-estim")}
-```
 
 ### Modelling environment
 
@@ -1739,7 +1719,7 @@ wrapper_options = stics_wrapper_options(javastics = javastics_path, workspace = 
 
 -   Import the observations for the "wheat" USM, and put it in an object called `obs`:
 
-```{r estim_param_obs1, exercise=TRUE, exercise.setup = "prepare-param-estim"}
+```{r estim_param_obs1, exercise=TRUE, exercise.setup = "store-param-estim"}
 # Insert your R code here!
 ```
 
@@ -1754,7 +1734,7 @@ obs = get_obs(workspace = workspace_path, usm = "wheat")
 
 -   Filter the observations to get only the lai using `filter_obs()`, and put it in an object called `obs_filt`:
 
-```{r estim_param_obs2, exercise=TRUE, exercise.setup = "prepare-param-estim"}
+```{r estim_param_obs2, exercise=TRUE, exercise.setup = "store-param-estim"}
 # Insert your R code here!
 ```
 
@@ -1851,7 +1831,7 @@ As a reminder, here's the objects we previously defined:
 
 -   Now estimate the value of `stamflax` using `estim_param()` and the previous objects we defined, and put the results in an object called `optim_res`.
 
-```{r estim_param2, exercise=TRUE, exercise.setup = "prepare-param-estim", exercise.timelimit=300}
+```{r estim_param2, exercise=TRUE, exercise.setup = "store-param-estim", exercise.timelimit=300}
 # Insert your R code here!
 ```
 
@@ -1894,7 +1874,7 @@ In the case of the simplex method this list includes:
 -   The `info_level` argument of `estim_param` allows to control the quantity of information returned and stored (see `? estim_param` for more details).
 :::
 
-```{r store-param-estim-out, eval=FALSE}
+```{r store-param-estim-out, exercise.setup="prepare-gen_usms"}
 if (!file.exists(file.path(tmp_dir,"prepare-param-estim-out.RData"))) {
   load(file = system.file("extdata/optim_results.Rdata", package = "SticsRPacks"))
   optim_res = res
@@ -1916,9 +1896,6 @@ if (!file.exists(file.path(tmp_dir,"prepare-param-estim-out.RData"))) {
 }
 ```
 
-```{r prepare-param-estim-out, ref.label=c("prepare-gen_usms","store-param-estim-out")}
-```
-
 ### Plots
 
 Now that our parameter value is optimized, we can re-run the model with this value to check the results.
@@ -1926,7 +1903,7 @@ To do so, we call again `stics_wrapper` with the optimized value passed as argum
 
 -   Use `stics_wrapper` to make a new simulation of the `wheat` USM with our optimized value `optim_res$final_values`, and store the simulated results (i.e. the content of `sim_list`) in an object called `sim_after_optim`.
 
-```{r estim_param3, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
+```{r estim_param3, exercise=TRUE, exercise.setup = "store-param-estim-out"}
 # Insert your R code here!
 ```
 
@@ -1954,7 +1931,7 @@ Now we can plot the output using `plot()`.
 
 -   Use `plot()` to make a dynamic plot of the simulations along with the observations (`obs_filt`) for the `lai_n` variable.
 
-```{r estim_param4, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
+```{r estim_param4, exercise=TRUE, exercise.setup = "store-param-estim-out"}
 # Insert your R code here!
 ```
 
@@ -1972,7 +1949,7 @@ We can also make a scatter plot for a different display of the fit between obser
 
 -   Make the same plot but as a scatter plot instead of a dynamic plot
 
-```{r estim_param5, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
+```{r estim_param5, exercise=TRUE, exercise.setup = "store-param-estim-out"}
 # Insert your R code here!
 ```
 
@@ -1993,7 +1970,7 @@ To do so, we just have to simulate both, and to plot the results using `plot()`.
 
 -   Make a simulation using `stics_wrapper` with the original values of the parameters, and store the simulated results (i.e. the content of `sim_list`) in an object called `sim_before_optim`.
 
-```{r estim_param6, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
+```{r estim_param6, exercise=TRUE, exercise.setup = "store-param-estim-out"}
 # Insert your R code here!
 ```
 
@@ -2010,7 +1987,7 @@ Now we can compare the simulations using `plot()` and `summary()`.
 
 -   Make a plot to compare both simulations for `lai_n`
 
-```{r estim_param7, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
+```{r estim_param7, exercise=TRUE, exercise.setup = "store-param-estim-out"}
 # Insert your R code here!
 ```
 
@@ -2026,7 +2003,7 @@ print(p)
 
 -   Compute the nRMSE and Bias of both simulations for `lai_n` using `summary()`
 
-```{r estim_param8, exercise=TRUE, exercise.setup = "prepare-param-estim-out"}
+```{r estim_param8, exercise=TRUE, exercise.setup = "store-param-estim-out"}
 # Insert your R code here!
 ```
 
@@ -2201,7 +2178,7 @@ if (!all(file.exists(file.path(workspace_path,c("mod_spintercrop_pea_barley.sti"
 }
 ```
 
-```{r store-intercrop-2, eval=FALSE}
+```{r store-intercrop-2, exercise.setup = "run-intercrop"}
 if (!file.exists(file.path(tmp_dir,"prepare-intercrop-2.RData"))) {
   sim <- get_sim(workspace = workspace_path,
                  usm="intercrop_pea_barley",
@@ -2215,10 +2192,7 @@ if (!file.exists(file.path(tmp_dir,"prepare-intercrop-2.RData"))) {
 }
 ```
 
-```{r prepare-intercrop-2, ref.label=c("run-intercrop","store-intercrop-2")}
-```
-
-```{r intercrop-2, exercise=TRUE, exercise.setup = "prepare-intercrop-2"}
+```{r intercrop-2, exercise=TRUE, exercise.setup = "store-intercrop-2"}
 # Insert your R code here!
 ```
 
@@ -2241,7 +2215,7 @@ question("How are organized the results for the different intercrops",
 
 -   Check now how results are changed when you use the `usms_file` argument of the `get_sim` function
 
-```{r intercrop-4, exercise=TRUE, exercise.setup = "prepare-intercrop-2"}
+```{r intercrop-4, exercise=TRUE, exercise.setup = "store-intercrop-2"}
 # Insert your R code here!
 ```
 
@@ -2256,7 +2230,7 @@ print(sim)
 
 -   And, finally, how results are changed when you use in addition the `javastics_path` argument of the `get_sim` function
 
-```{r intercrop-5, exercise=TRUE, exercise.setup = "prepare-intercrop-2"}
+```{r intercrop-5, exercise=TRUE, exercise.setup = "store-intercrop-2"}
 # Insert your R code here!
 ```
 
@@ -2271,7 +2245,7 @@ print(sim)
 
 -   Now, plot the simulation results using the standard plot function of CroPlotR
 
-```{r store-intercrop-6, eval=FALSE}
+```{r store-intercrop-6, exercise.setup = "run-intercrop"}
 if (!file.exists(file.path(tmp_dir,"prepare-intercrop-6.RData"))) {
   sim <- get_sim(workspace = workspace_path, usm="intercrop_pea_barley",
                  var=c("lai_n","masec_n","mafruit"),
@@ -2286,10 +2260,7 @@ if (!file.exists(file.path(tmp_dir,"prepare-intercrop-6.RData"))) {
 }
 ```
 
-```{r prepare-intercrop-6, ref.label=c("run-intercrop","store-intercrop-6")}
-```
-
-```{r intercrop-6, exercise=TRUE, exercise.setup = "prepare-intercrop-6"}
+```{r intercrop-6, exercise=TRUE, exercise.setup = "store-intercrop-6"}
 # Insert your R code here!
 ```
 
