@@ -32,8 +32,11 @@ available from each websites (Article sections).
 devtools::install_github("SticsRPacks/SticsRPacks")
 ```
 
-It this does not work, follow the instructions given
-[here](https://github.com/SticsRPacks/SticsRPacks/issues/1#event-2864068985).
+
+## Troubleshooting
+
+- Issue with [Github installation of packages](https://github.com/SticsRPacks/documentation/blob/master/github_install.md)
+- [Troubleshooting for Mac users](https://github.com/SticsRPacks/documentation/blob/master/mac_users.md)
 
 ## Usage
 
