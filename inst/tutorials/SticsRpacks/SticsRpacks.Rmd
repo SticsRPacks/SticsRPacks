@@ -38,7 +38,7 @@ get_java_version <- function(linux = TRUE, cmd = "java") {
   if(linux) {
     version_str <-
       suppressWarnings(system(paste(cmd, '-version 2>&1 | head -n 1 | cut -d\\" -f 2 | cut -d\\. -f1'),
-             intern = TRUE))
+                              intern = TRUE))
     if(length(grep("not found", version_str)) > 0) {
       version <- NULL
     } else  {
@@ -51,50 +51,74 @@ get_java_version <- function(linux = TRUE, cmd = "java") {
 
 java <- "java"
 
-if(SticsRFiles:::get_version_num(stics_version) < 10) { 
-  javastics_dir <- "JavaSTICS-1.41-stics-9.2"
-  workspace_path <- "JavaSTICS-1.41-stics-9.2/example"
-  # to set before if/else bloc when the V10.0.0 will be out
-  user_passwd <- SticsRPacks:::get_forge_userpass("public")
-  download_url <- "https://w3.avignon.inra.fr/forge/attachments/download/2482/"
-  workspace_PW1 <- "tutorials/SticsRpacks/PW1_V9.2"
-  
-  
-} else { 
-  # same as zip archive name
-  javastics_dir <- "JavaSTICS-1.5.1-STICS-10.0.0"
-  workspace_path <- "JavaSTICS-1.5.1-STICS-10.0.0/example"
-  # to remove when the V10.0.0 will be out
-  user_passwd <- SticsRPacks:::get_forge_userpass("public")
-  download_url <- "https://w3.avignon.inrae.fr/forge/attachments/download/3005/"
-  workspace_PW1 = "tutorials/SticsRpacks/PW1"
-  #java <- Sys.getenv("JAVA")
-  
-  if (linux) {
-    java_path <- Sys.getenv("JAVA")
+#--------------------------------------------------------------------------
+# Prior to getting this environment variable put it in 
+# a .Renviron file (in user base directory: Documents for windows,
+# /home/username)
+# usethis::edit_r_environ() may be used to edit the file
+# In any case the R session must be restarted to take effect
+#--------------------------------------------------------------------------
+
+
+javastics_in_path <- Sys.getenv("javastics_path")
+local_javastics <- !(javastics_in_path == "")
+
+stics_version <- SticsRFiles:::get_version_num(stics_version)
+lower_than_v10 <- stics_version < 10
+
+if (!local_javastics) {
+  if(lower_v10) { 
+    javastics_dir <- "JavaSTICS-1.41-stics-9.2"
+    workspace_path <- "JavaSTICS-1.41-stics-9.2/example"
+    # to set before if/else bloc when the V10.0.0 will be out
+    user_passwd <- SticsRPacks:::get_forge_userpass("public")
+    download_url <- "https://w3.avignon.inra.fr/forge/attachments/download/2482/"
+    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V9.2"
     
-    if(java_path != "") java <- java_path
-    
-    
-    java_version <- get_java_version(linux = linux, cmd = java)
-    
-    if(is.null(java_version)) 
-      stop("A java version 11 must be installed")
-    
-    
-    if(java_version < 11)
-      stop("The default system java virtual machine is ",system(paste(java,"-version 2>&1"), intern = TRUE)[1], 
-           #"\nThis is not correct for running JavaStics\n", 
-           "\nA java 11 version installation is needed for running JavaSTICS, \n",
-           "or as an alternate version and the java path can be set\n",
-           "in the .Renviron file, as for example: \n",
-           "JAVA=\"/usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java\"")
-    
+  } else { 
+    # same as zip archive name
+    javastics_dir <- "JavaSTICS-1.5.1-STICS-10.0.0"
+    workspace_path <- "JavaSTICS-1.5.1-STICS-10.0.0/example"
+    # to remove when the V10.0.0 will be out
+    user_passwd <- SticsRPacks:::get_forge_userpass("public")
+    download_url <- "https://w3.avignon.inrae.fr/forge/attachments/download/3005/"
+    workspace_PW1 <- "tutorials/SticsRpacks/PW1"
     
   }
-  
+} else {
+  # Check JavaStics in path
+  if(!dir.exists(javastics_in_path) ||
+     !any(grepl("JavaStics.exe",list.files(javastics_in_path))))
+    stop(javastics_in_path,
+         ": JavaStics directory set in 'javastics_path'\n",
+         "environment variable does not exist, aborting")
+  javastics_path <- javastics_in_path
+  workspace_PW1 <- "tutorials/SticsRpacks/PW1"
 }
 
+
+if (!lower_than_v10 && linux) {
+  java_path <- Sys.getenv("JAVA")
+  
+  if(java_path != "") java <- java_path
+  
+  
+  java_version <- get_java_version(linux = linux, cmd = java)
+  
+  if(is.null(java_version)) 
+    stop("A java version 11 must be installed")
+  
+  
+  if(java_version < 11)
+    stop("The default system java virtual machine is ",system(paste(java,"-version 2>&1"), intern = TRUE)[1], 
+         #"\nThis is not correct for running JavaStics\n", 
+         "\nA java 11 version installation is needed for running JavaSTICS, \n",
+         "or as an alternate version and the java path can be set\n",
+         "in the .Renviron file, as for example: \n",
+         "JAVA=\"/usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java\"")
+  
+  
+}
 
 knitr::opts_chunk$set(echo = FALSE,
                       java_cmd = java,
@@ -125,25 +149,32 @@ if (!dir.exists(tmp_dir)) {
   file.remove(tmp_files)
 }
 
-javastics_path <- file.path(work_dir, javastics_dir, fsep ="/")
-
-if(SticsRFiles:::get_version_num(stics_version) < 10) { 
-  # Creating JavaStics dir
-  if (!dir.exists(javastics_path)) dir.create(javastics_path)
-  out_path <- javastics_path
+# configure and dowload JavaStics
+if(!local_javastics) {
+  javastics_path <- file.path(work_dir, javastics_dir, fsep ="/")
+  
+  if(SticsRFiles:::get_version_num(stics_version) < 10) { 
+    # Creating JavaStics dir
+    if (!dir.exists(javastics_path)) dir.create(javastics_path)
+    out_path <- javastics_path
+  } else {
+    out_path <- work_dir
+  }
+  
+  files_list <- list.files(javastics_path)
+  if(length(files_list) == 0 || !any(grepl("JavaStics.exe",files_list))) {
+    zip_path <- file.path(work_dir,paste0(javastics_dir,".zip"))
+    system(paste0("curl -u ",user_passwd," ", download_url, javastics_dir,".zip --output ", zip_path))
+    unzip(zip_path, exdir = out_path)
+  }
+  
+  workspace_path <- file.path(work_dir, workspace_path, fsep ="/")
 } else {
-  out_path <- work_dir
-}
-
-files_list <- list.files(javastics_path)
-if(length(files_list) == 0 || !any(grepl("JavaStics.exe",files_list))) {
-  zip_path <- file.path(work_dir,paste0(javastics_dir,".zip"))
-  system(paste0("curl -u ",user_passwd," ", download_url, javastics_dir,".zip --output ", zip_path))
-  unzip(zip_path, exdir = out_path)
+  workspace_path <- file.path(javastics_in_path, "example")
 }
 
 # fixing workspaces path
-workspace_path <- file.path(work_dir, workspace_path, fsep ="/")
+#workspace_path <- file.path(work_dir, workspace_path, fsep ="/")
 workspace_PW1 <- file.path(system.file(package = "SticsRPacks"), workspace_PW1, fsep ="/")
 
 # Generating html help files, one for each function
