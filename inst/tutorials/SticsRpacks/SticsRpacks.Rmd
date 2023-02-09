@@ -101,7 +101,7 @@ knitr::opts_chunk$set(echo = FALSE,
                       linux = linux,
                       stics_version = stics_version)
 
-tutorial_options(exercise.lines = 5, exercise.timelimit = 60)
+tutorial_options(exercise.lines = 5, exercise.timelimit = 300)
 
 
 use_default = TRUE
@@ -665,7 +665,7 @@ Use `? function_name` or explore the packages websites (in particular the Refere
 -   Run all the USMs defined in the `example` workspace (path stored in `workspace_path`). The path to JavaStics is stored in the `javastics_path` R object. This may take a few minutes: there many USMs!
 
 
-```{r run_javaStics1, exercise=TRUE, exercise.timelimit=300}
+```{r run_javaStics1, exercise=TRUE, exercise.timelimit=600}
 # Insert your R code here!
 ```
 
@@ -723,7 +723,7 @@ if (!sim_done) {
 
 -   Get the values of all the outputs simulated during the previous exercise in the `example` workspace
 
-```{r get_sim1, exercise=TRUE, exercise.setup = "prepare-get_sim", exercise.timelimit=300}
+```{r get_sim1, exercise=TRUE, exercise.setup = "prepare-get_sim", exercise.timelimit=600}
 # Insert your R code here!
 
 ```
@@ -738,7 +738,7 @@ get_sim(workspace = workspace_path)
 
 -   Get the values of all the outputs simulated for USMs banana and Turmeric
 
-```{r get_sim2, exercise=TRUE, exercise.setup = "prepare-get_sim", exercise.timelimit=300}
+```{r get_sim2, exercise=TRUE, exercise.setup = "prepare-get_sim", exercise.timelimit=600}
 # Insert your R code here!
 ```
 
@@ -753,7 +753,7 @@ get_sim(workspace = workspace_path, usm = c("banana","Turmeric"))
 
 -   Get the values of the variable `lai_n` simulated for USMs `wheat` and `maize`
 
-```{r get_sim4, exercise=TRUE, exercise.setup = "prepare-get_sim", exercise.timelimit=300}
+```{r get_sim4, exercise=TRUE, exercise.setup = "prepare-get_sim", exercise.timelimit=600}
 # Insert your R code here!
 ```
 
@@ -1831,7 +1831,7 @@ As a reminder, here's the objects we previously defined:
 
 -   Now estimate the value of `stamflax` using `estim_param()` and the previous objects we defined, and put the results in an object called `optim_res`.
 
-```{r estim_param2, exercise=TRUE, exercise.setup = "store-param-estim", exercise.timelimit=300}
+```{r estim_param2, exercise=TRUE, exercise.setup = "store-param-estim", exercise.timelimit=600}
 # Insert your R code here!
 ```
 
