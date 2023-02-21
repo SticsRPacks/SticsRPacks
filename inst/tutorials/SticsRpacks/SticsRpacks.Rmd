@@ -268,17 +268,29 @@ You can use these panels to do whatever tests you want to do to explore the feat
 The `Start over` button re-initialize the panel.
 
 If you don't find the solution, click on the button `Hints`, it will give you an advice.
-If you click again and again several advises will be given (dependgin on the exercise) and finally the expected solution of the exercise.
+If you click again and again several advises will be given (depending on the exercise) and finally the expected solution of the exercise.
 To copy the solution in the panel, click on the `Copy to Clipboard` blue button on the right and then right-click in the black part of the panel and select "paste".
 You can train on the panel above.
 
 ::: {.alert .alert-info}
-This tutorial automatically downloaded JavaStics in a temporary folder of your computer: `r javastics_path`.
-The path of this folder is stored in the `javastics_path` R object.
+If this tutorial is run locally on your computer and that you have already installed a version of STICS more recent or equal to 9.2.0, it is recommended that you use this version to run the tutorial exercises. 
 
-It will be used in the following to perform the exercises.
-The exercises will use the USMs defined in the "example" workspace of JavaStics (stored in `r workspace_path`).
-The path of this workspace is stored in the `workspace_path` R object.
+For this, an environment variable `javastics_path` must be set to the path of the corresponding JavaSTICS folder.
+This can be done:
+
+* in your R session, each time before running the tutorial, by executing the following command:  `Sys.setenv(javastics_path="path_to_JavaSTICS”)`, where path_to_JavaSTICS should be replaced by the absolute path of the corresponding JavaSTICS folder.
+
+or 
+
+* by defining this environment variable in your .Renviron file: edit this file (located in your Home directory, can be edited also using `usethis::edit_r_environ()`), and add a new line javastics_path="path_to_JavaSTICS”
+
+
+Your R session must then be restarted in any case (in RStudio: menu Session-> Restart R).
+
+If you do not set this environment variable, the tutorial will automatically download JavaStics to a temporary folder on your computer: `r javastics_path` which will be stored in the R object `javastics_path`. However, this takes more time and disk space, and antiviruses sometimes block the run of executables located in such temporary folder, which is why the use of a locally installed JavaStics distribution is recommended.
+
+The exercises of the tutorial will use the USMs defined in the "example" workspace of JavaStics (stored in `r workspace_path`).
+The path of this workspace is stored in the R object `workspace_path`.
 :::
 
 ## A foretaste of SticsRpacks
