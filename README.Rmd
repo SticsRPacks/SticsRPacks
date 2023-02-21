@@ -78,6 +78,19 @@ SticsRPacks_update()
 
 To run it you need to install the `learnr` package.
 
+If you have a version of STICS more recent or equal to 9.2.0 installed on your computer, it is recommended that you use this version to carry out the exercises of the tutorial. 
+
+For this, an environment variable `javastics_path` must be set to the path of the corresponding JavaSTICS folder.
+This can be done:
+
+* in your R session, each time before running the tutorial, by executing the following command:  `Sys.setenv(javastics_path="path_to_JavaSTICS”)`, where `path_to_JavaSTICS` should be replaced by the absolute path of the corresponding JavaSTICS folder.
+
+or 
+
+* by defining this environment variable in your .Renviron file: edit this file (located in your Home directory, can be edited also using `usethis::edit_r_environ()`), and add a new line `javastics_path="path_to_JavaSTICS"`
+
+Your R session must then be restarted in any case (in RStudio: menu Session-> Restart R).
+
 Then, if you have RStudio version 1.3 or greater, click on the Tutorial pane on the right of the RStudio window (close to Environment, History, ... panes), scroll to see `Tutorial for SticsRPacks` and click on the button `Start Tutorial`.
 
 Alternatively, e.g. if you have an older version of RStudio or if you don't have the Tutorial pane for any reason, you can run the tutorial by running the command:
