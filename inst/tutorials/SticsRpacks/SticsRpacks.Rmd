@@ -14,7 +14,6 @@ editor_options:
     wrap: sentence
 ---
 
-
 ```{r setup, include=FALSE}
 library(learnr)
 library(SticsRPacks)
@@ -180,7 +179,7 @@ if (!dir.exists(tmp_dir)) {
   file.remove(tmp_files)
 }
 
-# configure and dowload JavaStics
+# configure and download JavaStics
 if(!local_javastics) {
   javastics_path <- file.path(work_dir, javastics_dir, fsep ="/")
   
@@ -271,6 +270,8 @@ Note also that completion can be used to list the different arguments of a funct
 
 ### The SticsRpacks tutorial
 
+#### Principle 
+
 This tutorial aims at introducing the use of these different packages with the STICS model.
 It was designed to be of increasing complexity, it is thus advised to follow it in order.
 The different sections are however independent and you can thus start it from any part using the menu on the left side (this may however take a little while since results from previous exercises must be automatically generated in this case).
@@ -303,6 +304,8 @@ If you click again and again several advises will be given (depending on the exe
 To copy the solution in the panel, click on the `Copy to Clipboard` blue button on the right and then right-click in the black part of the panel and select "paste".
 You can train on the panel above.
 
+#### STICS version used
+
 ::: {.alert .alert-info}
 If this tutorial is run locally on your computer and that you have already installed a version of STICS more recent or equal to 9.2.0, it is recommended that you use this version to run the tutorial exercises. 
 
@@ -318,11 +321,21 @@ or
 
 Your R session must then be restarted in any case (in RStudio: menu Session-> Restart R).
 
-If you do not set this environment variable, the tutorial will automatically download JavaStics to a temporary folder on your computer: `r javastics_path` which will be stored in the R object `javastics_path`. However, this takes more time and disk space, and antiviruses sometimes block the run of executables located in such temporary folder, which is why the use of a locally installed JavaStics distribution is recommended.
+Also, restart the tutorial using `learnr::run_tutorial("SticsRpacks", package="SticsRPacks", clean=TRUE)`.
 
-The exercises of the tutorial will use the USMs defined in the "example" workspace of JavaStics (stored in `r workspace_path`).
-The path of this workspace is stored in the R object `workspace_path`.
+If you do not set the environment variable `javastics_path`, the tutorial will automatically download JavaStics to a temporary folder on your computer: `r work_dir`. 
+
+However, this takes more time and disk space, and antiviruses sometimes block the run of the STICS executable when it is located in such temporary folder, which is why the use of a locally installed JavaStics distribution is recommended.
 :::
+
+For this session, the JavaSTICS distribution used is `r javastics_path`. This path is stored in the R object `javastics_path` in the context of this tutorial. 
+
+The exercises of the tutorial will use the USMs defined in the "example" workspace of JavaStics.
+The path of this workspace is stored in the R object `workspace_path` in the context of this tutorial.
+For this session this path is `r workspace_path`.
+
+**WARNING: The `javastics_path` and `workspace_path` values printed above may be incorrect if you have redefined the `javastics_path` environment variable and restarted the tutorial by clicking on the "Start Tutorial" button in RStudio, or by running `learnr::run_tutorial("SticsRpacks", package="SticsRPacks")`.
+To have correct values of these variables in this case, the tutorial must be started by running `learnr::run_tutorial("SticsRpacks", package="SticsRPacks", clean=TRUE)`.**
 
 ## A foretaste of SticsRpacks
 
