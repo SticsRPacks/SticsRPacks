@@ -93,7 +93,38 @@ if (!local_javastics) {
          ": JavaStics directory set in 'javastics_path'\n",
          "environment variable does not exist, aborting")
   javastics_path <- javastics_in_path
-  workspace_PW1 <- "tutorials/SticsRpacks/PW1"
+  
+  # Getting exe name
+  stics_exe_name <- SticsOnR:::list_stics_exe(javastics_path)[[2]][[1]]
+  
+  # Getting exe version
+  check <- try(SticsOnR:::check_stics_exe(
+    file.path(javastics_path, "bin",stics_exe_name), version = TRUE),
+    silent = TRUE)
+  
+  # Stopping the tuto when the executable is not found
+  if (class(check) == "try-error") {
+    stop("The Stics executable (",
+         stics_exe_name,
+         ") was not found in JavaStics bin directory: ",
+         javastics_path)
+  }
+  
+  # Checking if the version is compatible with 
+  # the 2 Stics versions taken into account in the tuto data
+  # Stoppting if Stics is older than version 9.2
+  if (length(grep("10.0",attr(check, "version"))) > 0) {
+    workspace_PW1 <- "tutorials/SticsRpacks/PW1"
+    stics_version <- "V10.0"
+  } else if (length(grep("9.2",attr(check, "version"))) > 0) {
+      workspace_PW1 <- "tutorials/SticsRpacks/PW1_V9.2"
+      stics_version <- "V9.2"
+      lower_than_v10 <- TRUE
+    } else {
+    stop("The JavaSTICS version is not supported with the tutorial!",
+         "Please download ")
+  }
+  
 }
 
 
