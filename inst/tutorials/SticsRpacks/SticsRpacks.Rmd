@@ -67,7 +67,7 @@ stics_version <- SticsRFiles:::get_version_num(stics_version)
 lower_than_v10 <- stics_version < 10
 
 if (!local_javastics) {
-  if(lower_v10) { 
+  if(lower_than_v10) { 
     javastics_dir <- "JavaSTICS-1.41-stics-9.2"
     workspace_path <- "JavaSTICS-1.41-stics-9.2/example"
     # to set before if/else bloc when the V10.0.0 will be out
