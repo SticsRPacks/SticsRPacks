@@ -1,14 +1,14 @@
 # -----------------------------------------------------------
-# CITATION file created with {cffr} R package, v0.2.2
+# CITATION file created with {cffr} R package, v0.4.1
 # See also: https://docs.ropensci.org/cffr/
 # -----------------------------------------------------------
-
+ 
 cff-version: 1.2.0
 message: 'To cite package "SticsRPacks" in publications use:'
 type: software
 license: GPL-3.0-only
 title: 'SticsRPacks: Easily Install and Load `SticsRPacks` Packages'
-version: 0.3.1
+version: 0.4.0
 abstract: A set of packages that work in harmony because they share common data representations
   and "API" design. This package is designed to make it easy to install and load multiple
   `SticsRPacks` packages in a single step. Learn more about `SticsRPacks` at <https://sticsrpacks.github.io/SticsRPacks/>.
@@ -29,44 +29,9 @@ authors:
   given-names: Michel
   email: michel.giner@cirad.fr
   orcid: https://orcid.org/0000-0002-9310-2377
-preferred-citation:
-  type: manual
-  title: 'SticsRPacks: Easily Install and Load `SticsRPacks` Packages'
-  authors:
-  - family-names: Vezy
-    given-names: Remi
-    email: remi.vezy@cirad.fr
-    orcid: https://orcid.org/0000-0002-0808-1461
-  - family-names: Buis
-    given-names: Samuel
-    email: samuel.buis@inrae.fr
-    orcid: https://orcid.org/0000-0002-8676-5447
-  - family-names: Lecharpentier
-    given-names: Patrice
-    email: patrice.lecharpentier@inrae.fr
-    orcid: https://orcid.org/0000-0002-4044-4322
-  - family-names: Giner
-    given-names: Michel
-    email: michel.giner@cirad.fr
-    orcid: https://orcid.org/0000-0002-9310-2377
-  version: 0.2.0
-  abstract: A set of packages that work in harmony because they share common data
-    representations and "API" design. This package is designed to make it easy to
-    install and load multiple `SticsRPacks` packages in a single step. Learn more
-    about `SticsRPacks` at <https://sticsrpacks.github.io/SticsRPacks/>.
-  repository-code: https://github.com/SticsRPacks/SticsRPacks
-  url: https://doi.org/10.5281/zenodo.4442330
-  date-released: '2021-10-07'
-  contact:
-  - family-names: Vezy
-    given-names: Remi
-    email: remi.vezy@cirad.fr
-    orcid: https://orcid.org/0000-0002-0808-1461
-  license: GPL-3.0-only
-  year: '2021'
 repository-code: https://github.com/SticsRPacks/SticsRPacks
 url: https://doi.org/10.5281/zenodo.4442330
-date-released: '2021-10-07'
+date-released: '2023-03-03'
 contact:
 - family-names: Vezy
   given-names: Remi
@@ -76,12 +41,12 @@ references:
 - type: software
   title: 'R: A Language and Environment for Statistical Computing'
   notes: Depends
+  url: https://www.R-project.org/
   authors:
   - name: R Core Team
   location:
     name: Vienna, Austria
-  year: '2022'
-  url: https://www.R-project.org/
+  year: '2023'
   institution:
     name: R Foundation for Statistical Computing
   version: '>= 3.6.0'
@@ -89,43 +54,49 @@ references:
   title: purrr
   abstract: 'purrr: Functional Programming Tools'
   notes: Imports
+  url: https://purrr.tidyverse.org/
+  repository: https://CRAN.R-project.org/package=purrr
   authors:
-  - family-names: Henry
-    given-names: Lionel
-    email: lionel@rstudio.com
   - family-names: Wickham
     given-names: Hadley
     email: hadley@rstudio.com
-  year: '2022'
-  url: https://CRAN.R-project.org/package=purrr
+    orcid: https://orcid.org/0000-0003-4757-117X
+  - family-names: Henry
+    given-names: Lionel
+    email: lionel@rstudio.com
+  year: '2023'
 - type: software
   title: cli
   abstract: 'cli: Helpers for Developing Command Line Interfaces'
   notes: Imports
+  url: https://cli.r-lib.org
+  repository: https://CRAN.R-project.org/package=cli
   authors:
   - family-names: Csárdi
     given-names: Gábor
     email: csardi.gabor@gmail.com
-  year: '2022'
-  url: https://CRAN.R-project.org/package=cli
+  year: '2023'
 - type: software
   title: crayon
   abstract: 'crayon: Colored Terminal Output'
   notes: Imports
+  url: https://github.com/r-lib/crayon#readme
+  repository: https://CRAN.R-project.org/package=crayon
   authors:
   - family-names: Csárdi
     given-names: Gábor
     email: csardi.gabor@gmail.com
-  year: '2022'
-  url: https://CRAN.R-project.org/package=crayon
+  year: '2023'
 - type: software
   title: dplyr
   abstract: 'dplyr: A Grammar of Data Manipulation'
   notes: Imports
+  url: https://dplyr.tidyverse.org
+  repository: https://CRAN.R-project.org/package=dplyr
   authors:
   - family-names: Wickham
     given-names: Hadley
-    email: hadley@rstudio.com
+    email: hadley@posit.co
     orcid: https://orcid.org/0000-0003-4757-117X
   - family-names: François
     given-names: Romain
@@ -135,12 +106,17 @@ references:
   - family-names: Müller
     given-names: Kirill
     orcid: https://orcid.org/0000-0002-1416-3412
-  year: '2022'
-  url: https://CRAN.R-project.org/package=dplyr
+  - family-names: Vaughan
+    given-names: Davis
+    email: davis@posit.co
+    orcid: https://orcid.org/0000-0003-4777-038X
+  year: '2023'
 - type: software
   title: tibble
   abstract: 'tibble: Simple Data Frames'
   notes: Imports
+  url: https://tibble.tidyverse.org/
+  repository: https://CRAN.R-project.org/package=tibble
   authors:
   - family-names: Müller
     given-names: Kirill
@@ -148,12 +124,13 @@ references:
   - family-names: Wickham
     given-names: Hadley
     email: hadley@rstudio.com
-  year: '2022'
-  url: https://CRAN.R-project.org/package=tibble
+  year: '2023'
 - type: software
   title: rlang
   abstract: 'rlang: Functions for Base Types and Core R and ''Tidyverse'' Features'
   notes: Imports
+  url: https://rlang.r-lib.org
+  repository: https://CRAN.R-project.org/package=rlang
   authors:
   - family-names: Henry
     given-names: Lionel
@@ -161,8 +138,7 @@ references:
   - family-names: Wickham
     given-names: Hadley
     email: hadley@rstudio.com
-  year: '2022'
-  url: https://CRAN.R-project.org/package=rlang
+  year: '2023'
 - type: software
   title: grDevices
   abstract: 'R: A Language and Environment for Statistical Computing'
@@ -171,14 +147,15 @@ references:
   - name: R Core Team
   location:
     name: Vienna, Austria
-  year: '2022'
-  url: https://www.R-project.org/
+  year: '2023'
   institution:
     name: R Foundation for Statistical Computing
 - type: software
   title: magrittr
   abstract: 'magrittr: A Forward-Pipe Operator for R'
   notes: Imports
+  url: https://magrittr.tidyverse.org
+  repository: https://CRAN.R-project.org/package=magrittr
   authors:
   - family-names: Bache
     given-names: Stefan Milton
@@ -186,12 +163,13 @@ references:
   - family-names: Wickham
     given-names: Hadley
     email: hadley@rstudio.com
-  year: '2022'
-  url: https://CRAN.R-project.org/package=magrittr
+  year: '2023'
 - type: software
   title: rstudioapi
   abstract: 'rstudioapi: Safely Access the RStudio API'
   notes: Imports
+  url: https://rstudio.github.io/rstudioapi/
+  repository: https://CRAN.R-project.org/package=rstudioapi
   authors:
   - family-names: Ushey
     given-names: Kevin
@@ -205,12 +183,12 @@ references:
   - family-names: Ritchie
     given-names: Gary
     email: gary@rstudio.com
-  year: '2022'
-  url: https://CRAN.R-project.org/package=rstudioapi
+  year: '2023'
 - type: software
   title: SticsRFiles
   abstract: 'SticsRFiles: Read And Modify STICS Input/Output Files'
   notes: Imports
+  url: https://doi.org/10.5281/zenodo.4443206
   authors:
   - family-names: Lecharpentier
     given-names: Patrice
@@ -228,11 +206,12 @@ references:
     given-names: Michel
     email: michel.giner@cirad.fr
     orcid: https://orcid.org/0000-0002-9310-2377
-  year: '2022'
+  year: '2023'
 - type: software
   title: SticsOnR
   abstract: 'SticsOnR: Manage STICS Simulations Running the Executable or JavaStics,'
   notes: Imports
+  url: https://doi.org/10.5281/zenodo.4443130
   authors:
   - family-names: Lecharpentier
     given-names: Patrice
@@ -250,11 +229,12 @@ references:
     given-names: Michel
     email: michel.giner@cirad.fr
     orcid: https://orcid.org/0000-0002-9310-2377
-  year: '2022'
+  year: '2023'
 - type: software
   title: CroptimizR
-  abstract: 'CroptimizR: A Package to estimate parameters of Crop Models'
+  abstract: 'CroptimizR: A Package to Estimate Parameters of Crop Models'
   notes: Imports
+  url: https://doi.org/10.5281/zenodo.4066451
   authors:
   - family-names: Buis
     given-names: Samuel
@@ -272,12 +252,13 @@ references:
     given-names: Michel
     email: michel.giner@cirad.fr
     orcid: https://orcid.org/0000-0002-9310-2377
-  year: '2022'
+  year: '2023'
 - type: software
   title: CroPlotR
-  abstract: 'CroPlotR: A Package to Analyse Crop Model Simulations Outputs with Plots
+  abstract: 'CroPlotR: A Package to Analyze Crop Model Simulations Outputs with Plots
     and Statistics'
   notes: Imports
+  url: https://doi.org/10.5281/zenodo.4442330
   authors:
   - family-names: Vezy
     given-names: Remi
@@ -295,11 +276,13 @@ references:
     given-names: Michel
     email: michel.giner@cirad.fr
     orcid: https://orcid.org/0000-0002-9310-2377
-  year: '2022'
+  year: '2023'
 - type: software
   title: remotes
   abstract: 'remotes: R Package Installation from Remote Repositories, Including ''GitHub'''
   notes: Imports
+  url: https://remotes.r-lib.org
+  repository: https://CRAN.R-project.org/package=remotes
   authors:
   - family-names: Csárdi
     given-names: Gábor
@@ -315,8 +298,7 @@ references:
     given-names: Martin
   - family-names: Tenenbaum
     given-names: Dan
-  year: '2022'
-  url: https://CRAN.R-project.org/package=remotes
+  year: '2023'
 - type: software
   title: utils
   abstract: 'R: A Language and Environment for Statistical Computing'
@@ -325,15 +307,20 @@ references:
   - name: R Core Team
   location:
     name: Vienna, Austria
-  year: '2022'
-  url: https://www.R-project.org/
+  year: '2023'
   institution:
     name: R Foundation for Statistical Computing
 - type: software
   title: learnr
   abstract: 'learnr: Interactive Tutorials for R'
   notes: Imports
+  url: https://rstudio.github.io/learnr/
+  repository: https://CRAN.R-project.org/package=learnr
   authors:
+  - family-names: Aden-Buie
+    given-names: Garrick
+    email: garrick@rstudio.com
+    orcid: https://orcid.org/0000-0002-7111-0077
   - family-names: Schloerke
     given-names: Barret
     email: barret@rstudio.com
@@ -341,29 +328,99 @@ references:
   - family-names: Allaire
     given-names: JJ
     email: jj@rstudio.com
-  - family-names: Borges
-    given-names: Barbara
-    email: barbara@rstudio.com
-  year: '2022'
-  url: https://CRAN.R-project.org/package=learnr
+  year: '2023'
+- type: software
+  title: methods
+  abstract: 'R: A Language and Environment for Statistical Computing'
+  notes: Imports
+  authors:
+  - name: R Core Team
+  location:
+    name: Vienna, Austria
+  year: '2023'
+  institution:
+    name: R Foundation for Statistical Computing
+- type: software
+  title: nloptr
+  abstract: 'nloptr: R Interface to NLopt'
+  notes: Imports
+  url: https://astamm.github.io/nloptr/index.html
+  repository: https://CRAN.R-project.org/package=nloptr
+  authors:
+  - family-names: Ypma
+    given-names: Jelmer
+    email: uctpjyy@ucl.ac.uk
+  - family-names: Johnson
+    given-names: Steven G.
+  year: '2023'
+- type: software
+  title: lhs
+  abstract: 'lhs: Latin Hypercube Samples'
+  notes: Imports
+  url: https://github.com/bertcarnell/lhs
+  repository: https://CRAN.R-project.org/package=lhs
+  authors:
+  - family-names: Carnell
+    given-names: Rob
+    email: bertcarnell@gmail.com
+  year: '2023'
+- type: software
+  title: stringr
+  abstract: 'stringr: Simple, Consistent Wrappers for Common String Operations'
+  notes: Imports
+  url: https://stringr.tidyverse.org
+  repository: https://CRAN.R-project.org/package=stringr
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+  year: '2023'
+- type: software
+  title: tictoc
+  abstract: 'tictoc: Functions for Timing R Scripts, as Well as Implementations of
+    "Stack" and "List" Structures'
+  notes: Imports
+  url: https://github.com/jabiru/tictoc
+  repository: https://CRAN.R-project.org/package=tictoc
+  authors:
+  - family-names: Izrailev
+    given-names: Sergei
+  year: '2023'
+- type: software
+  title: lifecycle
+  abstract: 'lifecycle: Manage the Life Cycle of your Package Functions'
+  notes: Imports
+  url: https://lifecycle.r-lib.org/
+  repository: https://CRAN.R-project.org/package=lifecycle
+  authors:
+  - family-names: Henry
+    given-names: Lionel
+    email: lionel@rstudio.com
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+    orcid: https://orcid.org/0000-0003-4757-117X
+  year: '2023'
 - type: software
   title: knitr
   abstract: 'knitr: A General-Purpose Package for Dynamic Report Generation in R'
   notes: Suggests
+  url: https://yihui.org/knitr/
+  repository: https://CRAN.R-project.org/package=knitr
   authors:
   - family-names: Xie
     given-names: Yihui
     email: xie@yihui.name
     orcid: https://orcid.org/0000-0003-0645-5666
-  year: '2022'
-  url: https://CRAN.R-project.org/package=knitr
+  year: '2023'
 - type: software
   title: testthat
   abstract: 'testthat: Unit Testing for R'
   notes: Suggests
+  url: https://testthat.r-lib.org
+  repository: https://CRAN.R-project.org/package=testthat
   authors:
   - family-names: Wickham
     given-names: Hadley
     email: hadley@rstudio.com
-  year: '2022'
-  url: https://CRAN.R-project.org/package=testthat
+  year: '2023'
