@@ -1,3 +1,10 @@
+# SticsRPacks 0.4.0
+
+Added the possibility to use a locally installed version of JavaStics in the tutorial. 
+Fixed compatibility between the tutorial and v0.11 of the learnr package.
+Fixed Java version management in the tutorial.
+Improved tutorial and package documentation.
+
 # SticsRPacks 0.3.1
 
 Little changes following the latest version of JavaSTICS 1.5.1, fixing plant files
