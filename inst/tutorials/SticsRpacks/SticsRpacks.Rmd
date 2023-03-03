@@ -275,8 +275,8 @@ Note also that completion can be used to list the different arguments of a funct
 #### Principle 
 
 This tutorial aims at introducing the use of these different packages with the STICS model.
-It was designed to be of increasing complexity, it is thus advised to follow it in order.
-The different sections are however independent and you can thus start it from any part using the menu on the left side (this may however take a little while since results from previous exercises must be automatically generated in this case).
+
+It was designed to be of increasing complexity, it is thus advised to follow it in order. The different sections are however independent and you can thus start it from any part using the menu on the left side (this may however take a little while since results from previous exercises must be automatically generated in this case).
 
 The names and documentation of the functions to be used are given in the first exercises before letting you find them on your own as you go through the exercises.
 
@@ -309,7 +309,7 @@ You can train on the panel above.
 #### STICS version used
 
 ::: {.alert .alert-info}
-If this tutorial is run locally on your computer and that you have already installed a version of STICS more recent or equal to 9.2.0, it is recommended that you use this version to run the tutorial exercises. 
+If this tutorial is run locally on your computer and that you have already installed a version of STICS (more recent or equal to 9.2.0), it is recommended that you use this version to run the tutorial exercises. 
 
 For this, an environment variable `javastics_path` must be set to the path of the corresponding JavaSTICS folder.
 This can be done:
@@ -318,7 +318,7 @@ This can be done:
 
 or 
 
-* by defining this environment variable in your .Renviron file: edit this file (located in your Home directory, can be edited also using `usethis::edit_r_environ()`), and add a new line javastics_path="path_to_JavaSTICS”
+* by defining this environment variable in your .Renviron file: edit this file (located in your Home directory - linux OS, or Document folder - Windows OS, can be edited also using `usethis::edit_r_environ()`), and add a new line javastics_path="path_to_JavaSTICS”.
 
 
 Your R session must then be restarted in any case (in RStudio: menu Session-> Restart R).
@@ -336,8 +336,7 @@ The exercises of the tutorial will use the USMs defined in the "example" workspa
 The path of this workspace is stored in the R object `workspace_path` in the context of this tutorial.
 For this session this path is `r workspace_path`.
 
-**WARNING: The `javastics_path` and `workspace_path` values printed above may be incorrect if you have redefined the `javastics_path` environment variable and restarted the tutorial by clicking on the "Start Tutorial" button in RStudio, or by running `learnr::run_tutorial("SticsRpacks", package="SticsRPacks")`.
-To have correct values of these variables in this case, the tutorial must be started by running `learnr::run_tutorial("SticsRpacks", package="SticsRPacks", clean=TRUE)`.**
+**WARNING: The `javastics_path` and `workspace_path` values printed above may be incorrect if you have redefined the `javastics_path` environment variable and restarted the tutorial by clicking on the "Start Tutorial" button in RStudio, or by running `learnr::run_tutorial("SticsRpacks", package="SticsRPacks")`. In this case, prefer run the tutorial by using `learnr::run_tutorial("SticsRpacks", package="SticsRPacks", clean=TRUE)`.**
 
 ## A foretaste of SticsRpacks
 
