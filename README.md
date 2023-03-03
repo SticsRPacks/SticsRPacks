@@ -29,7 +29,7 @@ available from each websites (Article sections).
 ``` r
 # Install from GitHub
 # install devtools if not yet installed : install.packages("devtools")
-devtools::install_github("SticsRPacks/SticsRPacks")
+devtools::install_github("SticsRPacks/SticsRPacks@*release")
 ```
 
 It this does not work, follow the instructions given
@@ -55,7 +55,7 @@ have loaded:
 library(SticsRPacks)
 #> ── Attaching packages ───────────────────────────────────── SticsRPacks 0.3.1 ──
 #> ✔ SticsRFiles 1.1.2     ✔ SticsOnR    1.0.1
-#> ✔ CroptimizR  0.4.0     ✔ CroPlotR    0.9.0
+#> ✔ CroptimizR  0.5.1     ✔ CroPlotR    0.9.0
 #> ── Conflicts ──────────────────────────────────────── SticsRPacks_conflicts() ──
 #> ✖ CroptimizR::AIC()      masks stats::AIC()
 #> ✖ CroptimizR::BIC()      masks stats::BIC()

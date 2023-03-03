@@ -31,7 +31,7 @@ If you'd like to learn how to use the SticsRPacks packages, the best place to st
 ```{r eval = FALSE}
 # Install from GitHub
 # install devtools if not yet installed : install.packages("devtools")
-devtools::install_github("SticsRPacks/SticsRPacks")
+devtools::install_github("SticsRPacks/SticsRPacks@*release")
 ```
 
 It this does not work, follow the instructions given [here](https://github.com/SticsRPacks/SticsRPacks/issues/1#event-2864068985).
