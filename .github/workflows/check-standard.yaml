@@ -52,6 +52,9 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
+      - name: Install ape 5.6
+        run: Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/ape/ape_5.6.tar.gz', repos = NULL, type = 'source')"
+      
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           pak-version: rc
@@ -63,9 +66,6 @@ jobs:
           extra-packages: any::rcmdcheck, ape=?ignore
           needs: check
       
-      - name: Install ape 5.6
-        run: Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/ape/ape_5.6.tar.gz', repos = NULL, type = 'source')"
-
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
