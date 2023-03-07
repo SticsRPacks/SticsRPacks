@@ -61,6 +61,9 @@ jobs:
           # Also, pak standard error for pkgs using a subdir (we have Bayesian Tools), which is fixed in rc (2022)
           extra-packages: any::rcmdcheck
           needs: check
+      
+      - name: Install ape 5.6
+        run: Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/ape/ape_5.6.tar.gz', repos = NULL, type = 'source')"
 
       - uses: r-lib/actions/check-r-package@v2
         with:
