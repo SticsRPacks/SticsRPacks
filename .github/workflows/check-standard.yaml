@@ -59,7 +59,8 @@ jobs:
           # Ubuntu doesn't install the proper version of XML see https://github.com/r-lib/actions/issues/559. Remove when fixed.
           # see also: https://stackoverflow.com/questions/73243945/pkgdown-action-failing-at-build-xml
           # Also, pak standard error for pkgs using a subdir (we have Bayesian Tools), which is fixed in rc (2022)
-          extra-packages: any::rcmdcheck
+          # ignoring ape package, manual install of 5.6 version
+          extra-packages: any::rcmdcheck, ape=?ignore
           needs: check
       
       - name: Install ape 5.6
