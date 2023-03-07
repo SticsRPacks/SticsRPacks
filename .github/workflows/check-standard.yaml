@@ -51,9 +51,6 @@ jobs:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
-
-      - name: Install ape 5.6
-        run: Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/ape/ape_5.6.tar.gz', repos = NULL, type = 'source')"
       
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
@@ -63,8 +60,11 @@ jobs:
           # see also: https://stackoverflow.com/questions/73243945/pkgdown-action-failing-at-build-xml
           # Also, pak standard error for pkgs using a subdir (we have Bayesian Tools), which is fixed in rc (2022)
           # ignoring ape package, manual install of 5.6 version
-          extra-packages: any::rcmdcheck, ape=?ignore
+          extra-packages: any::rcmdcheck, ape=?ignore-before-r=4.1.0
           needs: check
+      
+      - name: Install ape 5.6
+        run: Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/ape/ape_5.6.tar.gz', repos = NULL, type = 'source')"
       
       - uses: r-lib/actions/check-r-package@v2
         with:
