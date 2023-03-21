@@ -28,9 +28,11 @@ If you'd like to learn how to use the SticsRPacks packages, the best place to st
 
 ## Installation
 
+The installation requires the devtools package. 
+If it is not yet installed, run first `install.packages("devtools")`.
+
+Then, you can install the SticsRPacks packages by running:
 ```{r eval = FALSE}
-# Install from GitHub
-# install devtools if not yet installed : install.packages("devtools")
 devtools::install_github("SticsRPacks/SticsRPacks@*release")
 ```
 
