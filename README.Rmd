@@ -36,7 +36,21 @@ Then, you can install the SticsRPacks packages by running:
 devtools::install_github("SticsRPacks/SticsRPacks@*release")
 ```
 
-It this does not work, follow the instructions given [here](https://github.com/SticsRPacks/SticsRPacks/issues/1#event-2864068985).
+## Troubleshooting
+
+It the installation does not work:
+
+ * In case you have messages such as:
+ 
+    - "cannot remove prior installation of package ‘*****’"
+    
+    or
+    - API rate limit exceeded for ****
+   
+   please refer to [here](https://github.com/SticsRPacks/documentation/blob/master/github_install.md).
+
+ * otherwise, please follow the instructions given [here](https://github.com/SticsRPacks/SticsRPacks/issues/1#event-2864068985).
+
 
 ## Usage
 
