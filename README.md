@@ -48,7 +48,7 @@ It the installation does not work:
   - API rate limit exceeded for \*\*\*\*
 
   please refer to
-  [here](https://github.com/SticsRPacks/documentation/blob/master/github_install.md)
+  [here](https://github.com/SticsRPacks/documentation/blob/master/github_install.md).
 
 - otherwise, please follow the instructions given
   [here](https://github.com/SticsRPacks/SticsRPacks/issues/1#event-2864068985).
@@ -129,7 +129,7 @@ path of the corresponding JavaSTICS folder. This can be done:
 
 - in your R session, each time before running the tutorial, by executing
   the following command:
-  `Sys.setenv(javastics_path="path_to_JavaSTICS”)`, where
+  `Sys.setenv(javastics_path="path_to_JavaSTICS")`, where
   `path_to_JavaSTICS` should be replaced by the absolute path of the
   corresponding JavaSTICS folder.
 
@@ -138,8 +138,8 @@ or
 - by defining this environment variable in your .Renviron file: edit
   this file (located in your Home directory, can be edited also using
   `usethis::edit_r_environ()`), and add a new line
-  `javastics_path="path_to_JavaSTICS"`. In this case, your R session must then be restarted (in RStudio: menu
-Session-\> Restart R).
+  `javastics_path="path_to_JavaSTICS"`. In this case, your R session
+  must then be restarted (in RStudio: menu Session-\> Restart R).
 
 Then, if you have RStudio version 1.3 or greater, click on the Tutorial
 pane on the right of the RStudio window (close to Environment, History,
