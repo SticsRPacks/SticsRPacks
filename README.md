@@ -138,9 +138,7 @@ or
 - by defining this environment variable in your .Renviron file: edit
   this file (located in your Home directory, can be edited also using
   `usethis::edit_r_environ()`), and add a new line
-  `javastics_path="path_to_JavaSTICS"`
-
-Your R session must then be restarted in any case (in RStudio: menu
+  `javastics_path="path_to_JavaSTICS"`. In this case, your R session must then be restarted (in RStudio: menu
 Session-\> Restart R).
 
 Then, if you have RStudio version 1.3 or greater, click on the Tutorial
