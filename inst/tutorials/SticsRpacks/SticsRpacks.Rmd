@@ -22,7 +22,6 @@ library(tidyr)
 library(ggplot2)
 
 options(stringsAsFactors = FALSE)
-#options(knitr.duplicate.label = "allow")
 
 stics_version <- "V10.0"
 
