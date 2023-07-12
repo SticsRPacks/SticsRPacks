@@ -1429,7 +1429,7 @@ df <- data.frame(usm_name = c("usm1","usm1","usm2"), ian = c(2020,2021,2021), mo
 
 ```{r gen_obs-solution}
 #SOLUTION:
-gen_obs(df = df)
+gen_obs(df = df, out_dir = getwd())
 get_obs(workspace = getwd())
 ```
 
