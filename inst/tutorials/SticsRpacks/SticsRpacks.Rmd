@@ -22,7 +22,6 @@ library(tidyr)
 library(ggplot2)
 
 options(stringsAsFactors = FALSE)
-#options(knitr.duplicate.label = "allow")
 
 stics_version <- "V10.0"
 
@@ -155,6 +154,7 @@ if (!lower_than_v10 && linux) {
 knitr::opts_chunk$set(echo = FALSE,
                       java_cmd = java,
                       linux = linux,
+                      windows = !linux,
                       stics_version = stics_version)
 
 tutorial_options(exercise.lines = 5, exercise.timelimit = 300)
@@ -390,7 +390,7 @@ gen_usms_xml2txt(javastics_path, workspace_PW1, usm = usm_name, java_cmd = knitr
 
 ```
 
-```{r PW1-setup, echo=FALSE, eval=!knitr::opts_chunk$get("linux"), message=FALSE}
+```{r PW1-setup, echo=FALSE, eval=knitr::opts_chunk$get("windows"), message=FALSE}
 
 # Let's define the USM and variables of interest to use in this example
 usm_name <- "maize_ref_2013"
