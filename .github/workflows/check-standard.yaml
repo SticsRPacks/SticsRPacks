@@ -62,7 +62,7 @@ jobs:
           # ignoring ape package, manual install of 5.6 version
           extra-packages: any::rcmdcheck #, ape=?ignore-before-r=4.1.0
           needs: check
-          exclude: ape
+          #exclude: ape
       
       - name: Install ape 5.6
         run: Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/ape/ape_5.6.tar.gz', repos = NULL, type = 'source')"
@@ -70,3 +70,4 @@ jobs:
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
+          error-on: '"error"'
