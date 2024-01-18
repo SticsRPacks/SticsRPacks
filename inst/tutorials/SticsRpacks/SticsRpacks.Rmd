@@ -2193,7 +2193,8 @@ if (!file.exists(file.path(tmp_dir,"prepare-plot-successive.RData"))) {
                                            workspace = workspace_path,
                                            verbose = FALSE)
   without_succ <- stics_wrapper(model_options = wrapper_options,
-                                situation = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+                                situation = c("demo_Wheat1","demo_BareSoil2","demo_maize3"),
+                                var = c("lai_n", "masec_n", "mafruit", "azomes"))
   
   # Run with succession
   wrapper_options <- stics_wrapper_options(javastics = javastics_path,
@@ -2201,7 +2202,8 @@ if (!file.exists(file.path(tmp_dir,"prepare-plot-successive.RData"))) {
                                            successive = list(c("demo_Wheat1","demo_BareSoil2","demo_maize3")),
                                            verbose = FALSE)
   with_succ <- stics_wrapper(model_options = wrapper_options,
-                             situation = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+                             situation = c("demo_Wheat1","demo_BareSoil2","demo_maize3"),
+                             var = c("lai_n", "masec_n", "mafruit", "azomes"))
   
   save(list=c("without_succ", "with_succ"),
        file=file.path(tmp_dir,"prepare-plot-successive.RData"))
