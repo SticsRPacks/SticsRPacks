@@ -71,17 +71,14 @@ have loaded:
 
 ``` r
 library(SticsRPacks)
-#> ── Attaching packages ───────────────────────────────────── SticsRPacks 0.3.1 ──
-#> ✔ SticsRFiles 1.1.2     ✔ SticsOnR    1.0.1
-#> ✔ CroptimizR  0.5.1     ✔ CroPlotR    0.9.0
+#> ── Attaching packages ───────────────────────────────────── SticsRPacks 0.5.0 ──
+#> ✔ SticsRFiles 1.1.3     ✔ SticsOnR    1.1.0
+#> ✔ CroptimizR  0.6.0     ✔ CroPlotR    0.9.0
 #> ── Conflicts ──────────────────────────────────────── SticsRPacks_conflicts() ──
-#> ✖ CroptimizR::AIC()      masks stats::AIC()
-#> ✖ CroptimizR::BIC()      masks stats::BIC()
-#> ✖ methods::body<-()      masks base::body<-()
-#> ✖ SticsOnR::is_mac()     masks SticsRFiles::is_mac()
-#> ✖ SticsOnR::is_unix()    masks SticsRFiles::is_unix()
-#> ✖ SticsOnR::is_windows() masks SticsRFiles::is_windows()
-#> ✖ methods::kronecker()   masks base::kronecker()
+#> ✖ CroptimizR::AIC()    masks stats::AIC()
+#> ✖ CroptimizR::BIC()    masks stats::BIC()
+#> ✖ methods::body<-()    masks base::body<-()
+#> ✖ methods::kronecker() masks base::kronecker()
 ```
 
 You can see conflicts created later with `SticsRPacks_conflicts()`:
@@ -90,13 +87,10 @@ You can see conflicts created later with `SticsRPacks_conflicts()`:
 library(MASS)
 SticsRPacks_conflicts()
 #> ── Conflicts ──────────────────────────────────────── SticsRPacks_conflicts() ──
-#> ✖ CroptimizR::AIC()      masks stats::AIC()
-#> ✖ CroptimizR::BIC()      masks stats::BIC()
-#> ✖ methods::body<-()      masks base::body<-()
-#> ✖ SticsOnR::is_mac()     masks SticsRFiles::is_mac()
-#> ✖ SticsOnR::is_unix()    masks SticsRFiles::is_unix()
-#> ✖ SticsOnR::is_windows() masks SticsRFiles::is_windows()
-#> ✖ methods::kronecker()   masks base::kronecker()
+#> ✖ CroptimizR::AIC()    masks stats::AIC()
+#> ✖ CroptimizR::BIC()    masks stats::BIC()
+#> ✖ methods::body<-()    masks base::body<-()
+#> ✖ methods::kronecker() masks base::kronecker()
 ```
 
 And you can check that all SticsRPacks packages are up-to-date with
