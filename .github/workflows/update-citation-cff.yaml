@@ -8,7 +8,8 @@ on:
   release:
     types: [published]
   push:
-    branches: [master, main]
+    branches:
+      #[main]
     paths:
       - DESCRIPTION
       - inst/CITATION
@@ -29,6 +30,12 @@ jobs:
           extra-packages: |
             any::cffr
             any::V8
+      - name: create branch for pr
+        run: |
+          date=$(date '+%Y-%m-%d_%H-%M-%S')
+          export branch=$(update_citation_pr-$date)
+          git branch $branch
+          git checkout $branch
       - name: Update CITATION.cff
         run: |
           library(cffr)
@@ -44,6 +51,9 @@ jobs:
         run: |
           git config --local user.name "$GITHUB_ACTOR"
           git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          change=$(git diff CITATION.cff | wc -l)
+          if [ "$change" = "0" ]; then exit 0 ; fi
           git add CITATION.cff
           git commit -m 'Update CITATION.cff' || echo "No changes to commit"
           git push origin || echo "No changes to commit"
+          gh pr create --base main --head $branch
