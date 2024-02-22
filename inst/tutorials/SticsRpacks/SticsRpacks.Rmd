@@ -23,34 +23,39 @@ library(ggplot2)
 
 options(stringsAsFactors = FALSE)
 
-stics_version <- "V10.0"
+#stics_version <- "V10.0"
+stics_version <- "latest"
 
 # OS specific parameters
 linux <- SticsRFiles:::is_unix()
 attributes(linux) <- NULL
 
-gen_help = TRUE
+gen_help <- TRUE
 
 get_java_version <- function(linux = TRUE, cmd = "java") {
   version <- NULL
-  if(linux) {
+  if (linux) {
     version_str <-
-      suppressWarnings(system(paste(cmd, '-version 2>&1 | head -n 1 | cut -d\\" -f 2 | cut -d\\. -f1'),
+      suppressWarnings(
+                    system(
+                    paste(cmd,
+                   '-version 2>&1 | head -n 1 | cut -d\\" -f 2 | cut -d\\. -f1'),
                               intern = TRUE))
-    if(length(grep("not found", version_str)) > 0) {
+
+    if (length(grep("not found", version_str)) > 0) {
       version <- NULL
     } else  {
       version <- as.numeric(version_str)
     }
   }
-  if (length(version)==0) version <- NULL
+  if (length(version) == 0) version <- NULL
   return(version)
 }
 
 java <- "java"
 
 #--------------------------------------------------------------------------
-# Prior to getting this environment variable put it in 
+# Prior to getting this environment variable put it in
 # a .Renviron file (in user base directory: Documents for windows,
 # /home/username)
 # usethis::edit_r_environ() may be used to edit the file
@@ -65,41 +70,48 @@ stics_version <- SticsRFiles:::get_version_num(stics_version)
 lower_than_v10 <- stics_version < 10
 
 if (!local_javastics) {
-  if(lower_than_v10) { 
+  user_passwd <- SticsRPacks:::get_forge_userpass("public")
+  
+  if (lower_than_v10) { 
     javastics_dir <- "JavaSTICS-1.41-stics-9.2"
     workspace_path <- "JavaSTICS-1.41-stics-9.2/example"
-    # to set before if/else bloc when the V10.0.0 will be out
-    user_passwd <- SticsRPacks:::get_forge_userpass("public")
-    download_url <- "https://w3.avignon.inra.fr/forge/attachments/download/2482/"
+    download_url <- 
+      "https://w3.avignon.inra.fr/forge/attachments/download/2482/"
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V9.2"
-    
-  } else { 
+
+  } else if (stics_version < 10.1) {
     # same as zip archive name
     javastics_dir <- "JavaSTICS-1.5.1-STICS-10.0.0"
     workspace_path <- "JavaSTICS-1.5.1-STICS-10.0.0/example"
-    # to remove when the V10.0.0 will be out
-    user_passwd <- SticsRPacks:::get_forge_userpass("public")
-    download_url <- "https://w3.avignon.inrae.fr/forge/attachments/download/3005/"
+    download_url <- 
+      "https://w3.avignon.inrae.fr/forge/attachments/download/3005/"
     workspace_PW1 <- "tutorials/SticsRpacks/PW1"
-    
+
+  } else {
+    javastics_dir <- "JavaSTICS-1.5.2-STICS-10.1.0"
+    workspace_path <- "JavaSTICS-1.5.2-STICS-10.1.0/example"
+    # TODO: update and un comment when the relse is out !
+    #download_url <- 
+    #  "https://w3.avignon.inrae.fr/forge/attachments/download/3005/"
+    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.1.0"
   }
 } else {
   # Check JavaStics in path
-  if(!dir.exists(javastics_in_path) ||
-     !any(grepl("JavaStics.exe",list.files(javastics_in_path))))
+  if (!dir.exists(javastics_in_path) ||
+       !any(grepl("JavaStics.exe",list.files(javastics_in_path))))
     stop(javastics_in_path,
          ": JavaStics directory set in 'javastics_path'\n",
          "environment variable does not exist, aborting")
   javastics_path <- javastics_in_path
-  
+
   # Getting exe name
   stics_exe_name <- SticsOnR:::list_stics_exe(javastics_path)[[2]][[1]]
-  
+
   # Getting exe version
   check <- try(SticsOnR:::check_stics_exe(
-    file.path(javastics_path, "bin",stics_exe_name), version = TRUE),
-    silent = TRUE)
-  
+               file.path(javastics_path, "bin",stics_exe_name), version = TRUE),
+               silent = TRUE)
+
   # Stopping the tuto when the executable is not found
   if (class(check) == "try-error") {
     stop("The Stics executable (",
@@ -107,8 +119,8 @@ if (!local_javastics) {
          ") was not found in JavaStics bin directory: ",
          javastics_path)
   }
-  
-  # Checking if the version is compatible with 
+
+  # Checking if the version is compatible with
   # the 2 Stics versions taken into account in the tuto data
   # Stopping if Stics is older than version 9.2
   if (length(grep("10.0",attr(check, "version"))) > 0) {
@@ -118,37 +130,39 @@ if (!local_javastics) {
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V9.2"
     stics_version <- "V9.2"
     lower_than_v10 <- TRUE
+  } else if (length(grep("10.1.0",attr(check, "version"))) > 0) {
+    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.1.0"
+    stics_version <- "V10.1.0"
   } else {
     stop("The JavaSTICS distribution ",
          basename(javastics_path),
          "is not supported in this tutorial !",
          "Please download a newer version.")
   }
-  
 }
 
 
 if (!lower_than_v10 && linux) {
   java_path <- Sys.getenv("JAVA")
-  
-  if(java_path != "") java <- java_path
-  
-  
+
+  if (java_path != "") java <- java_path
+
   java_version <- get_java_version(linux = linux, cmd = java)
-  
-  if(is.null(java_version)) 
+
+  if (is.null(java_version)) 
     stop("A java version 11 must be installed")
-  
-  
-  if(java_version < 11)
-    stop("The default system java virtual machine is ",system(paste(java,"-version 2>&1"), intern = TRUE)[1], 
-         #"\nThis is not correct for running JavaStics\n", 
+
+
+  if (java_version < 11)
+    stop("The default system java virtual machine is ",
+         system(paste(java, "-version 2>&1"),
+                intern = TRUE)[1],
          "\nA java 11 version installation is needed for running JavaSTICS, \n",
          "or as an alternate version and the java path can be set\n",
          "in the .Renviron file, as for example: \n",
          "JAVA=\"/usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java\"")
-  
-  
+
+
 }
 
 knitr::opts_chunk$set(echo = FALSE,
@@ -160,8 +174,9 @@ knitr::opts_chunk$set(echo = FALSE,
 tutorial_options(exercise.lines = 5, exercise.timelimit = 300)
 
 
-use_default = TRUE
-work_dir = file.path(normalizePath(dirname(tempdir()), winslash = "/"), "SticsRPacks")
+use_default <- TRUE
+work_dir <- file.path(normalizePath(dirname(tempdir()), winslash = "/"),
+                      "SticsRPacks")
 tmp_dir <- file.path(work_dir, "tmp")
 
 # For avoiding problems under windows
@@ -169,7 +184,7 @@ tmp_dir <- file.path(work_dir, "tmp")
 if (.Platform$OS.type == "windows") {
   work_dir <- shortPathName(work_dir)
 }
-work_dir <- gsub(pattern = "\\\\", replacement="/", x=work_dir)
+work_dir <- gsub(pattern = "\\\\", replacement = "/", x = work_dir)
 
 # Creating work_dir if needed
 if (!dir.exists(work_dir)) dir.create(work_dir)
@@ -177,40 +192,49 @@ if (!dir.exists(work_dir)) dir.create(work_dir)
 if (!dir.exists(tmp_dir)) {
   dir.create(tmp_dir)
 } else {
-  tmp_files <- list.files(path = tmp_dir, pattern = "\\.RData$", full.names = TRUE)
+  tmp_files <- list.files(path = tmp_dir,
+                          pattern = "\\.RData$",
+                          full.names = TRUE)
   file.remove(tmp_files)
 }
 
 # configure and download JavaStics
-if(!local_javastics) {
+if (!local_javastics) {
   javastics_path <- file.path(work_dir, javastics_dir, fsep ="/")
-  
-  if(SticsRFiles:::get_version_num(stics_version) < 10) { 
+
+  if (SticsRFiles:::get_version_num(stics_version) < 10) {
     # Creating JavaStics dir
     if (!dir.exists(javastics_path)) dir.create(javastics_path)
     out_path <- javastics_path
   } else {
     out_path <- work_dir
   }
-  
+
   files_list <- list.files(javastics_path)
-  if(length(files_list) == 0 || !any(grepl("JavaStics.exe",files_list))) {
+  if (length(files_list) == 0 || !any(grepl("JavaStics.exe",files_list))) {
     zip_path <- file.path(work_dir,paste0(javastics_dir,".zip"))
-    system(paste0("curl -u ",user_passwd," ", download_url, javastics_dir,".zip --output ", zip_path))
+    system(paste0("curl -u ",
+                 user_passwd,
+                 " ",
+                 download_url,
+                 javastics_dir,
+                 ".zip --output ",
+                 zip_path))
     unzip(zip_path, exdir = out_path)
   }
-  
-  workspace_path <- file.path(work_dir, workspace_path, fsep ="/")
+
+  workspace_path <- file.path(work_dir, workspace_path, fsep = "/")
 } else {
   workspace_path <- file.path(javastics_in_path, "example")
 }
 
 # fixing workspaces path
-#workspace_path <- file.path(work_dir, workspace_path, fsep ="/")
-workspace_PW1 <- file.path(system.file(package = "SticsRPacks"), workspace_PW1, fsep ="/")
+workspace_PW1 <- file.path(system.file(package = "SticsRPacks"),
+                           workspace_PW1,
+                           fsep = "/")
 
 # Generating html help files, one for each function
-if(gen_help) {
+if (gen_help) {
   help_dir <- file.path(work_dir, "SticsRFiles_help")
   if (!dir.exists(help_dir)) dir.create(help_dir)
   SticsRFiles:::static_help(pkg = "SticsRFiles",
@@ -362,12 +386,14 @@ Let's first initialize variables and define the setup:
 
 # Let's define the USM and variables of interest to use in this example
 usm_name <- "maize_ref_2013"
-stress_ind_names <- c("turfac1moy", "turfac2moy", "swfac1moy", "swfac2moy", "inn1moy", "inn2moy")
-dyn_var_names <- c("lai_n","zrac","resmes","azomes","QNplante","masec_n")
-var_names <- c(stress_ind_names,dyn_var_names)
+stress_ind_names <- c("turfac1moy", "turfac2moy", "swfac1moy", "swfac2moy",
+                      "inn1moy", "inn2moy")
+dyn_var_names <- c("lai_n", "zrac", "resmes", "azomes", "QNplante", "masec_n")
+var_names <- c(stress_ind_names, dyn_var_names)
 
 # Set-up the simulation environment:
-wrapper_options = stics_wrapper_options(javastics = javastics_path, workspace = workspace_PW1)
+wrapper_options <- stics_wrapper_options(javastics = javastics_path,
+                                         workspace = workspace_PW1)
 
 # Generate the files for the simulation:
 gen_usms_xml2txt(javastics_path, workspace_PW1, usm = usm_name)
@@ -378,15 +404,18 @@ gen_usms_xml2txt(javastics_path, workspace_PW1, usm = usm_name)
 
 # Let's define the USM and variables of interest to use in this example
 usm_name <- "maize_ref_2013"
-stress_ind_names <- c("turfac1moy", "turfac2moy", "swfac1moy", "swfac2moy", "inn1moy", "inn2moy")
-dyn_var_names <- c("lai_n","zrac","resmes","azomes","QNplante","masec_n")
-var_names <- c(stress_ind_names,dyn_var_names)
+stress_ind_names <- c("turfac1moy", "turfac2moy", "swfac1moy", "swfac2moy",
+                      "inn1moy", "inn2moy")
+dyn_var_names <- c("lai_n", "zrac", "resmes", "azomes", "QNplante", "masec_n")
+var_names <- c(stress_ind_names, dyn_var_names)
 
 # Set-up the simulation environment:
-wrapper_options = stics_wrapper_options(javastics = javastics_path, workspace = workspace_PW1)
+wrapper_options <- stics_wrapper_options(javastics = javastics_path,
+                                         workspace = workspace_PW1)
 
 # Generate the files for the simulation:
-gen_usms_xml2txt(javastics_path, workspace_PW1, usm = usm_name, java_cmd = knitr::opts_chunk$get("java_cmd"))
+gen_usms_xml2txt(javastics_path, workspace_PW1, usm = usm_name,
+                 java_cmd = knitr::opts_chunk$get("java_cmd"))
 
 ```
 
@@ -394,7 +423,8 @@ gen_usms_xml2txt(javastics_path, workspace_PW1, usm = usm_name, java_cmd = knitr
 
 # Let's define the USM and variables of interest to use in this example
 usm_name <- "maize_ref_2013"
-stress_ind_names <- c("turfac1moy", "turfac2moy", "swfac1moy", "swfac2moy", "inn1moy", "inn2moy")
+stress_ind_names <- c("turfac1moy", "turfac2moy", "swfac1moy", "swfac2moy",
+                      "inn1moy", "inn2moy")
 dyn_var_names <- c("lai_n","zrac","resmes","azomes","QNplante","masec_n")
 var_names <- c(stress_ind_names,dyn_var_names)
 
@@ -435,7 +465,7 @@ sim_without_stress = stics_wrapper(model_options = wrapper_options,
 
 Now we can use the simulated results to plot the dynamic variables of interest for the different configurations:
 
-```{r PW1-plot-dyn, echo=TRUE, eval=TRUE, message=FALSE}
+```{r PW1-plot-dyn, echo=TRUE, eval=FALSE, message=FALSE}
 p <- plot(sim_ws_ns=sim_ws_ns, sim_ws=sim_ws, sim_ns=sim_ns, sim_without_stress=sim_without_stress, var = dyn_var_names )
 print(p)
 ```
