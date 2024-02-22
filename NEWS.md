@@ -1,3 +1,7 @@
+# SticsRPacks 0.5.0
+Some fixes have been done in the SticsRPacks tutorial 
+Now installs the SticsRFiles package version 1.1.3 from CRAN
+
 # SticsRPacks 0.4.0
 
 Added the possibility to use a locally installed version of JavaStics in the tutorial. 
