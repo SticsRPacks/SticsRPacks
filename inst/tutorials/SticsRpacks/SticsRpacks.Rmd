@@ -85,14 +85,13 @@ if (!local_javastics) {
     workspace_path <- "JavaSTICS-1.5.1-STICS-10.0.0/example"
     download_url <- 
       "https://w3.avignon.inrae.fr/forge/attachments/download/3005/"
-    workspace_PW1 <- "tutorials/SticsRpacks/PW1"
+    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.0"
 
   } else {
     javastics_dir <- "JavaSTICS-1.5.2-STICS-10.1.0"
     workspace_path <- "JavaSTICS-1.5.2-STICS-10.1.0/example"
-    # TODO: update and un comment when the relse is out !
-    #download_url <- 
-    #  "https://w3.avignon.inrae.fr/forge/attachments/download/3005/"
+    download_url <- 
+      "https://w3.avignon.inrae.fr/forge/attachments/download/3158/"
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.1.0"
   }
 } else {
