@@ -1,3 +1,6 @@
+# SticsRPacks 0.6.0
+Update to use the latest version of the JavaStics distribution 1.5.2, for STICS 10.1.0
+
 # SticsRPacks 0.5.0
 Some fixes have been done in the SticsRPacks tutorial 
 Now installs the SticsRFiles package version 1.1.3 from CRAN
