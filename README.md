@@ -71,9 +71,9 @@ have loaded:
 
 ``` r
 library(SticsRPacks)
-#> ── Attaching packages ───────────────────────────────────── SticsRPacks 0.5.0 ──
-#> ✔ SticsRFiles 1.1.3     ✔ SticsOnR    1.1.0
-#> ✔ CroptimizR  0.6.0     ✔ CroPlotR    0.9.0
+#> ── Attaching packages ───────────────────────────────────── SticsRPacks 0.6.0 ──
+#> ✔ SticsRFiles 1.2.0     ✔ SticsOnR    1.2.0
+#> ✔ CroptimizR  0.6.1     ✔ CroPlotR    0.9.0
 #> ── Conflicts ──────────────────────────────────────── SticsRPacks_conflicts() ──
 #> ✖ CroptimizR::AIC()    masks stats::AIC()
 #> ✖ CroptimizR::BIC()    masks stats::BIC()
@@ -152,7 +152,7 @@ almost immediately from the second run.
 
 **NEWS: the tutorial can now be done online, without installing
 SticsRPacks: just by clicking
-[here](https://mybinder.org/v2/git/https%3A%2F%2Fforgemia.inra.fr%2Fstics-formation%2Fsticsrpacks-binder.git/v0.4.0?urlpath=shiny/SticsRpacks/),
+[here](https://mybinder.org/v2/git/https%3A%2F%2Fforgemia.inra.fr%2Fstics-formation%2Fsticsrpacks-binder.git/v0.6.0?urlpath=shiny/SticsRpacks/),
 thanks to [@eric.casellas](https://forgemia.inra.fr/eric.casellas).**
 
 ## Getting help
