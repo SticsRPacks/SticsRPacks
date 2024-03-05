@@ -1,3 +1,8 @@
+# SticsRPacks 0.6.1
+Update of java version prerequisites management for JavaStics versions in the tutorial
+Improvements of the tutorial section "A foretaste of SticsRpacks"
+Updates in the README file: packages versions, online tutorial binder link
+
 # SticsRPacks 0.6.0
 Update to use the latest version of the JavaStics distribution 1.5.2, for STICS 10.1.0
 
