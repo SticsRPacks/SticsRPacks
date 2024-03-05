@@ -387,7 +387,7 @@ If you feel lost in this section or are hurry to start learning how to use the p
 
 ### STICS training Practical session PW1
 
-The practical sessions of the STICS training are traditionally performed using the JavaStics GUI and Excel.
+The practical sessions of the STICS training were traditionally performed using the JavaStics GUI and Excel.
 
 Let's see how the first sessions would look like in R using SticsRPacks.
 
@@ -449,6 +449,14 @@ gen_usms_xml2txt(javastics_path, workspace_PW1, usm = usm_name)
 
 ```
 
+Note that, in case you would like to reproduce this example, the JavaStics and workspace paths used here are:
+
+```{r PW1-print-path, echo=FALSE, eval=TRUE}
+# Print the path to JavaSTICS and to the workspace used 
+# (same paths can be used if you want to reproduce this example)
+print(paste("javastics_path = ",javastics_path))
+print(paste("workspace_PW1 = ",workspace_PW1))
+```
 
 Then, let's run the simulations for the different configurations:
 
@@ -506,17 +514,18 @@ print(p)
 
 ... and let the users interpret these results!
 
-The last part may not be straightforward for R newcomers ... however a function to filter values of simulated variables at given dates and/or stages will come soon :-).
+The last part may not be straightforward for R newcomers ... however a function to filter values of simulated variables at given dates and/or stages will hopefully come soon :-).
 
 ### Parameter optimization: A simple example
 
-Here is an example use-case of an optimization of the `stamflax` parameter for a wheat crop using observations of Leaf Area Index for one situation (*i.e.* one USM):
+Here is an example use-case of optimizing the `stamflax` parameter for a wheat crop using observations of Leaf Area Index (LAI) for one situation (*i.e.* one USM).
+The following figure shows the daily simulations of LAI using a default value for the `stamflax` parameter, those using the value after optimization, and the observations used for the optimization:
 
 ```{r param-estim-stamflax, paged.print=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/SticsRPacks/SticsRPacks/master/inst/tutorials/SticsRpacks/optim_stamflax_wheat.png")
 ```
 
-The code to get this is the following:
+The code to perform this optimization and generate this figure is the following:
 
 ```{r simple-example-param-estim, echo=TRUE, eval=FALSE}
 usm = "wheat"
@@ -542,7 +551,7 @@ optim_res = estim_param(obs_list = obs_filt,
                         optim_options = optim_options,
                         param_info = param_info)
 
-# Import the results before/after the simulation and plot them:
+# Import the results before/after the simulation and plot them on the same figure:
 sim_after_optim = stics_wrapper(param_values = optim_res$final_values, model_options = wrapper_options)$sim_list
 sim_before_optim = stics_wrapper(model_options = wrapper_options)$sim_list
 
@@ -550,10 +559,19 @@ p <- plot(after = sim_after_optim, before = sim_before_optim, obs = obs_filt, va
 print(p)
 ```
 
+Note that, in case you would like to reproduce this example, the JavaStics and workspace paths used in this example are:
+
+```{r simple-example-print-path, echo=FALSE, eval=TRUE}
+# Print the path to JavaSTICS and to the workspace used 
+# (same paths can be used if you want to reproduce this example)
+print(paste("javastics_path = ",javastics_path))
+print(paste("workspace_path = ",workspace_path))
+```
+
 A lot is happening here!
 
 But don't worry if you don't understand anything, you'll learn everything you need to know in this tutorial.
-We just want you to see that you can make a parameter optimization with less than 30 lines of code, including the plots of the improvement of the resulting simulated variable of interest against observation.
+We just want you to see that you can make a parameter optimization with less than 30 lines of code, including the plots of the improvement of the resulting simulated variable of interest against observations.
 And the good news is when you understand these lines of code, you'll be able to do almost anything with the packages, because it doesn't get any longer or more complex than this.
 
 OK now that we saw what we can do, let's find out how step by step.
