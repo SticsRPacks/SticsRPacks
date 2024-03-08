@@ -87,6 +87,7 @@ if (!local_javastics) {
     download_url <- 
       "https://w3.avignon.inra.fr/forge/attachments/download/2482/"
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V9.2"
+    java_target <- 8
     
   } else if (stics_version_num < 10.1) {
     # same as zip archive name
@@ -95,13 +96,15 @@ if (!local_javastics) {
     download_url <- 
       "https://w3.avignon.inrae.fr/forge/attachments/download/3005/"
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.0"
+    java_target <- 11
     
   } else {
-    javastics_dir <- "JavaSTICS-1.5.2-STICS-10.1.0"
-    workspace_path <- "JavaSTICS-1.5.2-STICS-10.1.0/example"
+    javastics_dir <- "JavaSTICS-1.5.2-STICS-10.1.1"
+    workspace_path <- "JavaSTICS-1.5.2-STICS-10.1.1/example"
     download_url <- 
-      "https://w3.avignon.inrae.fr/forge/attachments/download/3158/"
+      "https://w3.avignon.inrae.fr/forge/attachments/download/3165/"
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.1.0"
+    java_target <- 17
   }
 } else {
   # Check JavaStics in path
@@ -139,8 +142,7 @@ if (!local_javastics) {
   } else if (length(grep("9.2",attr(check, "version"))) > 0) {
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V9.2"
     stics_version <- "V9.2"
-    java_target <- 8
-  } else if (length(grep("10.1.0",attr(check, "version"))) > 0) {
+  } else if (length(grep("10.1",attr(check, "version"))) > 0) {
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.1.0"
     stics_version <- "V10.1.0"
     java_target <- 17
@@ -229,13 +231,13 @@ if (!local_javastics) {
     system(paste0("curl -u ",
                  user_passwd,
                  " ",
+                 "-k ",
                  download_url,
                  javastics_dir,
                  ".zip --output ",
                  zip_path))
     unzip(zip_path, exdir = out_path)
   }
-
   workspace_path <- file.path(work_dir, workspace_path, fsep = "/")
 } else {
   workspace_path <- file.path(javastics_in_path, "example")
