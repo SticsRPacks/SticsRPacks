@@ -112,7 +112,7 @@ Alternatively, e.g. if you have an older version of RStudio or if you don't have
 
 The first time it is started, the tutorial takes a few minutes to initialize in order to download all the materials and run the solutions. Subsequent runs do not need this steps, the tutorial will thus start almost immediately from the second run.
 
-**NEWS: the tutorial can now be done online, without installing SticsRPacks: just by clicking [here]( https://mybinder.org/v2/git/https%3A%2F%2Fforgemia.inra.fr%2Fstics-formation%2Fsticsrpacks-binder.git/v0.6.0?urlpath=shiny/SticsRpacks/), thanks to [@eric.casellas](https://forgemia.inra.fr/eric.casellas).**
+**NEWS: the tutorial can now be done online, without installing SticsRPacks: just by clicking [here]( https://mybinder.org/v2/git/https%3A%2F%2Fforgemia.inra.fr%2Fstics-formation%2Fsticsrpacks-binder.git/v0.6.2?urlpath=shiny/SticsRpacks/), thanks to [@eric.casellas](https://forgemia.inra.fr/eric.casellas).**
 
 ## Getting help
 
