@@ -1,7 +1,7 @@
 Package: SticsRPacks
 Title: Easily Install and Load `SticsRPacks` Packages
-Date: 2024-03-05
-Version: 0.6.1
+Date: 2024-03-08
+Version: 0.6.2
 Authors@R: c(
        person(given = "Remi", family = "Vezy", email = "remi.vezy@cirad.fr", role= c("aut", "cre"), comment = c(ORCID = "0000-0002-0808-1461")),
        person(given = "Samuel", family = "Buis", email = "samuel.buis@inrae.fr", role= "aut", comment = c(ORCID = "0000-0002-8676-5447")),
