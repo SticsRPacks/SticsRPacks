@@ -12,7 +12,7 @@ Description: A set of packages that work in
     design. This package is designed to make it easy to install and load
     multiple `SticsRPacks` packages in a single step. Learn more about
     `SticsRPacks` at <https://sticsrpacks.github.io/SticsRPacks/>.
-License: GPL-3 | file LICENSE
+License: LGPL (>= 3)
 URL: https://github.com/SticsRPacks/SticsRPacks,
  https://doi.org/10.5281/zenodo.4442330
 BugReports: https://github.com/SticsRPacks/SticsRPacks/issues
