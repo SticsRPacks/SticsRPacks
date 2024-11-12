@@ -36,21 +36,21 @@ get_java_version <- function(linux = TRUE, cmd = "java") {
   if (linux) {
     version_str <-
       suppressWarnings(
-                    system(
-                    paste(cmd,
-                   '-version 2>&1 | head -n 1 | cut -d\\" -f 2'),
-                              intern = TRUE))
+        system(
+          paste(cmd,
+                '-version 2>&1 | head -n 1 | cut -d\\" -f 2'),
+          intern = TRUE))
     if (grepl("1\\.8", version_str)) {
       field <- 2
     } else {
       field <- 1
     }
-      
+    
     version_str <-
       suppressWarnings(
-                    system(
-                    paste0("echo ","'",version_str,"'", " | cut -d\\. -f ", field),
-                              intern = TRUE))
+        system(
+          paste0("echo ","'",version_str,"'", " | cut -d\\. -f ", field),
+          intern = TRUE))
     
     if (length(grep("not found", version_str)) > 0) {
       version <- NULL
@@ -98,32 +98,40 @@ if (!local_javastics) {
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.0"
     java_target <- 11
     
-  } else {
+  } else if (stics_version_num < 10.2) {
     javastics_dir <- "JavaSTICS-1.5.2-STICS-10.1.1"
     workspace_path <- "JavaSTICS-1.5.2-STICS-10.1.1/example"
     download_url <- 
       "https://w3.avignon.inrae.fr/forge/attachments/download/3165/"
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.1.0"
     java_target <- 17
+    
+  } else {
+    javastics_dir <- "JavaSTICS-1.5.2-STICS-10.2.0"
+    workspace_path <- "JavaSTICS-1.5.2-STICS-10.2.0/example"
+    download_url <- 
+      "https://w3.avignon.inrae.fr/forge/attachments/download/3337/"
+    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.1.0"
+    java_target <- 17
   }
 } else {
   # Check JavaStics in path
   if (!dir.exists(javastics_in_path) ||
-       !any(grepl("JavaStics.exe",list.files(javastics_in_path))))
+      !any(grepl("JavaStics.exe",list.files(javastics_in_path))))
     stop(javastics_in_path,
          ": JavaStics directory set in 'javastics_path'\n",
          "environment variable does not exist, aborting")
   
   javastics_path <- javastics_in_path
-
+  
   # Getting exe name
   stics_exe_name <- SticsOnR:::list_stics_exe(javastics_path)[[2]][[1]]
-
+  
   # Getting exe version
   check <- try(SticsOnR:::check_stics_exe(
-               file.path(javastics_path, "bin",stics_exe_name), version = TRUE),
-               silent = TRUE)
-
+    file.path(javastics_path, "bin",stics_exe_name), version = TRUE),
+    silent = TRUE)
+  
   # Stopping the tuto when the executable is not found
   if (class(check) == "try-error") {
     stop("The Stics executable (",
@@ -131,42 +139,46 @@ if (!local_javastics) {
          ") was not found in JavaStics bin directory: ",
          javastics_path)
   }
-
+  
   # Checking if the version is compatible with
   # the 3 Stics versions taken into account in the tuto data
   # Stopping if Stics is older than version 9.2
-  if (length(grep("10.0",attr(check, "version"))) > 0) {
+  
+  if (stics_version_num < 10) {
+    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V9.2"
+    stics_version <- "V9.2"
+  } else if (stics_version_num < 10.1) {
     workspace_PW1 <- "tutorials/SticsRpacks/PW1"
     stics_version <- "V10.0"
     java_target <- 11
-  } else if (length(grep("9.2",attr(check, "version"))) > 0) {
-    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V9.2"
-    stics_version <- "V9.2"
-  } else if (length(grep("10.1",attr(check, "version"))) > 0) {
+  } else if (stics_version_num < 10.2) {
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.1.0"
     stics_version <- "V10.1.0"
+    java_target <- 17
+  } else if (stics_version_num < 10.3) {
+    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.1.0"
+    stics_version <- "V10.2.0"
     java_target <- 17
   } else {
     stop("The JavaSTICS distribution ",
          basename(javastics_path),
-         "is not supported in this tutorial !",
-         "Please download a newer version.")
+         "is not supported yet in this tutorial, \n",
+         "or is not a valide version.")
   }
 }
-
 
 if (linux) {
   #if (!lower_than_v10 && linux) {
   java_path <- Sys.getenv("JAVA")
-
+  
   if (java_path != "") java <- java_path
-
+  
   java_version <- get_java_version(linux = linux, cmd = java)
-
+  
   if (is.null(java_version)) 
     stop("A java version 11 must be installed")
-
-
+  
+  
   if (java_version < java_target)
     stop("The default system java virtual machine is ",
          system(paste(java, "-version 2>&1"),
@@ -176,8 +188,8 @@ if (linux) {
          "in the .Renviron file, as for example: \n",
          paste0("JAVA=\"/usr/lib/jvm/java-",java_target,"-openjdk-amd64/bin/java\"")
     )
-
-
+  
+  
 }
 
 knitr::opts_chunk$set(echo = FALSE,
@@ -216,7 +228,7 @@ if (!dir.exists(tmp_dir)) {
 # configure and download JavaStics
 if (!local_javastics) {
   javastics_path <- file.path(work_dir, javastics_dir, fsep ="/")
-
+  
   if (SticsRFiles:::get_version_num(stics_version) < 10) {
     # Creating JavaStics dir
     if (!dir.exists(javastics_path)) dir.create(javastics_path)
@@ -224,18 +236,18 @@ if (!local_javastics) {
   } else {
     out_path <- work_dir
   }
-
+  
   files_list <- list.files(javastics_path)
   if (length(files_list) == 0 || !any(grepl("JavaStics.exe",files_list))) {
     zip_path <- file.path(work_dir,paste0(javastics_dir,".zip"))
     system(paste0("curl -u ",
-                 user_passwd,
-                 " ",
-                 "-k ",
-                 download_url,
-                 javastics_dir,
-                 ".zip --output ",
-                 zip_path))
+                  user_passwd,
+                  " ",
+                  "-k ",
+                  download_url,
+                  javastics_dir,
+                  ".zip --output ",
+                  zip_path))
     unzip(zip_path, exdir = out_path)
   }
   workspace_path <- file.path(work_dir, workspace_path, fsep = "/")
