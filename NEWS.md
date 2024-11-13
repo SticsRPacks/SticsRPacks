@@ -1,3 +1,9 @@
+# SticsRPacks 0.7.0
+Update tutorial data with 10.2.0 STICS files and fix on local JavaStics use configuration
+using the STICS executable version.
+License update to LGPL.
+
+
 # SticsRPacks 0.6.1
 Update of java version prerequisites management for JavaStics versions in the tutorial
 Improvements of the tutorial section "A foretaste of SticsRpacks"
