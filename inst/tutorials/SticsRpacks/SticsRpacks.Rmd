@@ -23,8 +23,6 @@ library(ggplot2)
 
 options(stringsAsFactors = FALSE)
 
-stics_version <- "latest"
-
 # OS specific parameters
 linux <- SticsRFiles:::is_unix()
 attributes(linux) <- NULL
@@ -72,14 +70,18 @@ java <- "java"
 # In any case the R session must be restarted to take effect
 #--------------------------------------------------------------------------
 
-
+# Detecting which JavaStics to use local specific version or
+# downloaded the latest version from 
+# https://w3.avignon.inrae.fr/forge
+#
 javastics_in_path <- Sys.getenv("javastics_path")
 local_javastics <- !(javastics_in_path == "")
 
-stics_version_num <- SticsRFiles:::get_version_num(stics_version)
 
 if (!local_javastics) {
   user_passwd <- SticsRPacks:::get_forge_userpass("public")
+  
+  stics_version_num <- SticsRFiles:::get_version_num()
   
   if (stics_version_num < 10) { 
     javastics_dir <- "JavaSTICS-1.41-stics-9.2"
@@ -132,7 +134,7 @@ if (!local_javastics) {
     file.path(javastics_path, "bin",stics_exe_name), version = TRUE),
     silent = TRUE)
   
-  # Stopping the tuto when the executable is not found
+  # Stopping the tutorial when the executable is not found
   if (class(check) == "try-error") {
     stop("The Stics executable (",
          stics_exe_name,
@@ -140,8 +142,14 @@ if (!local_javastics) {
          javastics_path)
   }
   
+  # getting the STICS numerical version
+  stics_version_str <- attr(check, "version")
+  stics_version_num <- SticsRFiles:::get_version_num(
+    gsub(pattern = "(.*)\\_(.*)", x = stics_version_str, replacement = "\\1")
+  )
+  
   # Checking if the version is compatible with
-  # the 3 Stics versions taken into account in the tuto data
+  # the 4 Stics versions taken into account in the tuto data
   # Stopping if Stics is older than version 9.2
   
   if (stics_version_num < 10) {
