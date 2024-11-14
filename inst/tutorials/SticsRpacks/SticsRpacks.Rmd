@@ -80,8 +80,8 @@ local_javastics <- !(javastics_in_path == "")
 
 if (!local_javastics) {
   user_passwd <- SticsRPacks:::get_forge_userpass("public")
-  
   stics_version_num <- SticsRFiles:::get_version_num()
+  stics_version <- "latest"
   
   if (stics_version_num < 10) { 
     javastics_dir <- "JavaSTICS-1.41-stics-9.2"
@@ -113,7 +113,7 @@ if (!local_javastics) {
     workspace_path <- "JavaSTICS-1.5.2-STICS-10.2.0/example"
     download_url <- 
       "https://w3.avignon.inrae.fr/forge/attachments/download/3337/"
-    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.1.0"
+    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.2.0"
     java_target <- 17
   }
 } else {
@@ -164,7 +164,7 @@ if (!local_javastics) {
     stics_version <- "V10.1.0"
     java_target <- 17
   } else if (stics_version_num < 10.3) {
-    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.1.0"
+    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.2.0"
     stics_version <- "V10.2.0"
     java_target <- 17
   } else {
