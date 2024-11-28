@@ -35,24 +35,30 @@ get_java_version <- function(linux = TRUE, cmd = "java") {
     version_str <-
       suppressWarnings(
         system(
-          paste(cmd,
-                '-version 2>&1 | head -n 1 | cut -d\\" -f 2'),
-          intern = TRUE))
+          paste(
+            cmd,
+            '-version 2>&1 | head -n 1 | cut -d\\" -f 2'
+          ),
+          intern = TRUE
+        )
+      )
     if (grepl("1\\.8", version_str)) {
       field <- 2
     } else {
       field <- 1
     }
-    
+
     version_str <-
       suppressWarnings(
         system(
-          paste0("echo ","'",version_str,"'", " | cut -d\\. -f ", field),
-          intern = TRUE))
-    
+          paste0("echo ", "'", version_str, "'", " | cut -d\\. -f ", field),
+          intern = TRUE
+        )
+      )
+
     if (length(grep("not found", version_str)) > 0) {
       version <- NULL
-    } else  {
+    } else {
       version <- as.numeric(version_str)
     }
   }
@@ -71,7 +77,7 @@ java <- "java"
 #--------------------------------------------------------------------------
 
 # Detecting which JavaStics to use local specific version or
-# downloaded the latest version from 
+# downloaded the latest version from
 # https://w3.avignon.inrae.fr/forge
 #
 javastics_in_path <- Sys.getenv("javastics_path")
@@ -82,36 +88,33 @@ if (!local_javastics) {
   user_passwd <- SticsRPacks:::get_forge_userpass("public")
   stics_version_num <- SticsRFiles:::get_version_num()
   stics_version <- "latest"
-  
-  if (stics_version_num < 10) { 
+
+  if (stics_version_num < 10) {
     javastics_dir <- "JavaSTICS-1.41-stics-9.2"
     workspace_path <- "JavaSTICS-1.41-stics-9.2/example"
-    download_url <- 
+    download_url <-
       "https://w3.avignon.inra.fr/forge/attachments/download/2482/"
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V9.2"
     java_target <- 8
-    
   } else if (stics_version_num < 10.1) {
     # same as zip archive name
     javastics_dir <- "JavaSTICS-1.5.1-STICS-10.0.0"
     workspace_path <- "JavaSTICS-1.5.1-STICS-10.0.0/example"
-    download_url <- 
+    download_url <-
       "https://w3.avignon.inrae.fr/forge/attachments/download/3005/"
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.0"
     java_target <- 11
-    
   } else if (stics_version_num < 10.2) {
     javastics_dir <- "JavaSTICS-1.5.2-STICS-10.1.1"
     workspace_path <- "JavaSTICS-1.5.2-STICS-10.1.1/example"
-    download_url <- 
+    download_url <-
       "https://w3.avignon.inrae.fr/forge/attachments/download/3165/"
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.1.0"
     java_target <- 17
-    
   } else {
     javastics_dir <- "JavaSTICS-1.5.2-STICS-10.2.0"
     workspace_path <- "JavaSTICS-1.5.2-STICS-10.2.0/example"
-    download_url <- 
+    download_url <-
       "https://w3.avignon.inrae.fr/forge/attachments/download/3337/"
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.2.0"
     java_target <- 17
@@ -119,39 +122,48 @@ if (!local_javastics) {
 } else {
   # Check JavaStics in path
   if (!dir.exists(javastics_in_path) ||
-      !any(grepl("JavaStics.exe",list.files(javastics_in_path))))
-    stop(javastics_in_path,
-         ": JavaStics directory set in 'javastics_path'\n",
-         "environment variable does not exist, aborting")
-  
+    !any(grepl("JavaStics.exe", list.files(javastics_in_path)))) {
+    stop(
+      javastics_in_path,
+      ": JavaStics directory set in 'javastics_path'\n",
+      "environment variable does not exist, aborting"
+    )
+  }
+
   javastics_path <- javastics_in_path
-  
+
   # Getting exe name
   stics_exe_name <- SticsOnR:::list_stics_exe(javastics_path)[[2]][[1]]
-  
+
   # Getting exe version
-  check <- try(SticsOnR:::check_stics_exe(
-    file.path(javastics_path, "bin",stics_exe_name), version = TRUE),
-    silent = TRUE)
-  
+  check <- try(
+    SticsOnR:::check_stics_exe(
+      file.path(javastics_path, "bin", stics_exe_name),
+      version = TRUE
+    ),
+    silent = TRUE
+  )
+
   # Stopping the tutorial when the executable is not found
   if (class(check) == "try-error") {
-    stop("The Stics executable (",
-         stics_exe_name,
-         ") was not found in JavaStics bin directory: ",
-         javastics_path)
+    stop(
+      "The Stics executable (",
+      stics_exe_name,
+      ") was not found in JavaStics bin directory: ",
+      javastics_path
+    )
   }
-  
+
   # getting the STICS numerical version
   stics_version_str <- attr(check, "version")
   stics_version_num <- SticsRFiles:::get_version_num(
     gsub(pattern = "(.*)\\_(.*)", x = stics_version_str, replacement = "\\1")
   )
-  
+
   # Checking if the version is compatible with
   # the 4 Stics versions taken into account in the tuto data
   # Stopping if Stics is older than version 9.2
-  
+
   if (stics_version_num < 10) {
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V9.2"
     stics_version <- "V9.2"
@@ -168,50 +180,58 @@ if (!local_javastics) {
     stics_version <- "V10.2.0"
     java_target <- 17
   } else {
-    stop("The JavaSTICS distribution ",
-         basename(javastics_path),
-         "is not supported yet in this tutorial, \n",
-         "or is not a valide version.")
+    stop(
+      "The JavaSTICS distribution ",
+      basename(javastics_path),
+      "is not supported yet in this tutorial, \n",
+      "or is not a valide version."
+    )
   }
 }
 
 if (linux) {
-  #if (!lower_than_v10 && linux) {
+  # if (!lower_than_v10 && linux) {
   java_path <- Sys.getenv("JAVA")
-  
+
   if (java_path != "") java <- java_path
-  
+
   java_version <- get_java_version(linux = linux, cmd = java)
-  
-  if (is.null(java_version)) 
+
+  if (is.null(java_version)) {
     stop("A java version 11 must be installed")
-  
-  
-  if (java_version < java_target)
-    stop("The default system java virtual machine is ",
-         system(paste(java, "-version 2>&1"),
-                intern = TRUE)[1],
-         "\nA java ", as.character(java_target), " version installation is needed for running JavaSTICS, \n",
-         "or as an alternate version and the java path can be set\n",
-         "in the .Renviron file, as for example: \n",
-         paste0("JAVA=\"/usr/lib/jvm/java-",java_target,"-openjdk-amd64/bin/java\"")
+  }
+
+
+  if (java_version < java_target) {
+    stop(
+      "The default system java virtual machine is ",
+      system(paste(java, "-version 2>&1"),
+        intern = TRUE
+      )[1],
+      "\nA java ", as.character(java_target), " version installation is needed for running JavaSTICS, \n",
+      "or as an alternate version and the java path can be set\n",
+      "in the .Renviron file, as for example: \n",
+      paste0("JAVA=\"/usr/lib/jvm/java-", java_target, "-openjdk-amd64/bin/java\"")
     )
-  
-  
+  }
 }
 
-knitr::opts_chunk$set(echo = FALSE,
-                      java_cmd = java,
-                      linux = linux,
-                      windows = !linux,
-                      stics_version = stics_version)
+knitr::opts_chunk$set(
+  echo = FALSE,
+  java_cmd = java,
+  linux = linux,
+  windows = !linux,
+  stics_version = stics_version
+)
 
 tutorial_options(exercise.lines = 5, exercise.timelimit = 300)
 
 
 use_default <- TRUE
-work_dir <- file.path(normalizePath(dirname(tempdir()), winslash = "/"),
-                      "SticsRPacks")
+work_dir <- file.path(
+  normalizePath(dirname(tempdir()), winslash = "/"),
+  "SticsRPacks"
+)
 tmp_dir <- file.path(work_dir, "tmp")
 
 # For avoiding problems under windows
@@ -227,16 +247,18 @@ if (!dir.exists(work_dir)) dir.create(work_dir)
 if (!dir.exists(tmp_dir)) {
   dir.create(tmp_dir)
 } else {
-  tmp_files <- list.files(path = tmp_dir,
-                          pattern = "\\.RData$",
-                          full.names = TRUE)
+  tmp_files <- list.files(
+    path = tmp_dir,
+    pattern = "\\.RData$",
+    full.names = TRUE
+  )
   file.remove(tmp_files)
 }
 
 # configure and download JavaStics
 if (!local_javastics) {
-  javastics_path <- file.path(work_dir, javastics_dir, fsep ="/")
-  
+  javastics_path <- file.path(work_dir, javastics_dir, fsep = "/")
+
   if (SticsRFiles:::get_version_num(stics_version) < 10) {
     # Creating JavaStics dir
     if (!dir.exists(javastics_path)) dir.create(javastics_path)
@@ -244,18 +266,20 @@ if (!local_javastics) {
   } else {
     out_path <- work_dir
   }
-  
+
   files_list <- list.files(javastics_path)
-  if (length(files_list) == 0 || !any(grepl("JavaStics.exe",files_list))) {
-    zip_path <- file.path(work_dir,paste0(javastics_dir,".zip"))
-    system(paste0("curl -u ",
-                  user_passwd,
-                  " ",
-                  "-k ",
-                  download_url,
-                  javastics_dir,
-                  ".zip --output ",
-                  zip_path))
+  if (length(files_list) == 0 || !any(grepl("JavaStics.exe", files_list))) {
+    zip_path <- file.path(work_dir, paste0(javastics_dir, ".zip"))
+    system(paste0(
+      "curl -u ",
+      user_passwd,
+      " ",
+      "-k ",
+      download_url,
+      javastics_dir,
+      ".zip --output ",
+      zip_path
+    ))
     unzip(zip_path, exdir = out_path)
   }
   workspace_path <- file.path(work_dir, workspace_path, fsep = "/")
@@ -265,16 +289,19 @@ if (!local_javastics) {
 
 # fixing workspaces path
 workspace_PW1 <- file.path(system.file(package = "SticsRPacks"),
-                           workspace_PW1,
-                           fsep = "/")
+  workspace_PW1,
+  fsep = "/"
+)
 
 # Generating html help files, one for each function
 if (gen_help) {
   help_dir <- file.path(work_dir, "SticsRFiles_help")
   if (!dir.exists(help_dir)) dir.create(help_dir)
-  SticsRFiles:::static_help(pkg = "SticsRFiles",
-                            overwrite = FALSE,
-                            out_dir = help_dir)
+  SticsRFiles:::static_help(
+    pkg = "SticsRFiles",
+    overwrite = FALSE,
+    out_dir = help_dir
+  )
 }
 ```
 
@@ -351,7 +378,7 @@ Most of the exercises in the tutorial requires writing and running a few lines o
 
 ```{r test-solution}
 # Here's the SOLUTION:
-get_var_info(keyword = "roots")
+get_var_info(keyword = "root")
 ```
 
 You just have to type the R code in the black part and click on the `Run Code` green button on the right side to run it.
@@ -421,63 +448,72 @@ Let's first initialize variables and define the setup:
 
 # Let's define the USM and variables of interest to use in this example
 usm_name <- "maize_ref_2013"
-stress_ind_names <- c("turfac1moy", "turfac2moy", "swfac1moy", "swfac2moy",
-                      "inn1moy", "inn2moy")
+stress_ind_names <- c(
+  "turfac1moy", "turfac2moy", "swfac1moy", "swfac2moy",
+  "inn1moy", "inn2moy"
+)
 dyn_var_names <- c("lai_n", "zrac", "resmes", "azomes", "QNplante", "masec_n")
 var_names <- c(stress_ind_names, dyn_var_names)
 
 # Set-up the simulation environment:
-wrapper_options <- stics_wrapper_options(javastics = javastics_path,
-                                         workspace = workspace_PW1)
+wrapper_options <- stics_wrapper_options(
+  javastics = javastics_path,
+  workspace = workspace_PW1
+)
 
 # Generate the files for the simulation:
 gen_usms_xml2txt(javastics_path, workspace_PW1, usm = usm_name)
-
 ```
 
 ```{r PW1-linux-setup, echo=FALSE, eval=knitr::opts_chunk$get("linux"), message=FALSE}
 
 # Let's define the USM and variables of interest to use in this example
 usm_name <- "maize_ref_2013"
-stress_ind_names <- c("turfac1moy", "turfac2moy", "swfac1moy", "swfac2moy",
-                      "inn1moy", "inn2moy")
+stress_ind_names <- c(
+  "turfac1moy", "turfac2moy", "swfac1moy", "swfac2moy",
+  "inn1moy", "inn2moy"
+)
 dyn_var_names <- c("lai_n", "zrac", "resmes", "azomes", "QNplante", "masec_n")
 var_names <- c(stress_ind_names, dyn_var_names)
 
 # Set-up the simulation environment:
-wrapper_options <- stics_wrapper_options(javastics = javastics_path,
-                                         workspace = workspace_PW1)
+wrapper_options <- stics_wrapper_options(
+  javastics = javastics_path,
+  workspace = workspace_PW1
+)
 
 # Generate the files for the simulation:
-gen_usms_xml2txt(javastics_path, workspace_PW1, usm = usm_name,
-                 java_cmd = knitr::opts_chunk$get("java_cmd"))
-
+gen_usms_xml2txt(javastics_path, workspace_PW1,
+  usm = usm_name,
+  java_cmd = knitr::opts_chunk$get("java_cmd")
+)
 ```
 
 ```{r PW1-setup, echo=FALSE, eval=knitr::opts_chunk$get("windows"), message=FALSE}
 
 # Let's define the USM and variables of interest to use in this example
 usm_name <- "maize_ref_2013"
-stress_ind_names <- c("turfac1moy", "turfac2moy", "swfac1moy", "swfac2moy",
-                      "inn1moy", "inn2moy")
-dyn_var_names <- c("lai_n","zrac","resmes","azomes","QNplante","masec_n")
-var_names <- c(stress_ind_names,dyn_var_names)
+stress_ind_names <- c(
+  "turfac1moy", "turfac2moy", "swfac1moy", "swfac2moy",
+  "inn1moy", "inn2moy"
+)
+dyn_var_names <- c("lai_n", "zrac", "resmes", "azomes", "QNplante", "masec_n")
+var_names <- c(stress_ind_names, dyn_var_names)
 
 # Set-up the simulation environment:
-wrapper_options = stics_wrapper_options(javastics = javastics_path, workspace = workspace_PW1)
+wrapper_options <- stics_wrapper_options(javastics = javastics_path, workspace = workspace_PW1)
 
 # Generate the files for the simulation:
 gen_usms_xml2txt(javastics_path, workspace_PW1, usm = usm_name)
-
 ```
 
 Note that, in case you would like to reproduce this example, the JavaStics and workspace paths used here are:
 
 ```{r PW1-print-path, echo=FALSE, eval=TRUE}
-# Print the path to JavaSTICS and to the workspace used 
+# Print the path to JavaSTICS and to the workspace used
 # (same paths can be used if you want to reproduce this example)
-print(paste("javastics_path = ",javastics_path))
-print(paste("workspace_PW1 = ",workspace_PW1))
+print(paste("javastics_path = ", javastics_path))
+print(paste("workspace_PW1 = ", workspace_PW1))
 ```
 
 Then, let's run the simulations for the different configurations:
@@ -485,31 +521,38 @@ Then, let's run the simulations for the different configurations:
 ```{r PW1-sim-config, echo=TRUE, eval=TRUE, message=FALSE}
 
 # Simulate a reference situation with water and nitrogen stress
-sim_ws_ns = stics_wrapper(model_options = wrapper_options,
-                          param_values = c(codeinnact=1, codeh2oact=1),
-                          var = var_names)$sim_list
+sim_ws_ns <- stics_wrapper(
+  model_options = wrapper_options,
+  param_values = c(codeinnact = 1, codeh2oact = 1),
+  var = var_names
+)$sim_list
 
 # Simulate with water stress only
-sim_ws = stics_wrapper(model_options = wrapper_options,
-                       param_values = c(codeinnact=2),
-                       var = var_names)$sim_list
+sim_ws <- stics_wrapper(
+  model_options = wrapper_options,
+  param_values = c(codeinnact = 2),
+  var = var_names
+)$sim_list
 
 # Simulate with N stress only
-sim_ns = stics_wrapper(model_options = wrapper_options,
-                       param_values = c(codeh2oact=2),
-                       var= var_names)$sim_list
+sim_ns <- stics_wrapper(
+  model_options = wrapper_options,
+  param_values = c(codeh2oact = 2),
+  var = var_names
+)$sim_list
 
 # Simulate with water stress only
-sim_without_stress = stics_wrapper(model_options = wrapper_options,
-                                   param_values = c(codeinnact=2, codeh2oact=2),
-                                   var = var_names)$sim_list
-
+sim_without_stress <- stics_wrapper(
+  model_options = wrapper_options,
+  param_values = c(codeinnact = 2, codeh2oact = 2),
+  var = var_names
+)$sim_list
 ```
 
 Now we can use the simulated results to plot the dynamic variables of interest for the different configurations:
 
 ```{r PW1-plot-dyn, echo=TRUE, eval=FALSE, message=FALSE}
-p <- plot(sim_ws_ns=sim_ws_ns, sim_ws=sim_ws, sim_ns=sim_ns, sim_without_stress=sim_without_stress, var = dyn_var_names )
+p <- plot(sim_ws_ns = sim_ws_ns, sim_ws = sim_ws, sim_ns = sim_ns, sim_without_stress = sim_without_stress, var = dyn_var_names)
 print(p)
 ```
 
@@ -520,17 +563,19 @@ Finally, we can plot the stress indicators averaged over vegetative and reproduc
 # Get the final values
 df <- CroPlotR::bind_rows(
   sim_ws_ns[[usm_name]] %>% summarise(across(.cols = stress_ind_names, last)) %>%
-    bind_cols(Case="sim_ws_ns"),
+    bind_cols(Case = "sim_ws_ns"),
   sim_ws[[usm_name]] %>% summarise(across(.cols = stress_ind_names, last)) %>%
-    bind_cols(Case="sim_ws"),
+    bind_cols(Case = "sim_ws"),
   sim_ns[[usm_name]] %>% summarise(across(.cols = stress_ind_names, last)) %>%
-    bind_cols(Case="sim_ns"),
+    bind_cols(Case = "sim_ns"),
   sim_without_stress[[usm_name]] %>% summarise(across(.cols = stress_ind_names, last)) %>%
-    bind_cols(Case="sim_without_stress"))
+    bind_cols(Case = "sim_without_stress")
+)
 
 # Plot bar graph with ggplot ... sorry, not yet available using CroPlotR ...
 df_long <- tidyr::pivot_longer(df, stress_ind_names, names_to = "variables")
-p <- ggplot(df_long, aes(fill=Case, y=value, x=variables)) + geom_bar(position="dodge", stat="identity")
+p <- ggplot(df_long, aes(fill = Case, y = value, x = variables)) +
+  geom_bar(position = "dodge", stat = "identity")
 print(p)
 ```
 
@@ -550,32 +595,34 @@ knitr::include_graphics("https://raw.githubusercontent.com/SticsRPacks/SticsRPac
 The code to perform this optimization and generate this figure is the following:
 
 ```{r simple-example-param-estim, echo=TRUE, eval=FALSE}
-usm = "wheat"
+usm <- "wheat"
 
 # First, import the observations and filter them:
-obs = get_obs(workspace = workspace_path, usm = usm)
-obs_filt = filter_obs(obs, "lai_n", include = TRUE)
+obs <- get_obs(workspace = workspace_path, usm = usm)
+obs_filt <- filter_obs(obs, "lai_n", include = TRUE)
 
 # Set-up the simulation environment:
-wrapper_options = stics_wrapper_options(javastics = javastics_path, workspace = workspace_path, parallel = TRUE)
-optim_options = list(nb_rep = 3, out_dir = workspace_path)
+wrapper_options <- stics_wrapper_options(javastics = javastics_path, workspace = workspace_path, parallel = TRUE)
+optim_options <- list(nb_rep = 3, out_dir = workspace_path)
 
 # Define the parameter to optimize and the boundary values:
-param_info = list(stamflax = list(lb = 200, ub = 400))
+param_info <- list(stamflax = list(lb = 200, ub = 400))
 
 # Generate the files for the simulation:
 gen_usms_xml2txt(javastics_path, workspace_path, usm = usm)
 
 # Make the optimization:
-optim_res = estim_param(obs_list = obs_filt,
-                        model_function = stics_wrapper,
-                        model_options = wrapper_options,
-                        optim_options = optim_options,
-                        param_info = param_info)
+optim_res <- estim_param(
+  obs_list = obs_filt,
+  model_function = stics_wrapper,
+  model_options = wrapper_options,
+  optim_options = optim_options,
+  param_info = param_info
+)
 
 # Import the results before/after the simulation and plot them on the same figure:
-sim_after_optim = stics_wrapper(param_values = optim_res$final_values, model_options = wrapper_options)$sim_list
-sim_before_optim = stics_wrapper(model_options = wrapper_options)$sim_list
+sim_after_optim <- stics_wrapper(param_values = optim_res$final_values, model_options = wrapper_options)$sim_list
+sim_before_optim <- stics_wrapper(model_options = wrapper_options)$sim_list
 
 p <- plot(after = sim_after_optim, before = sim_before_optim, obs = obs_filt, var = "lai_n")
 print(p)
@@ -584,10 +631,10 @@ print(p)
 Note that, in case you would like to reproduce this example, the JavaStics and workspace paths used in this example are:
 
 ```{r simple-example-print-path, echo=FALSE, eval=TRUE}
-# Print the path to JavaSTICS and to the workspace used 
+# Print the path to JavaSTICS and to the workspace used
 # (same paths can be used if you want to reproduce this example)
-print(paste("javastics_path = ",javastics_path))
-print(paste("workspace_path = ",workspace_path))
+print(paste("javastics_path = ", javastics_path))
+print(paste("workspace_path = ", workspace_path))
 ```
 
 A lot is happening here!
@@ -608,24 +655,24 @@ Here's its description as given in the R help panel (`? get_var_info`) and the [
 
 ```{r get_var_info-help, results="asis"}
 lines <- SticsRFiles:::get_from_help(file.path(help_dir, "get_var_info.html"))
-cat(paste(lines, collapse="\n"))
+cat(paste(lines, collapse = "\n"))
 ```
 
 </blockquote>
 
--   Find all STICS variables characterizing roots
+-   Find all STICS variables related to roots
 
 ```{r get_var_info1, exercise=TRUE}
 # Insert your R code here!
 ```
 
 ```{r get_var_info1-hint-1}
-# Use argument keyword="roots"!
+# Use argument keyword="root"!
 ```
 
 ```{r get_var_info1-solution}
 # SOLUTION:
-get_var_info(keyword = "roots")
+get_var_info(keyword = "root")
 ```
 
 ::: {.alert .alert-info}
@@ -646,7 +693,7 @@ Here's its description as given in the R help panel (`? get_usms_list`) and on t
 
 ```{r get_usms_list-help, results="asis"}
 lines <- SticsRFiles:::get_from_help(file.path(help_dir, "get_usms_list.html"))
-cat(paste(lines, collapse="\n"))
+cat(paste(lines, collapse = "\n"))
 ```
 
 </blockquote>
@@ -700,7 +747,7 @@ get_usms_list(file = file.path(workspace_path, "usms.xml"))
 ```
 
 ```{r get_usms_list2-solution}
-#SOLUTION:
+# SOLUTION:
 get_usms_list(file = file.path(workspace_path, "usms.xml"), usm = "cc_")
 ```
 
@@ -712,7 +759,7 @@ Parameters values included in JavaStics input files can be retrieved using the f
 
 ```{r get_param_xml-help, results="asis"}
 lines <- SticsRFiles:::get_from_help(file.path(help_dir, "get_param_xml.html"))
-cat(paste(lines, collapse="\n"))
+cat(paste(lines, collapse = "\n"))
 ```
 
 </blockquote>
@@ -728,7 +775,7 @@ cat(paste(lines, collapse="\n"))
 ```
 
 ```{r get_param_xml1-solution}
-#SOLUTION:
+# SOLUTION:
 get_param_xml(file.path(workspace_path, "sols.xml"), c("argi"))
 ```
 
@@ -751,7 +798,7 @@ result <- get_param_xml(file.path(workspace_path, "sols.xml"), c("argi"))
 ```
 
 ```{r get_param_xml2-solution}
-#SOLUTION:
+# SOLUTION:
 hist(result$sols.xml$argi)
 ```
 
@@ -778,8 +825,8 @@ Weather variables defined in STICS input weather files can be retrieved using th
 <blockquote>
 
 ```{r get_climate_txt-help, results="asis"}
-lines <- SticsRFiles:::get_from_help(file.path(help_dir,"get_climate_txt.html"))
-cat(paste(lines, collapse="\n"))
+lines <- SticsRFiles:::get_from_help(file.path(help_dir, "get_climate_txt.html"))
+cat(paste(lines, collapse = "\n"))
 ```
 
 </blockquote>
@@ -795,7 +842,7 @@ cat(paste(lines, collapse="\n"))
 ```
 
 ```{r get_climate_txt1-solution}
-#SOLUTION:
+# SOLUTION:
 result <- get_climate_txt(workspace = workspace_path, file_name = "Auzeville.2013")
 sum(result$ttrr)
 ```
@@ -803,10 +850,10 @@ sum(result$ttrr)
 -   Compute the amount of precipitation that has fallen between dates `"2013-03-21"` and `"2013-09-20"` using the `result` R object containing the data of the `"Auzeville.2013"` file.
 
 ```{r prepare-get_climate}
-file_path <- file.path(tmp_dir,"climate.RData")
+file_path <- file.path(tmp_dir, "climate.RData")
 if (!file.exists(file_path)) {
   result <- get_climate_txt(workspace = workspace_path, file_name = "Auzeville.2013")
-  save("result", file=file_path)
+  save("result", file = file_path)
 } else {
   load(file = file_path)
 }
@@ -821,7 +868,7 @@ if (!file.exists(file_path)) {
 ```
 
 ```{r get_climate_txt2-solution}
-#SOLUTION:
+# SOLUTION:
 filtered_result <- dplyr::filter(result, Date > "2013-03-21", Date < "2013-09-20")
 sum(filtered_result$ttrr)
 ```
@@ -847,7 +894,7 @@ Use `? function_name` or explore the packages websites (in particular the Refere
 
 ```{r run_javaStics1-solution}
 # SOLUTION:
-run_javastics(javastics = javastics_path,  workspace = workspace_path)
+run_javastics(javastics = javastics_path, workspace = workspace_path)
 ```
 
 -   Run only the USMs banana and Turmeric.
@@ -862,7 +909,7 @@ run_javastics(javastics = javastics_path,  workspace = workspace_path)
 
 ```{r run_javaStics2-solution}
 # SOLUTION:
-run_javastics(javastics = javastics_path,  workspace = workspace_path, usm = c("banana","Turmeric"))
+run_javastics(javastics = javastics_path, workspace = workspace_path, usm = c("banana", "Turmeric"))
 ```
 
 
@@ -887,8 +934,10 @@ sim_done <- length(list.files(pattern = "^mod_s", workspace_path)) >=
 
 if (!sim_done) {
   print("Running simulations, please wait")
-  run_javastics(javastics = javastics_path,
-                workspace = workspace_path, verbose = FALSE)
+  run_javastics(
+    javastics = javastics_path,
+    workspace = workspace_path, verbose = FALSE
+  )
 }
 ```
 
@@ -896,7 +945,6 @@ if (!sim_done) {
 
 ```{r get_sim1, exercise=TRUE, exercise.setup = "prepare-get_sim", exercise.timelimit=600}
 # Insert your R code here!
-
 ```
 
 ```{r get_sim1-hint-1}
@@ -919,7 +967,7 @@ get_sim(workspace = workspace_path)
 
 ```{r get_sim2-solution}
 # SOLUTION
-get_sim(workspace = workspace_path, usm = c("banana","Turmeric"))
+get_sim(workspace = workspace_path, usm = c("banana", "Turmeric"))
 ```
 
 -   Get the values of the variable `lai_n` simulated for USMs `wheat` and `maize`
@@ -934,8 +982,10 @@ get_sim(workspace = workspace_path, usm = c("banana","Turmeric"))
 
 ```{r get_sim4-solution}
 # SOLUTION
-get_sim(workspace = workspace_path, usm = c("wheat", "maize"),
-        var = "lai_n")
+get_sim(
+  workspace = workspace_path, usm = c("wheat", "maize"),
+  var = "lai_n"
+)
 ```
 
 <!-- Voir ou le mettre, ou alors l'integrer dans les manips ? -->
@@ -967,14 +1017,14 @@ The autocompletion is normally triggered whenever you start writing, but you can
 Let's import some simulations for a few USMs and store them in an R object called `sim`:
 
 ```{r, eval=FALSE, echo=TRUE}
-usms <- c("wheat","DurumWheat", "maize", "sorghum")
+usms <- c("wheat", "DurumWheat", "maize", "sorghum")
 sim <- get_sim(workspace = workspace_path, usm = usms)
 ```
 
 ```{r load-sim, exercise.setup = "prepare-get_sim"}
-usms <- c("wheat","DurumWheat", "maize", "sorghum")
+usms <- c("wheat", "DurumWheat", "maize", "sorghum")
 sim <- get_sim(workspace = workspace_path, usm = usms, verbose = FALSE)
-sim_all = CroPlotR::bind_rows(sim)
+sim_all <- CroPlotR::bind_rows(sim)
 ```
 
 You can get the USMs names using the `names` function on the `sim` object:
@@ -1070,7 +1120,7 @@ Now we can use the functions from the [tidyverse](https://www.tidyverse.org/) fo
 For example we can use `filter` to filter the data:
 
 ```{r filter_sim, exercise=TRUE, exercise.setup = "load-sim"}
-sim_all = CroPlotR::bind_rows(sim)
+sim_all <- CroPlotR::bind_rows(sim)
 
 filter(sim_all, Date == as.POSIXct("2000-09-04", tz = "UTC"))
 ```
@@ -1079,8 +1129,8 @@ Or summarize it by group.
 For exemple if we want the maximum lai for each USM (as we did above using `lapply`), we would do as follows:
 
 ```{r summarise_sim, exercise=TRUE, exercise.setup = "load-sim"}
-sim_all%>%
-  group_by(situation)%>%
+sim_all %>%
+  group_by(situation) %>%
   summarise(max_lai = max(lai_n))
 ```
 
@@ -1091,14 +1141,16 @@ The [CroPlotR](https://sticsrpacks.github.io/CroPlotR/) package can be used to p
 -   Use the values of the variables `lai_n` and `masec_n` simulated for USM `wheat` already stored in the `results` R object and plot their dynamics
 
 ```{r store-sim, exercise.setup = "prepare-get_sim"}
-file_path <- file.path(tmp_dir,"sim-1.RData")
+file_path <- file.path(tmp_dir, "sim-1.RData")
 if (!file.exists(file_path)) {
-  results <- get_sim(workspace = workspace_path, usm = "wheat",
-                     var = c("lai_n", "masec_n"), verbose = FALSE)
-  
-  save("results", file=file_path)
+  results <- get_sim(
+    workspace = workspace_path, usm = "wheat",
+    var = c("lai_n", "masec_n"), verbose = FALSE
+  )
+
+  save("results", file = file_path)
 } else {
-  load(file=file_path)
+  load(file = file_path)
 }
 ```
 
@@ -1141,7 +1193,7 @@ To get the documentation about this function, either refer to the CroPlotR websi
 
 ```{r plot_sim2-solution}
 # SOLUTION
-p <- plot(results, overlap = list(list("lai_n","masec_n")))
+p <- plot(results, overlap = list(list("lai_n", "masec_n")))
 print(p)
 ```
 
@@ -1163,7 +1215,6 @@ All the manipulations presented on the `sim` object in the previous section are 
 
 ```{r get_obs1, exercise=TRUE}
 # Insert your R code here!
-
 ```
 
 ```{r get_obs1-hint-1}
@@ -1179,7 +1230,6 @@ get_obs(workspace = workspace_path)
 
 ```{r get_obs2, exercise=TRUE}
 # Insert your R code here!
-
 ```
 
 ```{r get_obs2-hint-1}
@@ -1188,7 +1238,7 @@ get_obs(workspace = workspace_path)
 
 ```{r get_obs2-solution}
 # SOLUTION
-get_obs(workspace = workspace_path, usm = c("wheat", "maize"), var = c("lai_n","masec_n"))
+get_obs(workspace = workspace_path, usm = c("wheat", "maize"), var = c("lai_n", "masec_n"))
 ```
 
 ::: {.alert .alert-info}
@@ -1201,14 +1251,14 @@ Please refer to the `get_sim()` use section for details.
 As for the first exercise in the "Plotting simulations results" section, use the values of the variables `lai_n` and `masec_n` simulated for USM `wheat` stored in the `results2` object and plot their dynamics, but this time add the observation data to the plot using the values stored in the `observations2` object.
 
 ```{r store-sim-obs1, exercise.setup = "prepare-get_sim"}
-file_path <- file.path(tmp_dir,"sim_obs1.RData")
+file_path <- file.path(tmp_dir, "sim_obs1.RData")
 if (!file.exists(file_path)) {
   results2 <- get_sim(workspace = workspace_path, usm = c("wheat", "maize"), verbose = FALSE)
   observations2 <- get_obs(workspace = workspace_path, usm = c("wheat", "maize"), verbose = FALSE)
-  save(list=c("results2","observations2"), file=file_path)
+  save(list = c("results2", "observations2"), file = file_path)
 } else {
-  #print("loading")
-  load(file=file_path)
+  # print("loading")
+  load(file = file_path)
 }
 ```
 
@@ -1226,7 +1276,7 @@ if (!file.exists(file_path)) {
 
 ```{r plot_simobs1-solution}
 # SOLUTION
-p <- plot(results2, var = c("lai_n","masec_n"), obs = observations2)
+p <- plot(results2, var = c("lai_n", "masec_n"), obs = observations2)
 print(p)
 ```
 
@@ -1251,7 +1301,7 @@ They can be produced using the same `plot()` function as for dynamics plots, wit
 
 ```{r plot_simobs2-solution}
 # SOLUTION
-p <- plot(results2, var = c("lai_n","masec_n"), obs = observations2, type = "scatter")
+p <- plot(results2, var = c("lai_n", "masec_n"), obs = observations2, type = "scatter")
 print(p)
 ```
 
@@ -1271,7 +1321,7 @@ The symbols used in the scatter plots can be adapted by the user using optional 
 
 ```{r plot_simobs3-solution}
 # SOLUTION
-p <- plot(results2, var = c("lai_n","masec_n"), obs = observations2, type = "scatter", shape_sit = "symbol")
+p <- plot(results2, var = c("lai_n", "masec_n"), obs = observations2, type = "scatter", shape_sit = "symbol")
 print(p)
 ```
 
@@ -1280,15 +1330,15 @@ print(p)
 Use the R objects `results4` and `observations4` already containing respectively simulation outputs and observations for these USMs and variables.
 
 ```{r store-sim-obs2, exercise.setup = "prepare-get_sim"}
-usms <- c("wheat","DurumWheat", "maize", "sorghum")
-file_path <- file.path(tmp_dir,"sim_obs2.RData")
+usms <- c("wheat", "DurumWheat", "maize", "sorghum")
+file_path <- file.path(tmp_dir, "sim_obs2.RData")
 if (!file.exists(file_path)) {
   results4 <- get_sim(workspace = workspace_path, usm = usms, verbose = FALSE)
   observations4 <- get_obs(workspace = workspace_path, usm = usms, verbose = FALSE)
-  save(list=c("results4","observations4"), file=file_path)
+  save(list = c("results4", "observations4"), file = file_path)
 } else {
-  #print("loading")
-  load(file=file_path)
+  # print("loading")
+  load(file = file_path)
 }
 ```
 
@@ -1302,8 +1352,8 @@ if (!file.exists(file_path)) {
 
 ```{r plot_simobs4-solution}
 # SOLUTION
-groups <- list(list("wheat","DurumWheat"), list("maize", "sorghum"))
-p <- plot(results4, var = c("lai_n","masec_n"), obs = observations4, type = "scatter", shape_sit = "group", situation_group = groups)
+groups <- list(list("wheat", "DurumWheat"), list("maize", "sorghum"))
+p <- plot(results4, var = c("lai_n", "masec_n"), obs = observations4, type = "scatter", shape_sit = "group", situation_group = groups)
 print(p)
 ```
 
@@ -1330,7 +1380,6 @@ As for the `plot()` function, to get the documentation about `summary()`, either
 ```{r stat_simobs1-solution}
 # SOLUTION
 summary(results4, obs = observations4)
-
 ```
 
 -   Now do the same but compute the statistical criteria per USM
@@ -1380,7 +1429,7 @@ For this purpose, the *R2* and *nRMSE* criteria will be used.
 
 ```{r stat_simobs3-solution}
 # SOLUTION
-summ <- summary(results4, obs = observations4, stats = c("R2","nRMSE"))
+summ <- summary(results4, obs = observations4, stats = c("R2", "nRMSE"))
 
 p <- plot(summ, title = "for all USMs")
 print(p)
@@ -1398,7 +1447,7 @@ print(p)
 
 ```{r stat_simobs4-solution}
 # SOLUTION
-summ <- summary(results4, obs = observations4, all_situations = FALSE, stats = c("R2","nRMSE"))
+summ <- summary(results4, obs = observations4, all_situations = FALSE, stats = c("R2", "nRMSE"))
 
 p <- plot(summ, title = "for each USM")
 print(p)
@@ -1418,7 +1467,7 @@ By default the results per USMs are plotted in bars having different columns
 
 ```{r stat_simobs5-solution}
 # SOLUTION
-summ <- summary(results4, obs = observations4, all_situations = FALSE, stats = c("R2","nRMSE"))
+summ <- summary(results4, obs = observations4, all_situations = FALSE, stats = c("R2", "nRMSE"))
 
 p <- plot(summ, xvar = "situation", title = "USM names as X")
 print(p)
@@ -1445,38 +1494,41 @@ The JavaStics Input files (XML format) can be generated from R using functions o
 
 ```{r gen_xml-1, echo=FALSE}
 question("What is the name of the SticsRFiles function for generating a usms.xml file?",
-         answer("gen_usms_xml2txt"),
-         answer("get_usms_files"),
-         answer("gen_usms_xml", correct = TRUE),
-         answer("gen_usms"),
-         incorrect = "Look at the Reference tab of the SticsRFiles website...",
-         random_answer_order = TRUE,
-         allow_retry = TRUE)
+  answer("gen_usms_xml2txt"),
+  answer("get_usms_files"),
+  answer("gen_usms_xml", correct = TRUE),
+  answer("gen_usms"),
+  incorrect = "Look at the Reference tab of the SticsRFiles website...",
+  random_answer_order = TRUE,
+  allow_retry = TRUE
+)
 ```
 
 ```{r gen_xml-2, echo=FALSE}
 question("From which type of file the usms.xml file can be generated using this function?",
-         answer("csv", correct = TRUE),
-         answer("word"),
-         answer("excel", correct = TRUE),
-         answer("XML"),
-         correct = "Great!",
-         incorrect = "Look at the vignette \"Generating Stics XML files from tabulated data\" of the SticsRFiles website (Article tab)...",
-         random_answer_order = TRUE,
-         allow_retry = TRUE)
+  answer("csv", correct = TRUE),
+  answer("word"),
+  answer("excel", correct = TRUE),
+  answer("XML"),
+  correct = "Great!",
+  incorrect = "Look at the vignette \"Generating Stics XML files from tabulated data\" of the SticsRFiles website (Article tab)...",
+  random_answer_order = TRUE,
+  allow_retry = TRUE
+)
 ```
 
 ```{r gen_xml-3, echo=FALSE}
 question("Which type of JavaStics files can not yet be generated using the gen_*_xml functions?",
-         answer("Soil files"),
-         answer("Weather data files", correct = TRUE),
-         answer("General parameter files", correct = TRUE),
-         answer("Technical files"),
-         answer("Weather station files"),
-         correct = "Incredible!",
-         incorrect = "Look at the vignette \"Generating Stics XML files from tabulated data\" of the SticsRFiles website (Article tab)...",
-         random_answer_order = TRUE,
-         allow_retry = TRUE)
+  answer("Soil files"),
+  answer("Weather data files", correct = TRUE),
+  answer("General parameter files", correct = TRUE),
+  answer("Technical files"),
+  answer("Weather station files"),
+  correct = "Incredible!",
+  incorrect = "Look at the vignette \"Generating Stics XML files from tabulated data\" of the SticsRFiles website (Article tab)...",
+  random_answer_order = TRUE,
+  allow_retry = TRUE
+)
 ```
 
 ::: {.alert .alert-info}
@@ -1495,7 +1547,7 @@ They are not used by the STICS model but can be used to plot comparison between 
 -   Generate observation files from the data stored in the `df` data.frame using the `gen_obs` function and check their content using the `get_obs` function.
 
 ```{r gen_obs, exercise=TRUE}
-df <- data.frame(usm_name = c("usm1","usm1","usm2"), ian = c(2020,2021,2021), mo = c(12,7,7), jo = c(25,27,20),jul = c(359,573,566),`lai_n` = c(0.5,4.5,4.2), mafruit = c(NA,6.5,6.1))
+df <- data.frame(usm_name = c("usm1", "usm1", "usm2"), ian = c(2020, 2021, 2021), mo = c(12, 7, 7), jo = c(25, 27, 20), jul = c(359, 573, 566), `lai_n` = c(0.5, 4.5, 4.2), mafruit = c(NA, 6.5, 6.1))
 
 # Insert your R code here!
 ```
@@ -1511,7 +1563,7 @@ df <- data.frame(usm_name = c("usm1","usm1","usm2"), ian = c(2020,2021,2021), mo
 ```
 
 ```{r gen_obs-solution}
-#SOLUTION:
+# SOLUTION:
 gen_obs(df = df, out_dir = getwd())
 get_obs(workspace = getwd())
 ```
@@ -1526,13 +1578,14 @@ Note that a subset of the observation files defined in the observation data.fram
 
 ```{r set_param_xml-1, echo=FALSE}
 question("What is the name of the SticsRFiles function for modifying JavaStics Input files (XML format)?",
-         answer("set_param_xml", correct = TRUE),
-         answer("set_param_txt"),
-         answer("gen_usms_xml"),
-         answer("gen_usms"),
-         incorrect = "Look at the Reference tab of the SticsRFiles website...",
-         random_answer_order = TRUE,
-         allow_retry = TRUE)
+  answer("set_param_xml", correct = TRUE),
+  answer("set_param_txt"),
+  answer("gen_usms_xml"),
+  answer("gen_usms"),
+  incorrect = "Look at the Reference tab of the SticsRFiles website...",
+  random_answer_order = TRUE,
+  allow_retry = TRUE
+)
 ```
 
 -   Check the values of the nitrification code (`codenitrif`) for the soils defined in the `sols.xml` file of the JavaStics distribution example workspace (path to the JavaStics distribution example workspace is stored in the R object `workspace_path`)
@@ -1547,8 +1600,10 @@ question("What is the name of the SticsRFiles function for modifying JavaStics I
 
 ```{r set_param_xml-2-solution}
 # SOLUTION:
-get_param_xml(file = file.path(workspace_path,"sols.xml"),
-              param = "codenitrif")
+get_param_xml(
+  file = file.path(workspace_path, "sols.xml"),
+  param = "codenitrif"
+)
 ```
 
 -   Then, generate in the JavaStics distribution example workspace a new soil file called `sols_new.xml` for which all nitrification codes are set to 1 and check their values using the `get_param_xml` function.
@@ -1563,10 +1618,14 @@ get_param_xml(file = file.path(workspace_path,"sols.xml"),
 
 ```{r set_param_xml-3-solution}
 # SOLUTION:
-set_param_xml(file = file.path(workspace_path,"sols.xml"),
-              param = "codenitrif", values = 1, save_as = file.path(workspace_path,"sols_new.xml"))
-get_param_xml(file = file.path(workspace_path,"sols_new.xml"),
-              param = "codenitrif")
+set_param_xml(
+  file = file.path(workspace_path, "sols.xml"),
+  param = "codenitrif", values = 1, save_as = file.path(workspace_path, "sols_new.xml")
+)
+get_param_xml(
+  file = file.path(workspace_path, "sols_new.xml"),
+  param = "codenitrif"
+)
 ```
 
 ::: {.alert .alert-info}
@@ -1625,7 +1684,7 @@ Before generating the text files, we will first restrain the number of variables
 ```
 
 ```{r gen_varmod-solution}
-#SOLUTION:
+# SOLUTION:
 gen_varmod(workspace_path, var = c("lai_n", "masec_n", "mafruit"))
 ```
 
@@ -1646,16 +1705,16 @@ Remember, the path of the JavaStics distribution downloaded by this tutorial is 
 ```
 
 ```{r gen_usms_xml2txt-solution}
-#SOLUTION:
-gen_usms_xml2txt(javastics_path, workspace_path, usm = c("wheat","banana","soybean"))
+# SOLUTION:
+gen_usms_xml2txt(javastics_path, workspace_path, usm = c("wheat", "banana", "soybean"))
 ```
 
 The text files have been generated in subfolders of `workspace_path`, i.e. **`r workspace_path`**, one folder per USM, each taking the name of the corresponding USM.
 
 ```{r prepare-gen_usms}
 # generate missing dirs, if any
-dirs <- c("wheat","banana","soybean")
-dirs_ex <- dir.exists(file.path(workspace_path,dirs))
+dirs <- c("wheat", "banana", "soybean")
+dirs_ex <- dir.exists(file.path(workspace_path, dirs))
 if (!all(dirs_ex)) gen_usms_xml2txt(javastics_path, workspace_path, usm = dirs[!dirs_ex], verbose = FALSE)
 ```
 
@@ -1666,8 +1725,8 @@ Now, print the files inside the created folders:
 ```
 
 ```{r list_txt_files-solution}
-#SOLUTION:
-dirs <- file.path(workspace_path, c("wheat","banana","soybean"))
+# SOLUTION:
+dirs <- file.path(workspace_path, c("wheat", "banana", "soybean"))
 list.files(dirs, full.names = TRUE)
 ```
 
@@ -1689,7 +1748,7 @@ This function, defined in SticsOnR, helps us define where is our installation of
 ```
 
 ```{r stics_wrapper_options1-solution}
-#SOLUTION:
+# SOLUTION:
 stics_wrapper_options(javastics = javastics_path, workspace = workspace_path, parallel = TRUE)
 ```
 
@@ -1699,12 +1758,12 @@ Now everything is set-up to make our simulations!
 The model options we will use here are stored in the `wrapper_options` object with the options we just set up in the previous section.
 
 ```{r store-wrapper-options, eval=TRUE, exercise.setup = "prepare-gen_usms"}
-wrapper_options_file <- file.path(tmp_dir,"wrapper_options.RData")
+wrapper_options_file <- file.path(tmp_dir, "wrapper_options.RData")
 if (!file.exists(wrapper_options_file)) {
-  wrapper_options = stics_wrapper_options(javastics = javastics_path, workspace = workspace_path, parallel = TRUE, verbose = FALSE)
+  wrapper_options <- stics_wrapper_options(javastics = javastics_path, workspace = workspace_path, parallel = TRUE, verbose = FALSE)
   save(list = "wrapper_options", file = wrapper_options_file)
 } else {
-  #print("loading")
+  # print("loading")
   load(file = wrapper_options_file)
 }
 ```
@@ -1728,7 +1787,7 @@ if (!file.exists(wrapper_options_file)) {
 ```
 
 ```{r stics_wrapper1-solution}
-#SOLUTION:
+# SOLUTION:
 res1 <- stics_wrapper(model_options = wrapper_options, situation = "wheat", var = c("lai_n", "masec_n"))
 print(res1)
 ```
@@ -1767,7 +1826,7 @@ This argument is given as a named vector.
 ```
 
 ```{r stics_wrapper2-solution}
-#SOLUTION:
+# SOLUTION:
 res2 <- stics_wrapper(model_options = wrapper_options, situation = "wheat", var = "lai_n", param_values = c("dlaimax" = 0.005, "durvieF" = 80))
 print(res2)
 ```
@@ -1780,20 +1839,26 @@ Remember, the simulated variables values are stored in the `sim_list` field of e
 For example, to get the values of the simulated variables for `res1`, we would do: `res1$sim_list`.
 
 ```{r store-comp_res, exercise.setup = "prepare-gen_usms"}
-if (!file.exists(file.path(tmp_dir,"comp_res.RData"))) {
-  wrapper_options = stics_wrapper_options(javastics = javastics_path,
-                                          workspace = workspace_path, parallel = TRUE,
-                                          verbose = FALSE)
-  res1 = stics_wrapper(model_options = wrapper_options, situation = "wheat",
-                       var = c("lai_n", "masec_n"))
-  res2 = stics_wrapper(model_options = wrapper_options, situation = "wheat",
-                       var = "lai_n",
-                       param_values = c("dlaimax" = 0.005, "durvieF" = 80))
-  
-  save(list=c("res1", "res2"), file=file.path(tmp_dir,"comp_res.RData"))
+if (!file.exists(file.path(tmp_dir, "comp_res.RData"))) {
+  wrapper_options <- stics_wrapper_options(
+    javastics = javastics_path,
+    workspace = workspace_path, parallel = TRUE,
+    verbose = FALSE
+  )
+  res1 <- stics_wrapper(
+    model_options = wrapper_options, situation = "wheat",
+    var = c("lai_n", "masec_n")
+  )
+  res2 <- stics_wrapper(
+    model_options = wrapper_options, situation = "wheat",
+    var = "lai_n",
+    param_values = c("dlaimax" = 0.005, "durvieF" = 80)
+  )
+
+  save(list = c("res1", "res2"), file = file.path(tmp_dir, "comp_res.RData"))
 } else {
-  #print("loading")
-  load(file=file.path(tmp_dir,"comp_res.RData"))
+  # print("loading")
+  load(file = file.path(tmp_dir, "comp_res.RData"))
 }
 ```
 
@@ -1818,8 +1883,8 @@ It is also possible to compare the results of several simulations by giving them
 ```
 
 ```{r stics_wrapper-plot1-solution}
-#SOLUTION:
-p <- plot(res1$sim_list,res2$sim_list)
+# SOLUTION:
+p <- plot(res1$sim_list, res2$sim_list)
 print(p)
 ```
 
@@ -1840,8 +1905,8 @@ We can also name the simulations in our plot by naming them when passed as argum
 ```
 
 ```{r stics_wrapper-plot2-solution}
-#SOLUTION:
-p <- plot("original" = res1$sim_list,"dlaimax=0.005, durvieF=80" = res2$sim_list)
+# SOLUTION:
+p <- plot("original" = res1$sim_list, "dlaimax=0.005, durvieF=80" = res2$sim_list)
 print(p)
 ```
 
@@ -1861,18 +1926,20 @@ The workflow for parameter estimation is made using several steps:
 -   run the parameter optimization (`estim_param`).
 
 ```{r store-param-estim, exercise.setup = "prepare-gen_usms"}
-if (!file.exists(file.path(tmp_dir,"store-param-estim.RData"))) {
-  wrapper_options = stics_wrapper_options(javastics = javastics_path, workspace = workspace_path, parallel = TRUE, verbose = FALSE)
-  obs = get_obs(workspace = workspace_path, usm = "wheat", verbose = FALSE)
-  obs_filt = filter_obs(obs, "lai_n", include = TRUE)
-  param_info = list(stamflax = list(lb = 200, ub = 400))
-  optim_options = list(nb_rep = 3, maxeval = 10, xtol_rel = 1e-03, out_dir = workspace_path, ranseed = 1234)
-  
-  save(list=c("wrapper_options", "obs", "obs_filt", "param_info", "optim_options"),
-       file=file.path(tmp_dir,"store-param-estim.RData"))
+if (!file.exists(file.path(tmp_dir, "store-param-estim.RData"))) {
+  wrapper_options <- stics_wrapper_options(javastics = javastics_path, workspace = workspace_path, parallel = TRUE, verbose = FALSE)
+  obs <- get_obs(workspace = workspace_path, usm = "wheat", verbose = FALSE)
+  obs_filt <- filter_obs(obs, "lai_n", include = TRUE)
+  param_info <- list(stamflax = list(lb = 200, ub = 400))
+  optim_options <- list(nb_rep = 3, maxeval = 10, xtol_rel = 1e-03, out_dir = workspace_path, ranseed = 1234)
+
+  save(
+    list = c("wrapper_options", "obs", "obs_filt", "param_info", "optim_options"),
+    file = file.path(tmp_dir, "store-param-estim.RData")
+  )
 } else {
-  #print("loading")
-  load(file=file.path(tmp_dir,"store-param-estim.RData"))
+  # print("loading")
+  load(file = file.path(tmp_dir, "store-param-estim.RData"))
 }
 ```
 
@@ -1899,8 +1966,8 @@ wrapper_options = stics_wrapper_options(javastics = javastics_path, workspace = 
 ```
 
 ```{r estim_param_obs1-solution}
-#SOLUTION:
-obs = get_obs(workspace = workspace_path, usm = "wheat")
+# SOLUTION:
+obs <- get_obs(workspace = workspace_path, usm = "wheat")
 ```
 
 -   Filter the observations to get only the lai using `filter_obs()`, and put it in an object called `obs_filt`:
@@ -1914,8 +1981,8 @@ obs = get_obs(workspace = workspace_path, usm = "wheat")
 ```
 
 ```{r estim_param_obs2-solution}
-#SOLUTION:
-obs_filt = filter_obs(obs, "lai_n", include = TRUE)
+# SOLUTION:
+obs_filt <- filter_obs(obs, "lai_n", include = TRUE)
 ```
 
 ### Parameters of the optimization method
@@ -1948,8 +2015,8 @@ These parameters are passed to `estim_param` as a named list.
 ```
 
 ```{r estim_param_options-solution}
-#SOLUTION:
-optim_options = list(nb_rep = 3, maxeval=10, out_dir = workspace_path)
+# SOLUTION:
+optim_options <- list(nb_rep = 3, maxeval = 10, out_dir = workspace_path)
 ```
 
 ### Choose parameter
@@ -1980,8 +2047,8 @@ Let's try to optimize the value of the `stamflax` parameter.
 ```
 
 ```{r estim_param_param-solution}
-#SOLUTION:
-param_info = list(stamflax = list(lb = 200, ub = 400))
+# SOLUTION:
+param_info <- list(stamflax = list(lb = 200, ub = 400))
 ```
 
 ### Optimization
@@ -2011,12 +2078,14 @@ As a reminder, here's the objects we previously defined:
 ```
 
 ```{r estim_param2-solution}
-#SOLUTION:
-optim_res = estim_param(obs_list = obs_filt,
-                        model_function = stics_wrapper,
-                        model_options = wrapper_options,
-                        optim_options = optim_options,
-                        param_info = param_info)
+# SOLUTION:
+optim_res <- estim_param(
+  obs_list = obs_filt,
+  model_function = stics_wrapper,
+  model_options = wrapper_options,
+  optim_options = optim_options,
+  param_info = param_info
+)
 ```
 
 ::: {.alert .alert-note}
@@ -2046,24 +2115,32 @@ In the case of the simplex method this list includes:
 :::
 
 ```{r store-param-estim-out, exercise.setup="prepare-gen_usms"}
-if (!file.exists(file.path(tmp_dir,"prepare-param-estim-out.RData"))) {
+if (!file.exists(file.path(tmp_dir, "prepare-param-estim-out.RData"))) {
   load(file = system.file("extdata/optim_results.Rdata", package = "SticsRPacks"))
-  optim_res = res
+  optim_res <- res
   rm(res)
-  wrapper_options = stics_wrapper_options(javastics = javastics_path,
-                                          workspace = workspace_path, parallel = TRUE,
-                                          verbose = FALSE)
-  obs_filt = filter_obs(get_obs(workspace = workspace_path, usm = "wheat",
-                                verbose = FALSE), "lai_n", include = TRUE)
-  sim_after_optim = stics_wrapper(param_values = optim_res$final_values,
-                                  model_options = wrapper_options, situation = "wheat")$sim_list
-  sim_before_optim = stics_wrapper(model_options = wrapper_options, situation = "wheat")$sim_list
-  
-  save(list=c("optim_res", "wrapper_options", "obs_filt", "sim_after_optim", "sim_before_optim"),
-       file=file.path(tmp_dir,"prepare-param-estim-out.RData"))
+  wrapper_options <- stics_wrapper_options(
+    javastics = javastics_path,
+    workspace = workspace_path, parallel = TRUE,
+    verbose = FALSE
+  )
+  obs_filt <- filter_obs(get_obs(
+    workspace = workspace_path, usm = "wheat",
+    verbose = FALSE
+  ), "lai_n", include = TRUE)
+  sim_after_optim <- stics_wrapper(
+    param_values = optim_res$final_values,
+    model_options = wrapper_options, situation = "wheat"
+  )$sim_list
+  sim_before_optim <- stics_wrapper(model_options = wrapper_options, situation = "wheat")$sim_list
+
+  save(
+    list = c("optim_res", "wrapper_options", "obs_filt", "sim_after_optim", "sim_before_optim"),
+    file = file.path(tmp_dir, "prepare-param-estim-out.RData")
+  )
 } else {
-  #print("loading")
-  load(file=file.path(tmp_dir,"prepare-param-estim-out.RData"))
+  # print("loading")
+  load(file = file.path(tmp_dir, "prepare-param-estim-out.RData"))
 }
 ```
 
@@ -2094,8 +2171,8 @@ To do so, we call again `stics_wrapper` with the optimized value passed as argum
 ```
 
 ```{r estim_param3-solution}
-#SOLUTION:
-sim_after_optim = stics_wrapper(param_values = optim_res$final_values, model_options = wrapper_options, situation = "wheat")$sim_list
+# SOLUTION:
+sim_after_optim <- stics_wrapper(param_values = optim_res$final_values, model_options = wrapper_options, situation = "wheat")$sim_list
 ```
 
 Now we can plot the output using `plot()`.
@@ -2111,7 +2188,7 @@ Now we can plot the output using `plot()`.
 ```
 
 ```{r estim_param4-solution}
-#SOLUTION:
+# SOLUTION:
 p <- plot(sim = sim_after_optim, obs = obs_filt, var = "lai_n")
 print(p)
 ```
@@ -2129,7 +2206,7 @@ We can also make a scatter plot for a different display of the fit between obser
 ```
 
 ```{r estim_param5-solution}
-#SOLUTION:
+# SOLUTION:
 p <- plot(sim = sim_after_optim, obs = obs_filt, type = "scatter", var = "lai_n")
 print(p)
 ```
@@ -2150,8 +2227,8 @@ To do so, we just have to simulate both, and to plot the results using `plot()`.
 ```
 
 ```{r estim_param6-solution}
-#SOLUTION:
-sim_before_optim = stics_wrapper(model_options = wrapper_options, situation = "wheat")$sim_list
+# SOLUTION:
+sim_before_optim <- stics_wrapper(model_options = wrapper_options, situation = "wheat")$sim_list
 ```
 
 Now we can compare the simulations using `plot()` and `summary()`.
@@ -2167,8 +2244,8 @@ Now we can compare the simulations using `plot()` and `summary()`.
 ```
 
 ```{r estim_param7-solution}
-#SOLUTION:
-p <- plot(before_optim=sim_before_optim, after_optim=sim_after_optim, obs= obs_filt, var = "lai_n")
+# SOLUTION:
+p <- plot(before_optim = sim_before_optim, after_optim = sim_after_optim, obs = obs_filt, var = "lai_n")
 print(p)
 ```
 
@@ -2187,8 +2264,8 @@ print(p)
 ```
 
 ```{r estim_param8-solution}
-#SOLUTION:
-summary(before_optim=sim_before_optim, after_optim=sim_after_optim, obs = obs_filt, stats=c("nRMSE", "Bias"))
+# SOLUTION:
+summary(before_optim = sim_before_optim, after_optim = sim_after_optim, obs = obs_filt, stats = c("nRMSE", "Bias"))
 ```
 
 ## Managing successive USMs
@@ -2222,30 +2299,41 @@ In this case, it is advised to use the `stics_wrapper()` function.
 ```
 
 ```{r sim_successive-solution}
-#SOLUTION:
+# SOLUTION:
 
 # Generate the txt files
-gen_usms_xml2txt(javastics_path, workspace_path, usm = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+gen_usms_xml2txt(javastics_path, workspace_path, usm = c("demo_Wheat1", "demo_BareSoil2", "demo_maize3"))
 
 # Run without succession
-wrapper_options <- stics_wrapper_options(javastics = javastics_path,
-                                         workspace = workspace_path)
-without_succ <- stics_wrapper(model_options = wrapper_options,
-                              situation = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+wrapper_options <- stics_wrapper_options(
+  javastics = javastics_path,
+  workspace = workspace_path
+)
+without_succ <- stics_wrapper(
+  model_options = wrapper_options,
+  situation = c("demo_Wheat1", "demo_BareSoil2", "demo_maize3")
+)
 
 # Run with succession
-wrapper_options <- stics_wrapper_options(javastics = javastics_path,
-                                         workspace = workspace_path,
-                                         successive = list(c("demo_Wheat1","demo_BareSoil2","demo_maize3")))
-with_succ <- stics_wrapper(model_options = wrapper_options,
-                           situation = c("demo_Wheat1","demo_BareSoil2","demo_maize3"))
+wrapper_options <- stics_wrapper_options(
+  javastics = javastics_path,
+  workspace = workspace_path,
+  successive = list(c("demo_Wheat1", "demo_BareSoil2", "demo_maize3"))
+)
+with_succ <- stics_wrapper(
+  model_options = wrapper_options,
+  situation = c("demo_Wheat1", "demo_BareSoil2", "demo_maize3")
+)
 
 # Compare both
-print(paste("mafruit demo_maize3 without succession:",
-            tail(without_succ$sim_list$demo_maize3$mafruit, n=1)))
-print(paste("mafruit demo_maize3 with succession:",
-            tail(with_succ$sim_list$demo_maize3$mafruit, n=1)))
-
+print(paste(
+  "mafruit demo_maize3 without succession:",
+  tail(without_succ$sim_list$demo_maize3$mafruit, n = 1)
+))
+print(paste(
+  "mafruit demo_maize3 with succession:",
+  tail(with_succ$sim_list$demo_maize3$mafruit, n = 1)
+))
 ```
 
 ::: {.alert .alert-info}
@@ -2266,33 +2354,44 @@ Dynamic plots of variables can be aggregated to generate continuous plots.
 -   Have a look at the argument `successive` of the `plot` function of the CroPlotR package. Then plot the `azomes` variable (amount of NO3-N in soil) simulated in the previous exercise for both modes (use the `without_succ` and `with_succ` R variables that contains the results returned by the wrapper, as presented in the SOLUTION of the previous exercise). Check that `azomes` is more continuous in the second case.
 
 ```{r prepare-plot-successive}
-if (!file.exists(file.path(tmp_dir,"prepare-plot-successive.RData"))) {
+if (!file.exists(file.path(tmp_dir, "prepare-plot-successive.RData"))) {
   gen_usms_xml2txt(javastics_path, workspace_path,
-                   usm = c("demo_Wheat1","demo_BareSoil2","demo_maize3"),
-                   verbose = FALSE)
-  
+    usm = c("demo_Wheat1", "demo_BareSoil2", "demo_maize3"),
+    verbose = FALSE
+  )
+
   # Run without succession
-  wrapper_options <- stics_wrapper_options(javastics = javastics_path,
-                                           workspace = workspace_path,
-                                           verbose = FALSE)
-  without_succ <- stics_wrapper(model_options = wrapper_options,
-                                situation = c("demo_Wheat1","demo_BareSoil2","demo_maize3"),
-                                var = c("lai_n", "masec_n", "mafruit", "azomes"))
-  
+  wrapper_options <- stics_wrapper_options(
+    javastics = javastics_path,
+    workspace = workspace_path,
+    verbose = FALSE
+  )
+  without_succ <- stics_wrapper(
+    model_options = wrapper_options,
+    situation = c("demo_Wheat1", "demo_BareSoil2", "demo_maize3"),
+    var = c("lai_n", "masec_n", "mafruit", "azomes")
+  )
+
   # Run with succession
-  wrapper_options <- stics_wrapper_options(javastics = javastics_path,
-                                           workspace = workspace_path,
-                                           successive = list(c("demo_Wheat1","demo_BareSoil2","demo_maize3")),
-                                           verbose = FALSE)
-  with_succ <- stics_wrapper(model_options = wrapper_options,
-                             situation = c("demo_Wheat1","demo_BareSoil2","demo_maize3"),
-                             var = c("lai_n", "masec_n", "mafruit", "azomes"))
-  
-  save(list=c("without_succ", "with_succ"),
-       file=file.path(tmp_dir,"prepare-plot-successive.RData"))
+  wrapper_options <- stics_wrapper_options(
+    javastics = javastics_path,
+    workspace = workspace_path,
+    successive = list(c("demo_Wheat1", "demo_BareSoil2", "demo_maize3")),
+    verbose = FALSE
+  )
+  with_succ <- stics_wrapper(
+    model_options = wrapper_options,
+    situation = c("demo_Wheat1", "demo_BareSoil2", "demo_maize3"),
+    var = c("lai_n", "masec_n", "mafruit", "azomes")
+  )
+
+  save(
+    list = c("without_succ", "with_succ"),
+    file = file.path(tmp_dir, "prepare-plot-successive.RData")
+  )
 } else {
-  #print("loading")
-  load(file=file.path(tmp_dir,"prepare-plot-successive.RData"))
+  # print("loading")
+  load(file = file.path(tmp_dir, "prepare-plot-successive.RData"))
 }
 ```
 
@@ -2301,11 +2400,13 @@ if (!file.exists(file.path(tmp_dir,"prepare-plot-successive.RData"))) {
 ```
 
 ```{r plot_successive-solution}
-#SOLUTION:
-p <- plot("Without successive"=without_succ$sim_list,
-          "With successive"=with_succ$sim_list,
-          var = "azomes",
-          successive = list(list("demo_Wheat1","demo_BareSoil2","demo_maize3")))
+# SOLUTION:
+p <- plot(
+  "Without successive" = without_succ$sim_list,
+  "With successive" = with_succ$sim_list,
+  var = "azomes",
+  successive = list(list("demo_Wheat1", "demo_BareSoil2", "demo_maize3"))
+)
 print(p)
 ```
 
@@ -2337,31 +2438,39 @@ We will see in this section how intercrops are handled in SticsRPacks.
 
 ```{r intercrop-1-solution}
 # SOLUTION:
-run_javastics(javastics=javastics_path,  workspace = workspace_path, usm = c("intercrop_pea_barley"))
-sim <- get_sim(workspace = workspace_path, usm="intercrop_pea_barley",var=c("lai_n","masec_n","mafruit"))
+run_javastics(javastics = javastics_path, workspace = workspace_path, usm = c("intercrop_pea_barley"))
+sim <- get_sim(workspace = workspace_path, usm = "intercrop_pea_barley", var = c("lai_n", "masec_n", "mafruit"))
 ```
 
 -   Examine the results and try to answer the quizz below
 
 ```{r run-intercrop, eval=FALSE}
-if (!all(file.exists(file.path(workspace_path,c("mod_spintercrop_pea_barley.sti",
-                                                "mod_saintercrop_pea_barley.sti"))))) {
-  run_javastics(javastics=javastics_path,  workspace = workspace_path,
-                usm = c("intercrop_pea_barley"), verbose = FALSE)
+if (!all(file.exists(file.path(workspace_path, c(
+  "mod_spintercrop_pea_barley.sti",
+  "mod_saintercrop_pea_barley.sti"
+))))) {
+  run_javastics(
+    javastics = javastics_path, workspace = workspace_path,
+    usm = c("intercrop_pea_barley"), verbose = FALSE
+  )
 }
 ```
 
 ```{r store-intercrop-2, exercise.setup = "run-intercrop"}
-if (!file.exists(file.path(tmp_dir,"prepare-intercrop-2.RData"))) {
-  sim <- get_sim(workspace = workspace_path,
-                 usm="intercrop_pea_barley",
-                 var=c("lai_n","masec_n","mafruit"), verbose = FALSE)
-  
-  save(list=c("sim"),
-       file=file.path(tmp_dir,"prepare-intercrop-2.RData"))
+if (!file.exists(file.path(tmp_dir, "prepare-intercrop-2.RData"))) {
+  sim <- get_sim(
+    workspace = workspace_path,
+    usm = "intercrop_pea_barley",
+    var = c("lai_n", "masec_n", "mafruit"), verbose = FALSE
+  )
+
+  save(
+    list = c("sim"),
+    file = file.path(tmp_dir, "prepare-intercrop-2.RData")
+  )
 } else {
-  #print("loading")
-  load(file=file.path(tmp_dir,"prepare-intercrop-2.RData"))
+  # print("loading")
+  load(file = file.path(tmp_dir, "prepare-intercrop-2.RData"))
 }
 ```
 
@@ -2379,11 +2488,12 @@ print(sim)
 
 ```{r intercrop-3, echo=FALSE}
 question("How are organized the results for the different intercrops",
-         answer("In a single data.frame per USM, the results for the different crops being flagged by Plant and Dominance columns", correct = TRUE),
-         answer("In different data.frames, depending on the crop"),
-         incorrect = "You're not lucky ... the correct proposition is the other one!",
-         random_answer_order = TRUE,
-         allow_retry = TRUE)
+  answer("In a single data.frame per USM, the results for the different crops being flagged by Plant and Dominance columns", correct = TRUE),
+  answer("In different data.frames, depending on the crop"),
+  incorrect = "You're not lucky ... the correct proposition is the other one!",
+  random_answer_order = TRUE,
+  allow_retry = TRUE
+)
 ```
 
 -   Check now how results are changed when you use the `usms_file` argument of the `get_sim` function
@@ -2394,9 +2504,11 @@ question("How are organized the results for the different intercrops",
 
 ```{r intercrop-4-solution}
 # SOLUTION:
-sim <- get_sim(workspace = workspace_path, usm="intercrop_pea_barley",
-               var=c("lai_n","masec_n","mafruit"),
-               usms_file = file.path(workspace_path,"usms.xml"))
+sim <- get_sim(
+  workspace = workspace_path, usm = "intercrop_pea_barley",
+  var = c("lai_n", "masec_n", "mafruit"),
+  usms_file = file.path(workspace_path, "usms.xml")
+)
 print(sim)
 # The names of the Plant files are now given in the Plant column instead of Plant_1 and Plant_2 ...
 ```
@@ -2409,9 +2521,11 @@ print(sim)
 
 ```{r intercrop-5-solution}
 # SOLUTION:
-sim <- get_sim(workspace = workspace_path, usm="intercrop_pea_barley",
-               var=c("lai_n","masec_n","mafruit"),
-               usms_file = file.path(workspace_path,"usms.xml"), javastics=javastics_path)
+sim <- get_sim(
+  workspace = workspace_path, usm = "intercrop_pea_barley",
+  var = c("lai_n", "masec_n", "mafruit"),
+  usms_file = file.path(workspace_path, "usms.xml"), javastics = javastics_path
+)
 print(sim)
 # The names of the Plants are now given in the Plant column.
 ```
@@ -2419,17 +2533,21 @@ print(sim)
 -   Now, plot the simulation results using the standard plot function of CroPlotR
 
 ```{r store-intercrop-6, exercise.setup = "run-intercrop"}
-if (!file.exists(file.path(tmp_dir,"prepare-intercrop-6.RData"))) {
-  sim <- get_sim(workspace = workspace_path, usm="intercrop_pea_barley",
-                 var=c("lai_n","masec_n","mafruit"),
-                 usms_file = file.path(workspace_path,"usms.xml"), javastics=javastics_path,
-                 verbose = FALSE)
-  
-  save(list=c("sim"),
-       file=file.path(tmp_dir,"prepare-intercrop-6.RData"))
+if (!file.exists(file.path(tmp_dir, "prepare-intercrop-6.RData"))) {
+  sim <- get_sim(
+    workspace = workspace_path, usm = "intercrop_pea_barley",
+    var = c("lai_n", "masec_n", "mafruit"),
+    usms_file = file.path(workspace_path, "usms.xml"), javastics = javastics_path,
+    verbose = FALSE
+  )
+
+  save(
+    list = c("sim"),
+    file = file.path(tmp_dir, "prepare-intercrop-6.RData")
+  )
 } else {
-  #print("loading")
-  load(file=file.path(tmp_dir,"prepare-intercrop-6.RData"))
+  # print("loading")
+  load(file = file.path(tmp_dir, "prepare-intercrop-6.RData"))
 }
 ```
 
