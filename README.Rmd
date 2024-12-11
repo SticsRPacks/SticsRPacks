@@ -82,7 +82,7 @@ SticsRPacks_update()
 #>  * SticsRFiles (0.4.0 -> 0.4.1)
 #>  * CroptimizR (0.4.1 -> 0.5)
 #> Update now?
-#> 
+#>
 #> 1: Yes
 #> 2: No
 ```
