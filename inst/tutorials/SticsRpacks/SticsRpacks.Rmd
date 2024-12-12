@@ -82,40 +82,13 @@ if (!local_javastics) {
   user_passwd <- SticsRPacks:::get_forge_userpass("public")
   stics_version_num <- SticsRFiles:::get_version_num()
   stics_version <- "latest"
-  
-  if (stics_version_num < 10) { 
-    javastics_dir <- "JavaSTICS-1.41-stics-9.2"
-    workspace_path <- "JavaSTICS-1.41-stics-9.2/example"
-    download_url <- 
-      "https://w3.avignon.inra.fr/forge/attachments/download/2482/"
-    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V9.2"
-    java_target <- 8
-    
-  } else if (stics_version_num < 10.1) {
-    # same as zip archive name
-    javastics_dir <- "JavaSTICS-1.5.1-STICS-10.0.0"
-    workspace_path <- "JavaSTICS-1.5.1-STICS-10.0.0/example"
-    download_url <- 
-      "https://w3.avignon.inrae.fr/forge/attachments/download/3005/"
-    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.0"
-    java_target <- 11
-    
-  } else if (stics_version_num < 10.2) {
-    javastics_dir <- "JavaSTICS-1.5.2-STICS-10.1.1"
-    workspace_path <- "JavaSTICS-1.5.2-STICS-10.1.1/example"
-    download_url <- 
-      "https://w3.avignon.inrae.fr/forge/attachments/download/3165/"
-    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.1.0"
-    java_target <- 17
-    
-  } else {
-    javastics_dir <- "JavaSTICS-1.5.2-STICS-10.2.0"
-    workspace_path <- "JavaSTICS-1.5.2-STICS-10.2.0/example"
-    download_url <- 
-      "https://w3.avignon.inrae.fr/forge/attachments/download/3337/"
-    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.2.0"
-    java_target <- 17
-  }
+  javastics_dir <- "JavaSTICS-1.5.2-STICS-10.2.0"
+  workspace_path <- "JavaSTICS-1.5.2-STICS-10.2.0/example"
+  download_url <- 
+    "https://w3.avignon.inrae.fr/forge/attachments/download/3337/JavaSTICS-1.5.2-STICS-10.2.0.zip"
+  workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10"
+  java_target <- 17
+  #}
 } else {
   # Check JavaStics in path
   if (!dir.exists(javastics_in_path) ||
@@ -143,29 +116,25 @@ if (!local_javastics) {
   }
   
   # getting the STICS numerical version
-  stics_version_str <- attr(check, "version")
+  stics_version <- attr(check, "version")
   stics_version_num <- SticsRFiles:::get_version_num(
-    gsub(pattern = "(.*)\\_(.*)", x = stics_version_str, replacement = "\\1")
+    gsub(pattern = "(.*)\\_(.*)", x = stics_version, replacement = "\\1")
   )
   
   # Checking if the version is compatible with
-  # the 4 Stics versions taken into account in the tuto data
   # Stopping if Stics is older than version 9.2
-  
-  if (stics_version_num < 10) {
+  # or an unsupported version (i.e. > of the latest standard version) 
+  if (stics_version_num < 9) {
+    stop("The JavaSTICS distribution ",
+         basename(javastics_path),
+         "is too old and not supported in this tutorial")
+  } else if (stics_version_num < 10) {
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V9.2"
-    stics_version <- "V9.2"
   } else if (stics_version_num < 10.1) {
-    workspace_PW1 <- "tutorials/SticsRpacks/PW1"
-    stics_version <- "V10.0"
+    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10"
     java_target <- 11
-  } else if (stics_version_num < 10.2) {
-    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.1.0"
-    stics_version <- "V10.1.0"
-    java_target <- 17
-  } else if (stics_version_num < 10.3) {
-    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10.2.0"
-    stics_version <- "V10.2.0"
+  } else if (stics_version_num < 11) {
+    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10"
     java_target <- 17
   } else {
     stop("The JavaSTICS distribution ",
@@ -176,7 +145,6 @@ if (!local_javastics) {
 }
 
 if (linux) {
-  #if (!lower_than_v10 && linux) {
   java_path <- Sys.getenv("JAVA")
   
   if (java_path != "") java <- java_path
@@ -247,23 +215,18 @@ if (!local_javastics) {
   
   files_list <- list.files(javastics_path)
   if (length(files_list) == 0 || !any(grepl("JavaStics.exe",files_list))) {
-    zip_path <- file.path(work_dir,paste0(javastics_dir,".zip"))
-    system(paste0("curl -u ",
-                  user_passwd,
-                  " ",
-                  "-k ",
-                  download_url,
-                  javastics_dir,
-                  ".zip --output ",
-                  zip_path))
-    unzip(zip_path, exdir = out_path)
+    # downloading the latest JavaStics distribution
+    javastics_path <- SticsRPacks:::download_javastics(
+      download_url = download_url,
+      output_dir = work_dir)
+    
   }
   workspace_path <- file.path(work_dir, workspace_path, fsep = "/")
 } else {
   workspace_path <- file.path(javastics_in_path, "example")
 }
 
-# fixing workspaces path
+# fixing workspace path
 workspace_PW1 <- file.path(system.file(package = "SticsRPacks"),
                            workspace_PW1,
                            fsep = "/")

@@ -66,3 +66,31 @@ get_forge_userpass <- function(type = "public") {
   if(type == "internal") return("stics_eps:w10lptr6405")
 
 }
+
+download_javastics <- function(download_url, output_dir = tempdir()) {
+
+  # get javastics last version
+  user_passwd <- SticsRPacks:::get_forge_userpass("public")
+
+  javastics_dir <-  gsub(pattern = "(.*)/(.*)\\.zip$",
+                         x = download_url, replacement = "\\2")
+
+
+  zip_path <- file.path(output_dir, paste0(javastics_dir, ".zip"))
+  #output_path <- file.path(output_dir, javastics_dir)
+  if (!dir.exists(file.path(output_dir, javastics_dir))) {
+    system(paste0("curl -u ",
+                  user_passwd,
+                  " ",
+                  "-k ",
+                  download_url,
+                  " --output ",
+                  zip_path))
+    unzip(zip_path, exdir = output_dir)
+  }
+
+  if (file.exists(zip_path)) unlink(zip_path)
+
+  return(file.path(output_dir, javastics_dir))
+
+}
