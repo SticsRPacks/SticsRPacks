@@ -1,4 +1,3 @@
-
 #' The SticsRPacks logo, using ASCII or Unicode characters
 #'
 #' Use [crayon::strip_style()] to get rid of the colors.
@@ -10,7 +9,6 @@
 #' @export
 #' @examples
 #' SticsRPacks_logo()
-
 SticsRPacks_logo <- function(unicode = l10n_info()$`UTF-8`) {
   logo <- c(
     "  ____    _     _                ____    ____                   _           ",
@@ -24,8 +22,10 @@ SticsRPacks_logo <- function(unicode = l10n_info()$`UTF-8`) {
   hexa <- c("*", ".", "o", "*", ".", "*", ".", "o", ".", "*")
   if (unicode) hexa <- c("*" = "\u2b22", "o" = "\u2b21", "." = ".")[hexa]
 
-  cols <- c("red", "yellow", "green", "magenta", "cyan",
-            "yellow", "green", "white", "magenta", "cyan")
+  cols <- c(
+    "red", "yellow", "green", "magenta", "cyan",
+    "yellow", "green", "white", "magenta", "cyan"
+  )
 
   col_hexa <- purrr::map2(hexa, cols, ~ crayon::make_style(.y)(.x))
 

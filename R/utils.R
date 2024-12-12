@@ -21,7 +21,6 @@ text_col <- function(x) {
   theme <- rstudioapi::getThemeInfo()
 
   if (isTRUE(theme$dark)) crayon::white(x) else crayon::black(x)
-
 }
 
 #' List all packages in SticsRPacks
@@ -44,7 +43,9 @@ SticsRPacks_packages <- function(include_self = TRUE) {
 }
 
 invert <- function(x) {
-  if (length(x) == 0) return()
+  if (length(x) == 0) {
+    return()
+  }
   stacked <- utils::stack(x)
   tapply(as.character(stacked$ind), stacked$values, list)
 }
@@ -61,10 +62,13 @@ style_grey <- function(level, ...) {
 get_forge_userpass <- function(type = "public") {
   # public or internal (EPS)
 
-  if(type == "public") return("stics_user:w10lptr6405")
+  if (type == "public") {
+    return("stics_user:w10lptr6405")
+  }
 
-  if(type == "internal") return("stics_eps:w10lptr6405")
-
+  if (type == "internal") {
+    return("stics_eps:w10lptr6405")
+  }
 }
 
 download_javastics <- function(download_url, output_dir = tempdir()) {
