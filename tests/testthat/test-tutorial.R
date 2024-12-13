@@ -3,8 +3,17 @@
 tmpdir <- normalizePath(tempdir(), winslash = "/", mustWork = FALSE)
 tutorial_rmd <- file.path(tmpdir, "SticsRpacks.Rmd")
 
-file.copy(from = "./../../inst/tutorials/SticsRpacks/SticsRpacks.Rmd",
-          to = tutorial_rmd)
+# file.copy(from = "./../../inst/tutorials/SticsRpacks/SticsRpacks.Rmd",
+#           to = tutorial_rmd)
+branch <- system("git rev-parse --abbrev-ref HEAD", intern = TRUE)
+ini_dir <- getwd()
+setwd(tutorial_rmd)
+system(paste0("curl -OL https://raw.github.com/SticsRpacks/SticsRPacks/",
+              branch,
+              "/inst/tutorial/SticsRpacks/SticsRpacks.Rmd"))
+
+setwd(ini_dir)
+
 #download.file("https://raw.githubusercontent.com/SticsRPacks/SticsRPacks/main/inst/tutorials/SticsRpacks/SticsRpacks.Rmd",
 #              tutorial_rmd)
 xfun::gsub_file(file = tutorial_rmd,
