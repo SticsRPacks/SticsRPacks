@@ -23,50 +23,52 @@ library(ggplot2)
 
 options(stringsAsFactors = FALSE)
 
+tutorial_options(exercise.lines = 5, exercise.timelimit = 300)
+
 # OS specific parameters
 linux <- SticsRFiles:::is_unix()
 attributes(linux) <- NULL
 
-gen_help <- TRUE
+#gen_help <- TRUE
 
-get_java_version <- function(linux = TRUE, cmd = "java") {
-  version <- NULL
-  if (linux) {
-    version_str <-
-      suppressWarnings(
-        system(
-          paste(
-            cmd,
-            '-version 2>&1 | head -n 1 | cut -d\\" -f 2'
-          ),
-          intern = TRUE
-        )
-      )
-    if (grepl("1\\.8", version_str)) {
-      field <- 2
-    } else {
-      field <- 1
-    }
+# get_java_version <- function(linux = TRUE, cmd = "java") {
+#   version <- NULL
+#   if (linux) {
+#     version_str <-
+#       suppressWarnings(
+#         system(
+#           paste(
+#             cmd,
+#             '-version 2>&1 | head -n 1 | cut -d\\" -f 2'
+#           ),
+#           intern = TRUE
+#         )
+#       )
+#     if (grepl("1\\.8", version_str)) {
+#       field <- 2
+#     } else {
+#       field <- 1
+#     }
+# 
+#     version_str <-
+#       suppressWarnings(
+#         system(
+#           paste0("echo ", "'", version_str, "'", " | cut -d\\. -f ", field),
+#           intern = TRUE
+#         )
+#       )
+# 
+#     if (length(grep("not found", version_str)) > 0) {
+#       version <- NULL
+#     } else {
+#       version <- as.numeric(version_str)
+#     }
+#   }
+#   if (length(version) == 0) version <- NULL
+#   return(version)
+# }
 
-    version_str <-
-      suppressWarnings(
-        system(
-          paste0("echo ", "'", version_str, "'", " | cut -d\\. -f ", field),
-          intern = TRUE
-        )
-      )
-
-    if (length(grep("not found", version_str)) > 0) {
-      version <- NULL
-    } else {
-      version <- as.numeric(version_str)
-    }
-  }
-  if (length(version) == 0) version <- NULL
-  return(version)
-}
-
-java <- "java"
+# java <- "java"
 
 #--------------------------------------------------------------------------
 # Prior to getting this environment variable put it in
@@ -83,125 +85,11 @@ java <- "java"
 javastics_in_path <- Sys.getenv("javastics_path")
 local_javastics <- !(javastics_in_path == "")
 
-
-if (!local_javastics) {
-  user_passwd <- SticsRPacks:::get_forge_userpass("public")
-  stics_version_num <- SticsRFiles:::get_version_num()
-  stics_version <- "latest"
-  javastics_dir <- "JavaSTICS-1.5.2-STICS-10.2.0"
-  workspace_path <- "JavaSTICS-1.5.2-STICS-10.2.0/example"
-  download_url <- 
-    "https://w3.avignon.inrae.fr/forge/attachments/download/3337/JavaSTICS-1.5.2-STICS-10.2.0.zip"
-  workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10"
-  java_target <- 17
-} else {
-  # Check JavaStics in path
-  if (!dir.exists(javastics_in_path) ||
-    !any(grepl("JavaStics.exe", list.files(javastics_in_path)))) {
-    stop(
-      javastics_in_path,
-      ": JavaStics directory set in 'javastics_path'\n",
-      "environment variable does not exist, aborting"
-    )
-  }
-
-  javastics_path <- javastics_in_path
-
-  # Getting exe name
-  stics_exe_name <- SticsOnR:::list_stics_exe(javastics_path)[[2]][[1]]
-
-  # Getting exe version
-  check <- try(
-    SticsOnR:::check_stics_exe(
-      file.path(javastics_path, "bin", stics_exe_name),
-      version = TRUE
-    ),
-    silent = TRUE
-  )
-
-  # Stopping the tutorial when the executable is not found
-  if (class(check) == "try-error") {
-    stop(
-      "The Stics executable (",
-      stics_exe_name,
-      ") was not found in JavaStics bin directory: ",
-      javastics_path
-    )
-  }
-
-  # getting the STICS numerical version
-  stics_version <- attr(check, "version")
-  stics_version_num <- SticsRFiles:::get_version_num(
-    gsub(pattern = "(.*)\\_(.*)", x = stics_version, replacement = "\\1")
-  )
-
-  # Checking if the version is compatible with
-  # Stopping if Stics is older than version 9.2
-  # or an unsupported version (i.e. > of the latest standard version) 
-  if (stics_version_num < 9) {
-    stop("The JavaSTICS distribution ",
-         basename(javastics_path),
-         "is too old and not supported in this tutorial")
-  } else if (stics_version_num < 10) {
-    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V9.2"
-  } else if (stics_version_num < 10.1) {
-    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10"
-    java_target <- 11
-  } else if (stics_version_num < 11) {
-    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10"
-    java_target <- 17
-  } else {
-    stop(
-      "The JavaSTICS distribution ",
-      basename(javastics_path),
-      "is not supported yet in this tutorial, \n",
-      "or is not a valide version."
-    )
-  }
-}
-
-if (linux) {
-  java_path <- Sys.getenv("JAVA")
-
-  if (java_path != "") java <- java_path
-
-  java_version <- get_java_version(linux = linux, cmd = java)
-
-  if (is.null(java_version)) {
-    stop("A java version 11 must be installed")
-  }
-
-
-  if (java_version < java_target) {
-    stop(
-      "The default system java virtual machine is ",
-      system(paste(java, "-version 2>&1"),
-        intern = TRUE
-      )[1],
-      "\nA java ", as.character(java_target), " version installation is needed for running JavaSTICS, \n",
-      "or as an alternate version and the java path can be set\n",
-      "in the .Renviron file, as for example: \n",
-      paste0("JAVA=\"/usr/lib/jvm/java-", java_target, "-openjdk-amd64/bin/java\"")
-    )
-  }
-}
-
-knitr::opts_chunk$set(
-  echo = FALSE,
-  java_cmd = java,
-  linux = linux,
-  windows = !linux,
-  stics_version = stics_version
-)
-
-tutorial_options(exercise.lines = 5, exercise.timelimit = 300)
-
-
-use_default <- TRUE
 work_dir <- file.path(
   normalizePath(dirname(tempdir()), winslash = "/"),
   "SticsRPacks"
 )
+
 tmp_dir <- file.path(work_dir, "tmp")
 
 # For avoiding problems under windows
@@ -209,11 +97,12 @@ tmp_dir <- file.path(work_dir, "tmp")
 if (.Platform$OS.type == "windows") {
   work_dir <- shortPathName(work_dir)
 }
+# Replacing Windows double backslash file separator with slash
 work_dir <- gsub(pattern = "\\\\", replacement = "/", x = work_dir)
 
 # Creating work_dir if needed
 if (!dir.exists(work_dir)) dir.create(work_dir)
-# Creating a tmp dir or emptying it ...
+# Creating a tmp dir or emptying it if it exists
 if (!dir.exists(tmp_dir)) {
   dir.create(tmp_dir)
 } else {
@@ -225,48 +114,252 @@ if (!dir.exists(tmp_dir)) {
   file.remove(tmp_files)
 }
 
-# configure and download JavaStics
+
 if (!local_javastics) {
-  javastics_path <- file.path(work_dir, javastics_dir, fsep = "/")
-
-  if (SticsRFiles:::get_version_num(stics_version) < 10) {
-    # Creating JavaStics dir
-    if (!dir.exists(javastics_path)) dir.create(javastics_path)
-    out_path <- javastics_path
-  } else {
-    out_path <- work_dir
-  }
-
-  files_list <- list.files(javastics_path)
-  if (length(files_list) == 0 || !any(grepl("JavaStics.exe",files_list))) {
-    # downloading the latest JavaStics distribution
-    javastics_path <- SticsRPacks:::download_javastics(
-      download_url = download_url,
-      output_dir = work_dir)
- 
-  }
-  workspace_path <- file.path(work_dir, workspace_path, fsep = "/")
+  
+  #stics_version_num <- SticsRFiles:::get_version_num()
+  stics_version <- "latest"
+  # download_url <- 
+  #   "https://w3.avignon.inrae.fr/forge/attachments/download/3337/JavaSTICS-1.5.2-STICS-10.2.0.zip"
+  # javastics_path <- file.path(work_dir, javastics_dir, fsep = "/")
+  # 
+  # if (SticsRFiles:::get_version_num(stics_version) < 10) {
+  #   # Creating JavaStics dir
+  #   if (!dir.exists(javastics_path)) dir.create(javastics_path)
+  #   out_path <- javastics_path
+  # } else {
+  #   out_path <- work_dir
+  # }
+  
+  # files_list <- list.files(javastics_path)
+  # if (length(files_list) == 0 || !any(grepl("JavaStics.exe",files_list))) {
+  download_url <-
+    "https://w3.avignon.inrae.fr/forge/attachments/download/3357/JavaSTICS-latest.zip"
+  #user_passwd <- SticsRPacks:::get_forge_userpass("public")
+  # downloading the latest JavaStics distribution
+  javastics_path <- SticsRPacks:::download_javastics(
+    download_url = download_url,
+    output_dir = work_dir)
+  
+  #stop("debug ", javastics_path)
+  
+  #}
+  # javastics_dir <- list.files(work_dir, 
+  #                             recursive = FALSE,
+  #                             full.names = FALSE,
+  #                             pattern = "^JavaSTICS")
+  
+  #javastics_path <- file.path(work_dir, javastics_dir)
+  
+  
+  workspace_path <- file.path(javastics_path, "example", fsep = "/")
+  
+  #stop("debug", javastics_path, workspace_path)
+  
+  workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10"
+  
+  # getting java version from jre embedded in JavaSTICS
+  java_target <- SticsRPacks:::get_javastics_java_version(javastics_path)
+  
 } else {
+  # Check JavaStics in path, got from javastics_path env. variable
+  if (!dir.exists(javastics_in_path) ||
+      !any(grepl("JavaStics.exe", list.files(javastics_in_path)))) {
+    stop(
+      javastics_in_path,
+      ": JavaStics directory set in 'javastics_path'\n",
+      "environment variable does not exist, aborting"
+    )
+  }
+  
+  javastics_path <- javastics_in_path
+  
+  # Getting exe name
+  stics_exe_name <- SticsOnR:::list_stics_exe(javastics_path)[[2]][[1]]
+  
+  # Getting exe version
+  check <- try(
+    SticsOnR:::check_stics_exe(
+      file.path(javastics_path, "bin", stics_exe_name),
+      version = TRUE
+    ),
+    silent = TRUE
+  )
+  
+  # Stopping the tutorial when the executable is not found
+  if (class(check) == "try-error") {
+    stop(
+      "The Stics executable (",
+      stics_exe_name,
+      ") was not found in JavaStics bin directory: ",
+      javastics_path
+    )
+  }
+  
+  # getting the STICS numerical version
+  stics_version <- attr(check, "version")
+  stics_version_num <- SticsRFiles:::get_version_num(
+    gsub(pattern = "(.*)\\_(.*)", x = stics_version, replacement = "\\1")
+  )
+  
+  # Checking if the version is compatible with
+  # Stopping if Stics is older than version 9.2
+  # or an unsupported version (i.e. > of the latest standard version) 
+  if (stics_version_num < 9) {
+    stop("The JavaSTICS distribution ",
+         basename(javastics_path),
+         "is too old and not supported in this tutorial")
+  } else if (stics_version_num < 10) {
+    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V9.2"
+    java_target <- "8"
+  } else if (stics_version_num < 10.1) {
+    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10"
+    java_target <- "11"
+  } else if (stics_version_num < 11) {
+    workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10"
+    java_target <- "17"
+  } else {
+    stop(
+      "The JavaSTICS distribution ",
+      basename(javastics_path),
+      "is not supported yet in this tutorial, \n",
+      "or is not a valid version."
+    )
+  }
+  
   workspace_path <- file.path(javastics_in_path, "example")
 }
 
-# fixing workspace path
-workspace_PW1 <- file.path(system.file(package = "SticsRPacks"),
-  workspace_PW1,
-  fsep = "/"
+
+# checking the consistency of the Java version 
+# according to the used version in JavaStics
+if (linux) {
+  java <- SticsRPacks:::check_java_version(java_target)
+  # java <- "java"
+  # java_path <- Sys.getenv("JAVA")
+  # 
+  # if (java_path != "") java <- java_path
+  # 
+  # java_version <- SticsRPacks:::get_java_version(cmd = java)
+  # 
+  # if (is.null(java_version)) {
+  #   stop("A java version 11 must be installed")
+  # }
+  # 
+  # 
+  # if (java_version < as.numeric(java_target)) {
+  #   stop(
+  #     "The default system java virtual machine is ",
+  #     system(paste(java, "-version 2>&1"),
+  #       intern = TRUE
+  #     )[1],
+  #     "\nA java ", java_target, " version installation is needed for running JavaSTICS, \n",
+  #     "or as an alternate version and the java path can be set\n",
+  #     "in the .Renviron file, as for example: \n",
+  #     paste0("JAVA=\"/usr/lib/jvm/java-", java_target, "-openjdk-amd64/bin/java\"")
+  #   )
+  # }
+}
+
+
+
+# Adding variables in the base chunk options
+knitr::opts_chunk$set(
+  echo = FALSE,
+  java_cmd = java,
+  linux = linux,
+  windows = !linux,
+  stics_version = stics_version
 )
 
-# Generating html help files, one for each function
-if (gen_help) {
-  help_dir <- file.path(work_dir, "SticsRFiles_help")
-  if (!dir.exists(help_dir)) dir.create(help_dir)
-  SticsRFiles:::static_help(
-    pkg = "SticsRFiles",
-    overwrite = FALSE,
-    out_dir = help_dir
-  )
+# tutorial_options(exercise.lines = 5, exercise.timelimit = 300)
+# 
+# work_dir <- file.path(
+#   normalizePath(dirname(tempdir()), winslash = "/"),
+#   "SticsRPacks"
+# )
+# 
+# tmp_dir <- file.path(work_dir, "tmp")
+# 
+# # For avoiding problems under windows
+# # with spaces in user dir path
+# if (.Platform$OS.type == "windows") {
+#   work_dir <- shortPathName(work_dir)
+# }
+# # Replacing Windows double backslash file separator with slash
+# work_dir <- gsub(pattern = "\\\\", replacement = "/", x = work_dir)
+# 
+# # Creating work_dir if needed
+# if (!dir.exists(work_dir)) dir.create(work_dir)
+# # Creating a tmp dir or emptying it if it exists
+# if (!dir.exists(tmp_dir)) {
+#   dir.create(tmp_dir)
+# } else {
+#   tmp_files <- list.files(
+#     path = tmp_dir,
+#     pattern = "\\.RData$",
+#     full.names = TRUE
+#   )
+#   file.remove(tmp_files)
+# }
+
+# Configure and download JavaStics
+#if (!local_javastics) {
+# javastics_path <- file.path(work_dir, javastics_dir, fsep = "/")
+# 
+# if (SticsRFiles:::get_version_num(stics_version) < 10) {
+#   # Creating JavaStics dir
+#   if (!dir.exists(javastics_path)) dir.create(javastics_path)
+#   out_path <- javastics_path
+# } else {
+#   out_path <- work_dir
+# }
+# 
+# files_list <- list.files(javastics_path)
+# if (length(files_list) == 0 || !any(grepl("JavaStics.exe",files_list))) {
+#   # downloading the latest JavaStics distribution
+#   javastics_path <- SticsRPacks:::download_javastics(
+#     download_url = download_url,
+#     output_dir = work_dir)
+# 
+# }
+# workspace_path <- file.path(work_dir, workspace_path, fsep = "/")
+# } else {
+#   workspace_path <- file.path(javastics_in_path, "example")
+# }
+
+# Copying workspace_PW1 files of the package to a new directory, 
+# and fixing the new workspace_PW1 path
+tmp_workspace_PW1 <- file.path(tmp_dir, basename(workspace_PW1))
+if (!dir.exists(tmp_workspace_PW1)) {
+  dir.create(tmp_workspace_PW1)
 }
+
+R.utils::copyDirectory(
+  from = file.path(system.file(package = "SticsRPacks"), workspace_PW1),
+  to = tmp_workspace_PW1, 
+  recursive = TRUE
+)
+
+workspace_PW1 <- tmp_workspace_PW1
+
+# workspace_PW1 <- file.path(system.file(package = "SticsRPacks"),
+#                            workspace_PW1,
+#                            fsep = "/"
+# )
+
+# Generating html help files, one for each function
+#if (gen_help) {
+help_dir <- file.path(work_dir, "SticsRFiles_help")
+if (!dir.exists(help_dir)) dir.create(help_dir)
+SticsRFiles:::static_help(
+  pkg = "SticsRFiles",
+  overwrite = FALSE,
+  out_dir = help_dir
+)
+#}
 ```
+
 
 <!-- <div class="alert alert-danger"> -->
 
@@ -439,16 +532,20 @@ stress_ind_names <- c(
 dyn_var_names <- c("lai_n", "zrac", "resmes", "azomes", "QNplante", "masec_n")
 var_names <- c(stress_ind_names, dyn_var_names)
 
+#stop("debug", javastics_path)
+
 # Set-up the simulation environment:
 wrapper_options <- stics_wrapper_options(
   javastics = javastics_path,
   workspace = workspace_PW1
 )
 
+
+
 # Generate the files for the simulation:
 gen_usms_xml2txt(javastics_path, workspace_PW1,
-  usm = usm_name,
-  java_cmd = knitr::opts_chunk$get("java_cmd")
+                 usm = usm_name,
+                 java_cmd = knitr::opts_chunk$get("java_cmd")
 )
 ```
 
@@ -477,6 +574,7 @@ Note that, in case you would like to reproduce this example, the JavaStics and w
 # (same paths can be used if you want to reproduce this example)
 print(paste("javastics_path = ", javastics_path))
 print(paste("workspace_PW1 = ", workspace_PW1))
+
 ```
 
 Then, let's run the simulations for the different configurations:
@@ -1110,7 +1208,7 @@ if (!file.exists(file_path)) {
     workspace = workspace_path, usm = "wheat",
     var = c("lai_n", "masec_n"), verbose = FALSE
   )
-
+  
   save("results", file = file_path)
 } else {
   load(file = file_path)
@@ -1457,40 +1555,40 @@ The JavaStics Input files (XML format) can be generated from R using functions o
 
 ```{r gen_xml-1, echo=FALSE}
 question("What is the name of the SticsRFiles function for generating a usms.xml file?",
-  answer("gen_usms_xml2txt"),
-  answer("get_usms_files"),
-  answer("gen_usms_xml", correct = TRUE),
-  answer("gen_usms"),
-  incorrect = "Look at the Reference tab of the SticsRFiles website...",
-  random_answer_order = TRUE,
-  allow_retry = TRUE
+         answer("gen_usms_xml2txt"),
+         answer("get_usms_files"),
+         answer("gen_usms_xml", correct = TRUE),
+         answer("gen_usms"),
+         incorrect = "Look at the Reference tab of the SticsRFiles website...",
+         random_answer_order = TRUE,
+         allow_retry = TRUE
 )
 ```
 
 ```{r gen_xml-2, echo=FALSE}
 question("From which type of file the usms.xml file can be generated using this function?",
-  answer("csv", correct = TRUE),
-  answer("word"),
-  answer("excel", correct = TRUE),
-  answer("XML"),
-  correct = "Great!",
-  incorrect = "Look at the vignette \"Generating Stics XML files from tabulated data\" of the SticsRFiles website (Article tab)...",
-  random_answer_order = TRUE,
-  allow_retry = TRUE
+         answer("csv", correct = TRUE),
+         answer("word"),
+         answer("excel", correct = TRUE),
+         answer("XML"),
+         correct = "Great!",
+         incorrect = "Look at the vignette \"Generating Stics XML files from tabulated data\" of the SticsRFiles website (Article tab)...",
+         random_answer_order = TRUE,
+         allow_retry = TRUE
 )
 ```
 
 ```{r gen_xml-3, echo=FALSE}
 question("Which type of JavaStics files can not yet be generated using the gen_*_xml functions?",
-  answer("Soil files"),
-  answer("Weather data files", correct = TRUE),
-  answer("General parameter files", correct = TRUE),
-  answer("Technical files"),
-  answer("Weather station files"),
-  correct = "Incredible!",
-  incorrect = "Look at the vignette \"Generating Stics XML files from tabulated data\" of the SticsRFiles website (Article tab)...",
-  random_answer_order = TRUE,
-  allow_retry = TRUE
+         answer("Soil files"),
+         answer("Weather data files", correct = TRUE),
+         answer("General parameter files", correct = TRUE),
+         answer("Technical files"),
+         answer("Weather station files"),
+         correct = "Incredible!",
+         incorrect = "Look at the vignette \"Generating Stics XML files from tabulated data\" of the SticsRFiles website (Article tab)...",
+         random_answer_order = TRUE,
+         allow_retry = TRUE
 )
 ```
 
@@ -1541,13 +1639,13 @@ Note that a subset of the observation files defined in the observation data.fram
 
 ```{r set_param_xml-1, echo=FALSE}
 question("What is the name of the SticsRFiles function for modifying JavaStics Input files (XML format)?",
-  answer("set_param_xml", correct = TRUE),
-  answer("set_param_txt"),
-  answer("gen_usms_xml"),
-  answer("gen_usms"),
-  incorrect = "Look at the Reference tab of the SticsRFiles website...",
-  random_answer_order = TRUE,
-  allow_retry = TRUE
+         answer("set_param_xml", correct = TRUE),
+         answer("set_param_txt"),
+         answer("gen_usms_xml"),
+         answer("gen_usms"),
+         incorrect = "Look at the Reference tab of the SticsRFiles website...",
+         random_answer_order = TRUE,
+         allow_retry = TRUE
 )
 ```
 
@@ -1817,7 +1915,7 @@ if (!file.exists(file.path(tmp_dir, "comp_res.RData"))) {
     var = "lai_n",
     param_values = c("dlaimax" = 0.005, "durvieF" = 80)
   )
-
+  
   save(list = c("res1", "res2"), file = file.path(tmp_dir, "comp_res.RData"))
 } else {
   # print("loading")
@@ -1895,7 +1993,7 @@ if (!file.exists(file.path(tmp_dir, "store-param-estim.RData"))) {
   obs_filt <- filter_obs(obs, "lai_n", include = TRUE)
   param_info <- list(stamflax = list(lb = 200, ub = 400))
   optim_options <- list(nb_rep = 3, maxeval = 10, xtol_rel = 1e-03, out_dir = workspace_path, ranseed = 1234)
-
+  
   save(
     list = c("wrapper_options", "obs", "obs_filt", "param_info", "optim_options"),
     file = file.path(tmp_dir, "store-param-estim.RData")
@@ -2096,7 +2194,7 @@ if (!file.exists(file.path(tmp_dir, "prepare-param-estim-out.RData"))) {
     model_options = wrapper_options, situation = "wheat"
   )$sim_list
   sim_before_optim <- stics_wrapper(model_options = wrapper_options, situation = "wheat")$sim_list
-
+  
   save(
     list = c("optim_res", "wrapper_options", "obs_filt", "sim_after_optim", "sim_before_optim"),
     file = file.path(tmp_dir, "prepare-param-estim-out.RData")
@@ -2319,10 +2417,10 @@ Dynamic plots of variables can be aggregated to generate continuous plots.
 ```{r prepare-plot-successive}
 if (!file.exists(file.path(tmp_dir, "prepare-plot-successive.RData"))) {
   gen_usms_xml2txt(javastics_path, workspace_path,
-    usm = c("demo_Wheat1", "demo_BareSoil2", "demo_maize3"),
-    verbose = FALSE
+                   usm = c("demo_Wheat1", "demo_BareSoil2", "demo_maize3"),
+                   verbose = FALSE
   )
-
+  
   # Run without succession
   wrapper_options <- stics_wrapper_options(
     javastics = javastics_path,
@@ -2334,7 +2432,7 @@ if (!file.exists(file.path(tmp_dir, "prepare-plot-successive.RData"))) {
     situation = c("demo_Wheat1", "demo_BareSoil2", "demo_maize3"),
     var = c("lai_n", "masec_n", "mafruit", "azomes")
   )
-
+  
   # Run with succession
   wrapper_options <- stics_wrapper_options(
     javastics = javastics_path,
@@ -2347,7 +2445,7 @@ if (!file.exists(file.path(tmp_dir, "prepare-plot-successive.RData"))) {
     situation = c("demo_Wheat1", "demo_BareSoil2", "demo_maize3"),
     var = c("lai_n", "masec_n", "mafruit", "azomes")
   )
-
+  
   save(
     list = c("without_succ", "with_succ"),
     file = file.path(tmp_dir, "prepare-plot-successive.RData")
@@ -2426,7 +2524,7 @@ if (!file.exists(file.path(tmp_dir, "prepare-intercrop-2.RData"))) {
     usm = "intercrop_pea_barley",
     var = c("lai_n", "masec_n", "mafruit"), verbose = FALSE
   )
-
+  
   save(
     list = c("sim"),
     file = file.path(tmp_dir, "prepare-intercrop-2.RData")
@@ -2451,11 +2549,11 @@ print(sim)
 
 ```{r intercrop-3, echo=FALSE}
 question("How are organized the results for the different intercrops",
-  answer("In a single data.frame per USM, the results for the different crops being flagged by Plant and Dominance columns", correct = TRUE),
-  answer("In different data.frames, depending on the crop"),
-  incorrect = "You're not lucky ... the correct proposition is the other one!",
-  random_answer_order = TRUE,
-  allow_retry = TRUE
+         answer("In a single data.frame per USM, the results for the different crops being flagged by Plant and Dominance columns", correct = TRUE),
+         answer("In different data.frames, depending on the crop"),
+         incorrect = "You're not lucky ... the correct proposition is the other one!",
+         random_answer_order = TRUE,
+         allow_retry = TRUE
 )
 ```
 
@@ -2503,7 +2601,7 @@ if (!file.exists(file.path(tmp_dir, "prepare-intercrop-6.RData"))) {
     usms_file = file.path(workspace_path, "usms.xml"), javastics = javastics_path,
     verbose = FALSE
   )
-
+  
   save(
     list = c("sim"),
     file = file.path(tmp_dir, "prepare-intercrop-6.RData")
