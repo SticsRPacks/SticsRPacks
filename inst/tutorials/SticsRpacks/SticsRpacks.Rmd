@@ -1043,10 +1043,7 @@ get_sim(workspace = workspace_path, usm = c("banana", "Turmeric"))
 
 ```{r get_sim4-solution}
 # SOLUTION
-get_sim(
-  workspace = workspace_path, usm = c("wheat", "maize"),
-  var = "lai_n"
-)
+get_sim(workspace = workspace_path, usm = c("wheat", "maize"), var = "lai_n")
 ```
 
 <!-- Voir ou le mettre, ou alors l'integrer dans les manips ? -->

@@ -1,18 +1,28 @@
+options(warn=-1)
 
 #Download and transform Tutorial .RMD to .R
 tmpdir <- normalizePath(tempdir(), winslash = "/", mustWork = FALSE)
 tutorial_rmd <- file.path(tmpdir, "SticsRpacks.Rmd")
 
 
-branch <- system("git rev-parse --abbrev-ref HEAD", intern = TRUE)
+#branch <- system("git rev-parse --abbrev-ref HEAD", intern = TRUE)
 
-download.file(url = paste0("https://raw.githubusercontent.com/SticsRPacks/SticsRPacks/",
-                           branch,
-                           "/inst/tutorials/SticsRpacks/SticsRpacks.Rmd"), destfile = tutorial_rmd)
+# download.file(url = paste0("https://raw.githubusercontent.com/SticsRPacks/SticsRPacks/",
+#                            branch,
+#                            "/inst/tutorials/SticsRpacks/SticsRpacks.Rmd"), destfile = tutorial_rmd)
 #download.file("https://raw.githubusercontent.com/SticsRPacks/SticsRPacks/main/inst/tutorials/SticsRpacks/SticsRpacks.Rmd",
 #              tutorial_rmd)
 
-stop("debug download in test", branch)
+#print(list.files(getwd()))
+
+
+file.copy(from = "./../../inst/tutorials/SticsRpacks/SticsRpacks.Rmd",
+          to = tutorial_rmd)
+
+# print(tmpdir)
+# print(list.files(tmpdir))
+# #stop("debug download in test", branch)
+# stop("debug")
 
 xfun::gsub_file(file = tutorial_rmd,
                 "eval=FALSE","eval=TRUE",
@@ -29,10 +39,48 @@ if (Sys.getenv("CI") != "") {
                   fixed = TRUE)
 }
 
+# removing outputs from get_sim
+xfun::gsub_file(file = tutorial_rmd,
+                "get_sim(workspace = workspace_path",
+                "x <- get_sim(workspace = workspace_path",
+                fixed = TRUE)
+
+xfun::gsub_file(file = tutorial_rmd,
+                'get_sim(workspace = workspace_path, usm = c("banana", "Turmeric"))',
+                'x <- get_sim(workspace = workspace_path, usm = c("banana", "Turmeric"))',
+                fixed = TRUE)
+
+xfun::gsub_file(file = tutorial_rmd,
+                'get_sim(workspace = workspace_path, usm = c("wheat", "maize"), var = "lai_n")',
+                'x <- get_sim(workspace = workspace_path, usm = c("wheat", "maize"), var = "lai_n")',
+                fixed = TRUE)
+
+xfun::gsub_file(file = tutorial_rmd,
+                "print(sim)",
+                "",
+                fixed = TRUE)
+
+xfun::gsub_file(file = tutorial_rmd,
+                "print(p)",
+                "",
+                fixed = TRUE)
+
+
+xfun::gsub_file(file = tutorial_rmd,
+                "print(res1)",
+                "",
+                fixed = TRUE)
+
+xfun::gsub_file(file = tutorial_rmd,
+                "print(res2)",
+                "",
+                fixed = TRUE)
+
 tutorial_r <-file.path(tmpdir, "tutorial.R")
 knitr::purl(input = tutorial_rmd,
             output = tutorial_r,
             documentation = 2)
+
 
 
 # Test Tutorial
