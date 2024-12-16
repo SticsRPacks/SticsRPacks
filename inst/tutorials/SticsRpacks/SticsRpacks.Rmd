@@ -330,23 +330,23 @@ knitr::opts_chunk$set(
 
 # Copying workspace_PW1 files of the package to a new directory, 
 # and fixing the new workspace_PW1 path
-tmp_workspace_PW1 <- file.path(tmp_dir, basename(workspace_PW1))
-if (!dir.exists(tmp_workspace_PW1)) {
-  dir.create(tmp_workspace_PW1)
-}
-
-R.utils::copyDirectory(
-  from = file.path(system.file(package = "SticsRPacks"), workspace_PW1),
-  to = tmp_workspace_PW1, 
-  recursive = TRUE
-)
-
-workspace_PW1 <- tmp_workspace_PW1
-
-# workspace_PW1 <- file.path(system.file(package = "SticsRPacks"),
-#                            workspace_PW1,
-#                            fsep = "/"
+# tmp_workspace_PW1 <- file.path(tmp_dir, basename(workspace_PW1))
+# if (!dir.exists(tmp_workspace_PW1)) {
+#   dir.create(tmp_workspace_PW1)
+# }
+# 
+# R.utils::copyDirectory(
+#   from = file.path(system.file(package = "SticsRPacks"), workspace_PW1),
+#   to = tmp_workspace_PW1, 
+#   recursive = TRUE
 # )
+# 
+# workspace_PW1 <- tmp_workspace_PW1
+
+workspace_PW1 <- file.path(system.file(package = "SticsRPacks"),
+                           workspace_PW1,
+                           fsep = "/"
+)
 
 # Generating html help files, one for each function
 #if (gen_help) {
