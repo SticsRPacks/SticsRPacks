@@ -82,7 +82,7 @@ download_javastics <- function(download_url, output_dir = tempdir()) {
     s <- strsplit(download_url, split = "/")[[1]]
     zip_name <- s[length(s)]
     zip_path <- file.path(output_dir, zip_name)
-    user_passwd <- SticsRPacks:::get_forge_userpass("public")
+    user_passwd <- get_forge_userpass("public")
     system(paste0("curl -u ",
                   user_passwd,
                   " ",
@@ -90,7 +90,7 @@ download_javastics <- function(download_url, output_dir = tempdir()) {
                   download_url,
                   " --output ",
                   zip_path))
-    unzip(zip_path, exdir = output_dir)
+    utils::unzip(zip_path, exdir = output_dir)
 
     if (file.exists(zip_path)) unlink(zip_path)
 
@@ -174,7 +174,7 @@ check_java_version <- function(java_target) {
 
   if (java_path != "") java <- java_path
 
-  java_version <- SticsRPacks:::get_java_version(cmd = java)
+  java_version <- get_java_version(cmd = java)
 
   if (is.null(java_version)) {
     stop("A java version 11 must be installed")

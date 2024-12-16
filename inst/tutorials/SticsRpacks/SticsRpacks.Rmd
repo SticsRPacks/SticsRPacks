@@ -234,7 +234,7 @@ if (!local_javastics) {
 # checking the consistency of the Java version 
 # according to the used version in JavaStics
 if (linux) {
-  java <- SticsRPacks:::check_java_version(java_target)
+  java <- check_java_version(java_target)
   # java <- "java"
   # java_path <- Sys.getenv("JAVA")
   # 
