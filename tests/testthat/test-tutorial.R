@@ -6,12 +6,14 @@ tutorial_rmd <- file.path(tmpdir, "SticsRpacks.Rmd")
 
 branch <- system("git rev-parse --abbrev-ref HEAD", intern = TRUE)
 
-download.file(paste0("https://raw.githubusercontent.com/SticsRPacks/SticsRPacks/",
-                     branch,
-                     "/inst/tutorials/SticsRpacks/SticsRpacks.Rmd"),
-              tutorial_rmd)
+download.file(url = paste0("https://raw.githubusercontent.com/SticsRPacks/SticsRPacks/",
+                           branch,
+                           "/inst/tutorials/SticsRpacks/SticsRpacks.Rmd"), destfile = tutorial_rmd)
 #download.file("https://raw.githubusercontent.com/SticsRPacks/SticsRPacks/main/inst/tutorials/SticsRpacks/SticsRpacks.Rmd",
 #              tutorial_rmd)
+
+stop("debug download in test", branch)
+
 xfun::gsub_file(file = tutorial_rmd,
                 "eval=FALSE","eval=TRUE",
                 fixed = TRUE)
