@@ -1,5 +1,7 @@
 options(warn=-1)
 
+import::from(xfun, gsub_file)
+import::from(knitr, purl)
 #Download and transform Tutorial .RMD to .R
 # tmpdir <- normalizePath(tempdir(), winslash = "/", mustWork = FALSE)
 # tutorial_rmd <- file.path(tmpdir, "SticsRpacks.Rmd")
@@ -35,54 +37,54 @@ file.copy(from = tutorial_rmd,
 # #stop("debug download in test", branch)
 # stop("debug")
 
-xfun::gsub_file(file = tutorial_test_rmd,
+gsub_file(file = tutorial_test_rmd,
                 "eval=FALSE","eval=TRUE",
                 fixed = TRUE)
 
-xfun::gsub_file(file = tutorial_test_rmd,
+gsub_file(file = tutorial_test_rmd,
                 "optim_options = list(nb_rep = 3, out_dir = workspace_path)",
                 "optim_options = list(nb_rep = 3, out_dir = workspace_path, maxeval = 3)",
                 fixed = TRUE)
 
 if (Sys.getenv("CI") != "") {
-  xfun::gsub_file(file = tutorial_test_rmd,
+  gsub_file(file = tutorial_test_rmd,
                   "parallel = TRUE","parallel = TRUE, cores = 2",
                   fixed = TRUE)
 }
 
 # removing outputs from get_sim
-xfun::gsub_file(file = tutorial_test_rmd,
+gsub_file(file = tutorial_test_rmd,
                 "get_sim(workspace = workspace_path)",
                 "x <- get_sim(workspace = workspace_path)",
                 fixed = TRUE)
 
-xfun::gsub_file(file = tutorial_test_rmd,
+gsub_file(file = tutorial_test_rmd,
                 'get_sim(workspace = workspace_path, usm = c("banana", "Turmeric"))',
                 'x <- get_sim(workspace = workspace_path, usm = c("banana", "Turmeric"))',
                 fixed = TRUE)
 
-xfun::gsub_file(file = tutorial_test_rmd,
+gsub_file(file = tutorial_test_rmd,
                 'get_sim(workspace = workspace_path, usm = c("wheat", "maize"), var = "lai_n")',
                 'x <- get_sim(workspace = workspace_path, usm = c("wheat", "maize"), var = "lai_n")',
                 fixed = TRUE)
 
-xfun::gsub_file(file = tutorial_test_rmd,
+gsub_file(file = tutorial_test_rmd,
                 "print(sim)",
                 "",
                 fixed = TRUE)
 
-xfun::gsub_file(file = tutorial_test_rmd,
+gsub_file(file = tutorial_test_rmd,
                 "print(p)",
                 "",
                 fixed = TRUE)
 
 
-xfun::gsub_file(file = tutorial_test_rmd,
+gsub_file(file = tutorial_test_rmd,
                 "print(res1)",
                 "",
                 fixed = TRUE)
 
-xfun::gsub_file(file = tutorial_test_rmd,
+gsub_file(file = tutorial_test_rmd,
                 "print(res2)",
                 "",
                 fixed = TRUE)
@@ -92,7 +94,7 @@ xfun::gsub_file(file = tutorial_test_rmd,
 #tutorial_test_r <- file.path(dirname(tutorial_test_rmd), "tutorial.R")
 tutorial_test_r <- "tutorial_test.R"
 
-knitr::purl(input = tutorial_test_rmd,
+purl(input = tutorial_test_rmd,
             output = tutorial_test_r,
             documentation = 2)
 
