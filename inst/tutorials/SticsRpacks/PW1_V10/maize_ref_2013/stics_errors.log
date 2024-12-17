@@ -1,0 +1,8 @@
+ -----------------------------------------------------------------------------------------
+ Stics errors file Creation date: 2024/12/11-19:28:56
+ STICS Version: 10.2.0_2024-10-07                                 
+ -----------------------------------------------------------------------------------------
+ 
+ 
+ problem with your profile output dates --> they have been recalculated
+ Unknown variable [tsol(iz)] in soil profile. Check that the name in prof.mod is correct.

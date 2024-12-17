@@ -1,0 +1,21 @@
+ Balance of the STICS simulation 10.2.0_2024-10-07                   , model culture
+ **************************************************************
+ 1. INPUT DATA
+ *******************
+   Weather file           :                                             sitej
+   Cropping practices file:                                 maize_ref_tec.xml
+   Plant file             :                                      corn_plt.xml
+   Cultivar: DK300           variety group =10
+   Initialisations file   :                                     maize_ini.xml
+   Initial soil values    : Sol_RU280   
+      Z (cm)      Water (%)   NO3 (kg/ha)    NH4 (kg/ha)
+        30.         0.0          20.0           0.0
+        30.         0.0          15.0           0.0
+        30.         0.0          15.0           0.0
+        50.         0.0          10.0           0.0
+
+   Start of simulation   : 31-mar-2013      day  90
+   End of simulation     : 26-nov-2013      day 330   (or 330)
+   Irrigation read 
+   Fertilisation read
+   Method of PET calculation:               Penman reading
