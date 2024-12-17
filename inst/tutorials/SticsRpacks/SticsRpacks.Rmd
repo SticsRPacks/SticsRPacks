@@ -259,6 +259,8 @@ if (linux) {
   #     paste0("JAVA=\"/usr/lib/jvm/java-", java_target, "-openjdk-amd64/bin/java\"")
   #   )
   # }
+} else {
+  java <- "java"
 }
 
 
