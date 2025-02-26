@@ -72,28 +72,29 @@ get_forge_userpass <- function(type = "public") {
 }
 
 download_javastics <- function(download_url, output_dir = tempdir()) {
-
   javastics_dir <- list.files(output_dir,
-                              recursive = FALSE,
-                              full.names = FALSE,
-                              pattern = "^JavaSTICS")
+    recursive = FALSE,
+    full.names = FALSE,
+    pattern = "^JavaSTICS"
+  )
   if (length(javastics_dir) == 0) {
     # get javastics lastest version
     s <- strsplit(download_url, split = "/")[[1]]
     zip_name <- s[length(s)]
     zip_path <- file.path(output_dir, zip_name)
     user_passwd <- get_forge_userpass("public")
-    system(paste0("curl -u ",
-                  user_passwd,
-                  " ",
-                  "-k ",
-                  download_url,
-                  " --output ",
-                  zip_path))
+    system(paste0(
+      "curl -u ",
+      user_passwd,
+      " ",
+      "-k ",
+      download_url,
+      " --output ",
+      zip_path
+    ))
     utils::unzip(zip_path, exdir = output_dir)
 
     if (file.exists(zip_path)) unlink(zip_path)
-
   }
 
 
@@ -101,21 +102,21 @@ download_javastics <- function(download_url, output_dir = tempdir()) {
   #                        x = download_url, replacement = "\\2")
 
 
-  #zip_path <- file.path(output_dir, paste0(javastics_dir, ".zip"))
-  #output_path <- file.path(output_dir, javastics_dir)
+  # zip_path <- file.path(output_dir, paste0(javastics_dir, ".zip"))
+  # output_path <- file.path(output_dir, javastics_dir)
   # if (!dir.exists(file.path(output_dir, javastics_dir))) {
   #
   # }
 
-  #if (file.exists(zip_path)) unlink(zip_path)
+  # if (file.exists(zip_path)) unlink(zip_path)
 
   javastics_dir <- list.files(output_dir,
-                              recursive = FALSE,
-                              full.names = FALSE,
-                              pattern = "^JavaSTICS")
+    recursive = FALSE,
+    full.names = FALSE,
+    pattern = "^JavaSTICS"
+  )
 
   return(file.path(output_dir, javastics_dir))
-
 }
 
 get_java_version <- function(cmd = "java") {
@@ -159,12 +160,15 @@ get_javastics_java_version <- function(javastics_path) {
   jre_dir <- list.dirs(
     file.path(javastics_path, "bin"),
     recursive = FALSE,
-    full.names = FALSE)
+    full.names = FALSE
+  )
 
   return(
-    gsub(pattern = "(jre)([0-9]*)",
-         replacement = "\\2",
-         x = jre_dir)
+    gsub(
+      pattern = "(jre)([0-9]*)",
+      replacement = "\\2",
+      x = jre_dir
+    )
   )
 }
 
@@ -185,7 +189,7 @@ check_java_version <- function(java_target) {
     stop(
       "The default system java virtual machine is ",
       system(paste(java, "-version 2>&1"),
-             intern = TRUE
+        intern = TRUE
       )[1],
       "\nA java ", java_target, " version installation is needed for running JavaSTICS, \n",
       "or as an alternate version and the java path can be set\n",
