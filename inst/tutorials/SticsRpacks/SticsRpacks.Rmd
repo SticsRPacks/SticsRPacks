@@ -695,7 +695,7 @@ result <- get_param_xml(file.path(workspace_path, "sols.xml"), c("argi"))
 hist(result$sols.xml$argi)
 ```
 
--   Compute the Available Water Capacity of fine earth for soil `"solmais"` in mm. The equation is `AWC=sum((HCCF-HMINF)*epc*DAF/10)`, where `HCCF` is the vector of STICS parameters for field capacity of the different soil layers, `HMINF` for wilting point, `epc` for thickness, `DAF` for soil density, and sum is over the different layers.
+- 🔍 Compute the Available Water Capacity of fine earth for soil `"solmais"` in mm. The equation is `AWC=sum((HCCF-HMINF)*epc*DAF/10)`, where `HCCF` is the vector of STICS parameters for field capacity of the different soil layers, `HMINF` for wilting point, `epc` for thickness, `DAF` for soil density, and sum is over the different layers.
 
 ```{r get_param_xml3, exercise=TRUE}
 # Insert your R code here!
