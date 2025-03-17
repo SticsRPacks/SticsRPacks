@@ -76,7 +76,7 @@ if (!dir.exists(tmp_dir)) {
 
 if (!local_javastics) {
   stics_version <- "latest"
-  download_url <- "https://w3.avignon.inrae.fr/forge/attachments/download/3357/JavaSTICS-latest.zip"
+  download_url <- "https://w3.avignon.inrae.fr/forge/attachments/download/3392/JavaSTICS-latest.zip"
 
   javastics_path <- SticsRPacks:::download_javastics(
     download_url = download_url,
