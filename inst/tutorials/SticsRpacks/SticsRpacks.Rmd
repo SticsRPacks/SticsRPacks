@@ -2,15 +2,18 @@
 title: "Tutorial for SticsRPacks"
 output:
   learnr::tutorial:
-    theme: cerulean
-    ace_theme: pastel_on_dark
-    progressive: FALSE
+    theme: lumen
+    ace_theme: xcode
+    progressive: false
     allow_skip: true
     df_print: "paged"
+    toc: true
+    toc_depth: 4
+    allow_hide: true
 description: "A tutorial to learn SticsRPacks"
 runtime: shiny_prerendered
-editor_options: 
-  markdown: 
+editor_options:
+  markdown:
     wrap: sentence
 ---
 
@@ -20,6 +23,16 @@ library(SticsRPacks)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+
+# function for displaying functions help
+display_help <- function(subject, pkg = NULL) {
+    tc <- textConnection("s", "w", local = TRUE)
+    tools:::Rd2HTML(utils:::.getHelpFile(help(subject, (pkg))), out = tc)
+    knitr::asis_output(htmltools::htmlPreserve(s))
+}
+
+# removing warnings in chunks
+knitr::opts_chunk$set(warning = FALSE)
 
 options(stringsAsFactors = FALSE)
 
@@ -184,34 +197,9 @@ workspace_PW1 <- file.path(system.file(package = "SticsRPacks"),
   fsep = "/"
 )
 
-# Generating html help files, one for each function
-help_dir <- file.path(work_dir, "SticsRFiles_help")
-if (!dir.exists(help_dir)) dir.create(help_dir)
-SticsRFiles:::static_help(
-  pkg = "SticsRFiles",
-  overwrite = FALSE,
-  out_dir = help_dir
-)
 ```
 
 
-<!-- <div class="alert alert-danger"> -->
-
-<!-- Test danger 2 -->
-
-<!-- </div> -->
-
-<!-- <div class="alert alert-warning"> -->
-
-<!-- Test warning -->
-
-<!-- </div> -->
-
-<!-- <div class="alert alert-info"> -->
-
-<!-- Test info -->
-
-<!-- </div> -->
 
 ## Introduction
 
@@ -324,7 +312,7 @@ For this session this path is `r workspace_path`.
 if they are not followed along the right order, needs for example to run simulations before exploiting outputs ... in part **Exploring and Evaluating the STICS results** -->
 ```
 Let see first the possibilities offered by the SticsRPacks packages through two simple illustrative examples.
-At this stage it is not necessary to understand the code, the aim in this section is just to show you what we can do with a few lines of R codes, you will learn how to use all the functions used here in the next sections :-).
+At this stage it is not necessary to understand the code, the aim in this section is just to show you what we can do with a few lines of R codes, you will learn how to use all the functions used here in the next sections 😄.
 If you feel lost in this section or are hurry to start learning how to use the packages you can skip it and go to the next one!
 
 ### STICS training Practical session PW1
@@ -478,7 +466,7 @@ print(p)
 
 ... and let the users interpret these results!
 
-The last part may not be straightforward for R newcomers ... however a function to filter values of simulated variables at given dates and/or stages will hopefully come soon :-).
+The last part may not be straightforward for R newcomers ... however a function to filter values of simulated variables at given dates and/or stages will hopefully come soon 😄.
 
 ### Parameter optimization: A simple example
 
@@ -546,13 +534,12 @@ OK now that we saw what we can do, let's find out how step by step.
 
 Names of STICS variables can be retrieved from partial name or keywords using the `get_var_info` function of the [SticsRFiles package](https://SticsRPacks.github.io/SticsRFiles/index.html).
 
-Here's its description as given in the R help panel (`? get_var_info`) and the [SticsRFiles package website](https://SticsRPacks.github.io/SticsRFiles/reference/get_var_info.html):
+Here's its description as given in the R help panel (`?get_var_info`) and the [SticsRFiles package website](https://SticsRPacks.github.io/SticsRFiles/reference/get_var_info.html):
 
 <blockquote>
 
-```{r get_var_info-help, results="asis"}
-lines <- SticsRFiles:::get_from_help(file.path(help_dir, "get_var_info.html"))
-cat(paste(lines, collapse = "\n"))
+```{r get_var_info-help, echo=FALSE}
+display_help("get_var_info", "SticsRFiles")
 ```
 
 </blockquote>
@@ -588,9 +575,8 @@ Here's its description as given in the R help panel (`? get_usms_list`) and on t
 
 <blockquote>
 
-```{r get_usms_list-help, results="asis"}
-lines <- SticsRFiles:::get_from_help(file.path(help_dir, "get_usms_list.html"))
-cat(paste(lines, collapse = "\n"))
+```{r get_usms_list-help, echo=FALSE}
+display_help("get_usms_list", "SticsRFiles")
 ```
 
 </blockquote>
@@ -654,9 +640,8 @@ Parameters values included in JavaStics input files can be retrieved using the f
 
 <blockquote>
 
-```{r get_param_xml-help, results="asis"}
-lines <- SticsRFiles:::get_from_help(file.path(help_dir, "get_param_xml.html"))
-cat(paste(lines, collapse = "\n"))
+```{r get_param_xml-help, echo=FALSE}
+display_help("get_param_xml", "SticsRFiles")
 ```
 
 </blockquote>
@@ -721,9 +706,8 @@ Weather variables defined in STICS input weather files can be retrieved using th
 
 <blockquote>
 
-```{r get_climate_txt-help, results="asis"}
-lines <- SticsRFiles:::get_from_help(file.path(help_dir, "get_climate_txt.html"))
-cat(paste(lines, collapse = "\n"))
+```{r get_climate_txt-help, echo=FALSE}
+display_help("get_climate_txt", "SticsRFiles")
 ```
 
 </blockquote>
