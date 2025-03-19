@@ -1,3 +1,6 @@
+# SticsRPacks 0.8.0
+
+
 # SticsRPacks 0.7.1
 Fix for running the tutorial using an automatic JavaStics download and PW1 folder
 for the latest STICS version
