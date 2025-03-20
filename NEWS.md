@@ -1,4 +1,11 @@
 # SticsRPacks 0.8.0
+Fix tutorial for TOC displaying
+Tutorial updates:
+  * latest JavaSTICS 1.5.3 download
+  * information about optional exercises 
+  * simplification of the tutorial functioning: setup, workspace for exercises
+  * removed useless comments and information display (warnings, functions return,...)
+Tests improvements
 
 
 # SticsRPacks 0.7.1
