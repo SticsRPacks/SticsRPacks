@@ -155,8 +155,8 @@ almost immediately from the second run.
 ### Using the tutorial online
 
 In this case the tutorial can be used without installing SticsRPacks by
-using a virtual environment in which all the needed applications and
-libraries are pre-installed.
+using a virtual environment running a RStudio server in which all the
+needed applications and libraries are pre-installed.
 
 It can be accessed just by clicking
 [here](https://mybinder.org/v2/git/https%3A%2F%2Fforgemia.inra.fr%2Fstics-formation%2Fsticsrpacks-binder.git/v0.8.0?urlpath=rstudio),
