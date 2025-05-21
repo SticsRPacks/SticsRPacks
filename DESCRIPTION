@@ -28,7 +28,7 @@ Imports:
     grDevices,
     magrittr,
     rstudioapi,
-    SticsRFiles (>= 1.1.3),
+    SticsRFiles,
     SticsOnR,
     CroptimizR,
     CroPlotR,
@@ -42,6 +42,7 @@ Imports:
     tictoc,
     lifecycle
 Remotes:
+    github::SticsRPacks/SticsRFiles@*release,
     github::SticsRPacks/SticsOnR@*release,
     github::SticsRPacks/CroptimizR@*release,
     github::SticsRPacks/CroPlotR@*release
