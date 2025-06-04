@@ -30,11 +30,11 @@ jobs:
               r: "release",
               rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest",
             }
-          #- {
-          #    os: ubuntu-latest,
-          #    r: "4.0.0",
-          #    rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest",
-          #  }
+          - {
+              os: ubuntu-latest,
+              r: "4.1.0",
+              rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest",
+            }
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -42,6 +42,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - uses: r-hub/actions/setup-r-sysreqs@v1 # Install and setup R system dependencies on macOS.
+        with:
+          type: full
 
       - uses: actions/setup-java@v4
         with:

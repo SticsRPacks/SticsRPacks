@@ -260,7 +260,7 @@ Most of the exercises in the tutorial requires writing and running a few lines o
 get_var_info(keyword = "root")
 ```
 
-You just have to type the R code in the black part and click on the `Run Code` green button on the right side to run it.
+You just have to type the R code in it and click on the `Run Code` green button on the right side to run it.
 The results will be printed below the panel.
 You can use these panels to do whatever tests you want to do to explore the features of the packages.
 
