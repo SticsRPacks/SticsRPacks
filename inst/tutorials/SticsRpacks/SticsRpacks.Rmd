@@ -10,6 +10,7 @@ output:
     toc: true
     toc_depth: 4
     allow_hide: true
+    clear: true
 description: "A tutorial to learn SticsRPacks"
 runtime: shiny_prerendered
 editor_options:
