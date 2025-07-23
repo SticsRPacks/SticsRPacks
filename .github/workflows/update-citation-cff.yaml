@@ -29,6 +29,9 @@ jobs:
           extra-packages: |
             any::cffr
             any::V8
+      - name: install getext
+        run: |
+          sudo port install gettext
       - name: Update CITATION.cff
         run: |
           library(cffr)
