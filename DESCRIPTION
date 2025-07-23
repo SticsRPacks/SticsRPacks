@@ -38,7 +38,6 @@ Imports:
     methods,
     nloptr,
     lhs,
-    stringr,
     tictoc,
     lifecycle
 Remotes:
@@ -47,7 +46,7 @@ Remotes:
     github::SticsRPacks/CroptimizR@*release,
     github::SticsRPacks/CroPlotR@*release
 Encoding: UTF-8
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Suggests: 
     knitr,
     testthat
