@@ -32,6 +32,16 @@ display_help <- function(subject, pkg = NULL) {
     knitr::asis_output(htmltools::htmlPreserve(s))
 }
 
+# function for extracting stics_version from version
+# information returned by the stics executable through SticsOnR::check_stics_exe
+get_stics_version <- function(version_string) {
+  # Extract the version number from the string
+  gsub(
+    pattern = "([a-z]*[_]{0,1}[v|V]*)([0-9]{1,}.[0-9]{1,}.[0-9]{1,})(_)([0-9-]*)",
+    x = version_string, replacement = "\\2"
+  )
+}
+
 # removing warnings in chunks
 knitr::opts_chunk$set(warning = FALSE)
 
@@ -140,9 +150,11 @@ if (!local_javastics) {
   }
 
   # getting the STICS numerical version
-  stics_version <- attr(check, "version")
+  stics_version_string <- attr(check, "version")
+  stics_version <- get_stics_version(stics_version_string)
+  
   stics_version_num <- SticsRFiles:::get_version_num(
-    gsub(pattern = "(.*)\\_(.*)", x = stics_version, replacement = "\\1")
+    stics_version
   )
 
   # Checking if the version is compatible with
@@ -369,7 +381,9 @@ wrapper_options <- stics_wrapper_options(
 
 
 # Generate the files for the simulation:
-gen_usms_xml2txt(javastics_path, workspace_PW1,
+gen_usms_xml2txt(
+  javastics_path,
+  workspace_PW1,
   usm = usm_name,
   java_cmd = knitr::opts_chunk$get("java_cmd")
 )
