@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![R build
-status](https://github.com/SticsRPacks/SticsRPacks/workflows/R-CMD-check/badge.svg)](https://github.com/SticsRPacks/SticsRPacks/actions)
+status](https://github.com/SticsRPacks/SticsRPacks/workflows/R-CMD-check/badge.svg?branch=main)](https://github.com/SticsRPacks/SticsRPacks/actions)
 [![DOI](https://zenodo.org/badge/223148621.svg)](https://zenodo.org/badge/latestdoi/223148621)
 <!-- badges: end -->
 
@@ -71,8 +71,8 @@ have loaded:
 
 ``` r
 library(SticsRPacks)
-#> ── Attaching packages ───────────────────────────────────── SticsRPacks 0.8.0 ──
-#> ✔ SticsRFiles 1.5.0      ✔ SticsOnR    1.3.0 
+#> ── Attaching packages ───────────────────────────────────── SticsRPacks 0.9.0 ──
+#> ✔ SticsRFiles 1.6.0      ✔ SticsOnR    1.3.0 
 #> ✔ CroptimizR  0.7.0      ✔ CroPlotR    0.10.0
 #> ── Conflicts ──────────────────────────────────────── SticsRPacks_conflicts() ──
 #> ✖ CroptimizR::AIC()    masks stats::AIC()
@@ -131,11 +131,14 @@ path of the corresponding JavaSTICS folder. This can be done:
 
 or
 
-- by defining this environment variable in your .Renviron file: edit
-  this file (located in your Home directory, can be edited also using
-  `usethis::edit_r_environ()`), and add a new line
-  `javastics_path="path_to_JavaSTICS"`. In this case, your R session
-  must then be restarted (in RStudio: menu Session-\> Restart R).
+- by defining this environment variable in the `.Renviron` file located
+  in your home directory:
+  - `C:\Users\[username]\Documents` for windows
+  - `/home/[username]` for linux
+  - `/Users/[username]` for MacOS) Create or modify this file or use
+    `usethis::edit_r_environ()` to do so, and add a new line
+    `javastics_path="path_to_JavaSTICS"`. In this case, your R session
+    must then be restarted (in RStudio: menu Session-\> Restart R).
 
 Then, if you have RStudio version 1.3 or greater, click on the Tutorial
 pane on the right of the RStudio window (close to Environment, History,
@@ -159,8 +162,8 @@ using a virtual environment running a RStudio server in which all the
 needed applications and libraries are pre-installed.
 
 It can be accessed just by clicking
-[here](https://mybinder.org/v2/git/https%3A%2F%2Fforgemia.inra.fr%2Fstics-formation%2Fsticsrpacks-binder.git/v0.8.0?urlpath=rstudio),
-thanks to [@eric.casellas](https://forgemia.inra.fr/eric.casellas).
+[here](https://mybinder.org/v2/git/https%3A%2F%2Fforge.inraefr%2Fstics-formation%2Fsticsrpacks-binder.git/v0.9.0?urlpath=rstudio),
+thanks to [@eric.casellas](https://forge.inrae.fr/eric.casellas).
 
 ## Getting help
 

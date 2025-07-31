@@ -8,7 +8,7 @@ message: 'To cite package "SticsRPacks" in publications use:'
 type: software
 license: GPL-3.0-only
 title: 'SticsRPacks: Easily Install and Load `SticsRPacks` Packages'
-version: 0.8.0
+version: 0.9.0
 abstract: A set of packages that work in harmony because they share common data representations
   and "API" design. This package is designed to make it easy to install and load multiple
   `SticsRPacks` packages in a single step. Learn more about `SticsRPacks` at <https://sticsrpacks.github.io/SticsRPacks/>.
