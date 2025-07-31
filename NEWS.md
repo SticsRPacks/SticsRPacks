@@ -1,3 +1,14 @@
+# SticsRPacks 0.9.0
+Tutorial updates:
+  * fix: getting STICS version string
+  * latest JavaSTICS-10.4.1-STICS-10.4.1 download
+  * update dependencies (R version)
+  * content improvements
+Dependencies updates:
+  * update R version for github runners
+  * update R version for the package
+  
+
 # SticsRPacks 0.8.0
 Fix tutorial for TOC displaying
 Tutorial updates:
