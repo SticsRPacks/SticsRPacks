@@ -102,7 +102,7 @@ SticsRPacks_update()
 #>  * SticsRFiles (0.4.0 -> 0.4.1)
 #>  * CroptimizR (0.4.1 -> 0.5)
 #> Update now?
-#> 
+#>
 #> 1: Yes
 #> 2: No
 ```
@@ -110,7 +110,9 @@ SticsRPacks_update()
 ## Tutorial
 
 **A tutorial is provided to learn how to use the main features of the
-SticsRPacks packages!**
+SticsRPacks packages! It can be run locally or online.**
+
+### Preparing a local tutorial run
 
 To run it you need to install the `learnr` package.
 
@@ -129,11 +131,14 @@ path of the corresponding JavaSTICS folder. This can be done:
 
 or
 
-- by defining this environment variable in your .Renviron file: edit
-  this file (located in your Home directory, can be edited also using
-  `usethis::edit_r_environ()`), and add a new line
-  `javastics_path="path_to_JavaSTICS"`. In this case, your R session
-  must then be restarted (in RStudio: menu Session-\> Restart R).
+- by defining this environment variable in the `.Renviron` file located
+  in your home directory:
+  - `C:\Users\[username]\Documents` for windows
+  - `/home/[username]` for linux
+  - `/Users/[username]` for MacOS) Create or modify this file or use
+    `usethis::edit_r_environ()` to do so, and add a new line
+    `javastics_path="path_to_JavaSTICS"`. In this case, your R session
+    must then be restarted (in RStudio: menu Session-\> Restart R).
 
 Then, if you have RStudio version 1.3 or greater, click on the Tutorial
 pane on the right of the RStudio window (close to Environment, History,
@@ -150,10 +155,15 @@ initialize in order to download all the materials and run the solutions.
 Subsequent runs do not need this steps, the tutorial will thus start
 almost immediately from the second run.
 
-**NEWS: the tutorial can now be done online, without installing
-SticsRPacks: just by clicking
-[here](https://mybinder.org/v2/git/https%3A%2F%2Fforgemia.inra.fr%2Fstics-formation%2Fsticsrpacks-binder.git/v0.6.2?urlpath=shiny/SticsRpacks/),
-thanks to [@eric.casellas](https://forgemia.inra.fr/eric.casellas).**
+### Using the tutorial online
+
+In this case the tutorial can be used without installing SticsRPacks by
+using a virtual environment running a RStudio server in which all the
+needed applications and libraries are pre-installed.
+
+It can be accessed just by clicking
+[here](https://mybinder.org/v2/git/https%3A%2F%2Fforge.inrae.fr%2Fstics-formation%2Fsticsrpacks-binder.git/v0.9.0?urlpath=rstudio),
+thanks to [@eric.casellas](https://forge.inrae.fr/eric.casellas).
 
 ## Getting help
 
