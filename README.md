@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![R build
-status](https://github.com/SticsRPacks/SticsRPacks/workflows/R-CMD-check/badge.svg)](https://github.com/SticsRPacks/SticsRPacks/actions)
+status](https://github.com/SticsRPacks/SticsRPacks/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/SticsRPacks/SticsRPacks/actions/workflows/check-standard.yaml)
 [![DOI](https://zenodo.org/badge/223148621.svg)](https://zenodo.org/badge/latestdoi/223148621)
 <!-- badges: end -->
 
@@ -71,9 +71,9 @@ have loaded:
 
 ``` r
 library(SticsRPacks)
-#> ── Attaching packages ───────────────────────────────────── SticsRPacks 0.6.2 ──
-#> ✔ SticsRFiles 1.2.0     ✔ SticsOnR    1.2.0
-#> ✔ CroptimizR  0.6.1     ✔ CroPlotR    0.9.0
+#> ── Attaching packages ───────────────────────────────────── SticsRPacks 0.9.0 ──
+#> ✔ SticsRFiles 1.6.0      ✔ SticsOnR    1.3.0 
+#> ✔ CroptimizR  0.7.0      ✔ CroPlotR    0.10.0
 #> ── Conflicts ──────────────────────────────────────── SticsRPacks_conflicts() ──
 #> ✖ CroptimizR::AIC()    masks stats::AIC()
 #> ✖ CroptimizR::BIC()    masks stats::BIC()
