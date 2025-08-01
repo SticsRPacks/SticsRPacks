@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![R build
-status](https://github.com/SticsRPacks/SticsRPacks/workflows/R-CMD-check/badge.svg?branch=main)](https://github.com/SticsRPacks/SticsRPacks/actions)
+status](https://github.com/SticsRPacks/SticsRPacks/workflows/check-standard.yaml/badge.svg?branch=main)](https://github.com/SticsRPacks/SticsRPacks/actions)
 [![DOI](https://zenodo.org/badge/223148621.svg)](https://zenodo.org/badge/latestdoi/223148621)
 <!-- badges: end -->
 
