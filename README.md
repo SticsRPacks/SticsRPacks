@@ -162,7 +162,7 @@ using a virtual environment running a RStudio server in which all the
 needed applications and libraries are pre-installed.
 
 It can be accessed just by clicking
-[here](https://mybinder.org/v2/git/https%3A%2F%2Fforge.inraefr%2Fstics-formation%2Fsticsrpacks-binder.git/v0.9.0?urlpath=rstudio),
+[here](https://mybinder.org/v2/git/https%3A%2F%2Fforge.inrae.fr%2Fstics-formation%2Fsticsrpacks-binder.git/v0.9.0?urlpath=rstudio),
 thanks to [@eric.casellas](https://forge.inrae.fr/eric.casellas).
 
 ## Getting help
