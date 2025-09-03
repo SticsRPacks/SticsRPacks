@@ -78,8 +78,9 @@ It is a good habit to start working from a new, clean directory, called a `works
 
 ```{r, eval=params$eval_auto_vignette}
 workspace <- file.path(tempdir(), paste0("vignette-STICS-example_", usmName))
-if(dir.exists(workspace))
-  unlink(workspace, recursive=TRUE)
+if (dir.exists(workspace)) {
+  unlink(workspace, recursive = TRUE)
+}
 dir.create(workspace)
 ```
 
@@ -102,9 +103,10 @@ listUSMs <- xmlChildren(root)
 length(listUSMs)
 usmNames <- xmlSApply(root, xmlGetAttr, "nom")
 toKeep <- which(usmNames == usmName)
-for(i in 1:length(listUSMs)){
-  if(! i %in% toKeep)
+for (i in 1:length(listUSMs)) {
+  if (!i %in% toKeep) {
     removeChildren(xmlParent(listUSMs[[i]]), listUSMs[[i]])
+  }
 }
 stopifnot(length(xmlChildren(root)) == 1)
 saveXML(doc, file.path(workspace, "usms.xml"))
@@ -116,11 +118,13 @@ For STICS to run successfully, it requires several input files, whose list can b
 ```{r, eval=params$eval_auto_vignette}
 usm_details <-
   get_param_xml(file.path(workspace, "usms.xml"),
-                select="usm", select_value=usmName)[[1]]
+    select = "usm", select_value = usmName
+  )[[1]]
 names(usm_details)
 tmp <- get_param_info(names(usm_details))
-tmp <- tmp[grep("^name of", tmp$definition),]; rownames(tmp) <- NULL
-tmp[,c("name","definition")]
+tmp <- tmp[grep("^name of", tmp$definition), ]
+rownames(tmp) <- NULL
+tmp[, c("name", "definition")]
 ```
 
 They can then be copied to the workspace:
@@ -130,10 +134,13 @@ file.copy(file.path(javastics, "example", usm_details$fstation), workspace)
 file.copy(file.path(javastics, "example", usm_details$fclim1), workspace)
 file.copy(file.path(javastics, "example", usm_details$fclim2), workspace)
 ## the plant file should be in a subdirectory named "plant"
-if(! dir.exists(file.path(workspace, "plant")))
+if (!dir.exists(file.path(workspace, "plant"))) {
   dir.create(file.path(workspace, "plant"))
-file.copy(file.path(javastics, "plant", usm_details$fplt[1]),
-          file.path(workspace, "plant"))
+}
+file.copy(
+  file.path(javastics, "plant", usm_details$fplt[1]),
+  file.path(workspace, "plant")
+)
 file.copy(file.path(javastics, "example", usm_details$ftec[1]), workspace)
 file.copy(file.path(javastics, "example", usm_details$flai[1]), workspace)
 file.copy(file.path(javastics, "example", usm_details$fobs[1]), workspace)
@@ -148,13 +155,17 @@ To run a simulation, it is compulsory to have such a file, with this specific na
 This text file contains the simulated variables to keep in the output.
 
 ```{r, eval=params$eval_auto_vignette}
-devPars <- c("iplt", "iger", "ilev", "iamf", "ilax",
-             "iflo","idrp","ilan","imat","irec")
+devPars <- c(
+  "iplt", "iger", "ilev", "iamf", "ilax",
+  "iflo", "idrp", "ilan", "imat", "irec"
+)
 devVars <- paste0(devPars, "s")
 
-growthVars <- c("masec_n", "msrac_n", "masecveg", "mafruit",
-                "mafeuil", "mafeuilverte",
-                "matigestruc")
+growthVars <- c(
+  "masec_n", "msrac_n", "masecveg", "mafruit",
+  "mafeuil", "mafeuilverte",
+  "matigestruc"
+)
 
 otherVars <- c("lai_n", "leai", "hauteur", "nbinflo_recal")
 
@@ -162,15 +173,15 @@ outVars <- c(devVars, growthVars, otherVars)
 
 get_var_info(outVars)
 
-gen_varmod(workspace, var=outVars)
+gen_varmod(workspace, var = outVars)
 ```
 
 
 # Run the simulation
 
 ```{r, eval=params$eval_auto_vignette}
-gen_usms_xml2txt(javastics, workspace, usm=usmName)
-wrapper_options <- stics_wrapper_options(javastics, workspace=workspace, parallel=FALSE)
+gen_usms_xml2txt(javastics, workspace, usm = usmName)
+wrapper_options <- stics_wrapper_options(javastics, workspace = workspace, parallel = FALSE)
 wrap <- stics_wrapper(wrapper_options)
 ```
 
@@ -181,19 +192,19 @@ wrap <- stics_wrapper(wrapper_options)
 ## Retrieve observed and simulated data
 
 ```{r, eval=params$eval_auto_vignette}
-sim <- get_sim(workspace, usm=usmName)
+sim <- get_sim(workspace, usm = usmName)
 colnames(sim[[1]])
 
 ## (devStages <- getDevStages(sim, devVars))
 
-obs <- get_obs(workspace, usm=usmName)
+obs <- get_obs(workspace, usm = usmName)
 colnames(obs[[1]])
 ```
 
 ## Plot observed and simulated data
 
 ```{r, eval=params$eval_auto_vignette}
-plot(sim, var="lai_n", obs=obs)
-plot(sim, var="hauteur", obs=obs)
-plot(sim, var="masec_n", obs=obs)
+plot(sim, var = "lai_n", obs = obs)
+plot(sim, var = "hauteur", obs = obs)
+plot(sim, var = "masec_n", obs = obs)
 ```
