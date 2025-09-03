@@ -1,0 +1,199 @@
+---
+title: "STICS example in R"
+author: "Timothée Flutre"
+affiliation: "INRAE - GQE"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 5
+    toc_float: true
+    number_sections: TRUE
+    code_folding: show
+vignette: >
+  %\VignetteIndexEntry{STICS example in R}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+params:
+  eval_auto_vignette: TRUE     # automatic execution of the vignette
+  eval_manual_vignette: FALSE  # manual execution of the vignette (e.g. to 
+                               # create results graphs included in it)
+  eval_auto_test: FALSE  # automatic test execution of the vignette, SET IT TO
+                         #  TRUE IF manual_vignette IS SET TO TRUE
+  path_to_JavaStics: "/home/tflutre/Documents/travail/src_ext/STICS/JavaSTICS-10.4.1-STICS-10.4.1"
+  result_path: "/home/tflutre/Documents/travail/src/SticsRPacks/vignettes"
+---
+
+```{r, eval=TRUE, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+javastics <- params$path_to_JavaStics
+```
+
+```{r}
+library(SticsRPacks)
+library(XML) # TODO: see below
+## TODO: save necessary variables as a list in a file inst/extdata/...rds
+##   to display the results on GitHub that cannot re-run the vignette
+```
+
+
+# Overview
+
+As explained in the documentation available on the main [website](https://stics.inrae.fr/eng), the STICS acronym stands for "Scientific, Technical and Interdisciplinary simulator of soil-Crop System functioning".
+More specifically, STICS is a generic soil-crop to support agro-ecosystem analysis, evaluation and design.
+It runs at a daily time-step and using input variables related to climate, soil and the cropping system and its management.
+It can be described as a deterministic process-based model as well as a cropping system model.
+
+The model equations are implemented in Fortran, and a graphical interface named JavaSTICS is coded in Java.
+Both software are freely available for [download](https://stics.inrae.fr/eng/download) on the main website.
+Moreover, to ease the programmatic use of STICS, a set of R packages, named [SticsRPacks](https://sticsrpacks.github.io/SticsRPacks/), has been developped.
+
+The goal of this vignette is to **show how a new user, interested in STICS from an agronomic perspective, can quickly get familizarized with the model**, its required inputs and what outputs it can provide, **thanks to the functionalities from SticsRPacks**.
+However, by no means should you think that following this vignette can dispense of reading the STICS book as well as JavaSTICS and SticsRPacks documentation... ;-)
+
+
+
+# Make a workspace
+
+Concretely, this vignette will take an example among all of those provided in the JavaSTICS "example" directory.
+Below the "wheat" example is chosen, but feel free to copy-paste the code to another script and choose another example.
+
+## Choose a USM
+
+The USM acronym stands for "unit of simulation":
+```{r, eval=params$eval_auto_vignette}
+allUsmsFile <- file.path(javastics, "example", "usms.xml")
+usmNames <- get_usms_list(allUsmsFile)
+length(usmNames)
+usmName <- "wheat" # as a user, you may wish to choose another one
+stopifnot(usmName %in% usmNames)
+```
+
+## Create a working directory
+
+It is a good habit to start working from a new, clean directory, called a `workspace` in SticsRPacks.
+
+```{r, eval=params$eval_auto_vignette}
+workspace <- file.path(tempdir(), paste0("vignette-STICS-example_", usmName))
+if(dir.exists(workspace))
+  unlink(workspace, recursive=TRUE)
+dir.create(workspace)
+```
+
+
+
+# Retrieve all necessary files
+
+They are listed and described in section 2.3 of the JavaSTICS documentation.
+
+## Make `usms.xml`
+
+To run a simulation, it is compulsory to have such a file, with this specific name, in the workspace.
+This XML file contains some parameter values as well as the path to input files required for the simulation.
+
+```{r, eval=params$eval_auto_vignette}
+## TODO: use a function from SticsRFiles to avoid using the XML package directly
+doc <- xmlParse(allUsmsFile)
+root <- xmlRoot(doc)
+listUSMs <- xmlChildren(root)
+length(listUSMs)
+usmNames <- xmlSApply(root, xmlGetAttr, "nom")
+toKeep <- which(usmNames == usmName)
+for(i in 1:length(listUSMs)){
+  if(! i %in% toKeep)
+    removeChildren(xmlParent(listUSMs[[i]]), listUSMs[[i]])
+}
+stopifnot(length(xmlChildren(root)) == 1)
+saveXML(doc, file.path(workspace, "usms.xml"))
+```
+
+## Copy other input files
+
+For STICS to run successfully, it requires several input files, whose list can be obtained with the following commands:
+```{r, eval=params$eval_auto_vignette}
+usm_details <-
+  get_param_xml(file.path(workspace, "usms.xml"),
+                select="usm", select_value=usmName)[[1]]
+names(usm_details)
+tmp <- get_param_info(names(usm_details))
+tmp <- tmp[grep("^name of", tmp$definition),]; rownames(tmp) <- NULL
+tmp[,c("name","definition")]
+```
+
+They can then be copied to the workspace:
+```{r, eval=params$eval_auto_vignette}
+file.copy(file.path(javastics, "example", usm_details$finit), workspace)
+file.copy(file.path(javastics, "example", usm_details$fstation), workspace)
+file.copy(file.path(javastics, "example", usm_details$fclim1), workspace)
+file.copy(file.path(javastics, "example", usm_details$fclim2), workspace)
+## the plant file should be in a subdirectory named "plant"
+if(! dir.exists(file.path(workspace, "plant")))
+  dir.create(file.path(workspace, "plant"))
+file.copy(file.path(javastics, "plant", usm_details$fplt[1]),
+          file.path(workspace, "plant"))
+file.copy(file.path(javastics, "example", usm_details$ftec[1]), workspace)
+file.copy(file.path(javastics, "example", usm_details$flai[1]), workspace)
+file.copy(file.path(javastics, "example", usm_details$fobs[1]), workspace)
+file.copy(file.path(javastics, "example", "sols.xml"), workspace)
+
+list.files(workspace)
+```
+
+## Make `var.mod`
+
+To run a simulation, it is compulsory to have such a file, with this specific name, in the workspace.
+This text file contains the simulated variables to keep in the output.
+
+```{r, eval=params$eval_auto_vignette}
+devPars <- c("iplt", "iger", "ilev", "iamf", "ilax",
+             "iflo","idrp","ilan","imat","irec")
+devVars <- paste0(devPars, "s")
+
+growthVars <- c("masec_n", "msrac_n", "masecveg", "mafruit",
+                "mafeuil", "mafeuilverte",
+                "matigestruc")
+
+otherVars <- c("lai_n", "leai", "hauteur", "nbinflo_recal")
+
+outVars <- c(devVars, growthVars, otherVars)
+
+get_var_info(outVars)
+
+gen_varmod(workspace, var=outVars)
+```
+
+
+# Run the simulation
+
+```{r, eval=params$eval_auto_vignette}
+gen_usms_xml2txt(javastics, workspace, usm=usmName)
+wrapper_options <- stics_wrapper_options(javastics, workspace=workspace, parallel=FALSE)
+wrap <- stics_wrapper(wrapper_options)
+```
+
+
+
+# Explore the outputs
+
+## Retrieve observed and simulated data
+
+```{r, eval=params$eval_auto_vignette}
+sim <- get_sim(workspace, usm=usmName)
+colnames(sim[[1]])
+
+## (devStages <- getDevStages(sim, devVars))
+
+obs <- get_obs(workspace, usm=usmName)
+colnames(obs[[1]])
+```
+
+## Plot observed and simulated data
+
+```{r, eval=params$eval_auto_vignette}
+plot(sim, var="lai_n", obs=obs)
+plot(sim, var="hauteur", obs=obs)
+plot(sim, var="masec_n", obs=obs)
+```
