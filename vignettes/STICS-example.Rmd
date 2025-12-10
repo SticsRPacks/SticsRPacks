@@ -38,7 +38,8 @@ knitr::opts_chunk$set(
 precomputed <- list()
 if (params$eval_vignette == "load") {
   file_path <- system.file(file.path("extdata", params$precomputedFile),
-                           package = "SticsRPacks")
+    package = "SticsRPacks"
+  )
   stopifnot(file.exists(file_path))
   precomputed <- readRDS(file_path)
 }
@@ -49,12 +50,12 @@ javastics <- params$path_to_JavaStics
 #' @param var_names character vector of variable names
 #' @param precomputed list of precomputed variables
 #' @param eval_vignette use get() if "run", assign() if "load"
-get_or_assign_var <- function(var_names, precomputed, eval_vignette, envir){
+get_or_assign_var <- function(var_names, precomputed, eval_vignette, envir) {
   stopifnot(eval_vignette %in% c("run", "load"))
-  for(var_name in var_names){
-    if (eval_vignette == "run"){
+  for (var_name in var_names) {
+    if (eval_vignette == "run") {
       precomputed[[var_name]] <- get(var_name, envir = envir)
-    } else if (eval_vignette == "load"){
+    } else if (eval_vignette == "load") {
       assign(var_name, precomputed[[var_name]], envir = envir)
     }
   }
@@ -127,13 +128,16 @@ All necessary XML files are listed and described in section 2.3 of the JavaSTICS
 
 Here they will be retrieved from the JavaStics example directory:
 ```{r, eval=params$eval_vignette == "run"}
-extract_workspace(from_workspace = file.path(javastics, "example"),
-                  to_workspace = workspace,
-                  javastics = params$path_to_JavaStics,
-                  usm = usm_name)
+extract_workspace(
+  from_workspace = file.path(javastics, "example"),
+  to_workspace = workspace,
+  javastics = params$path_to_JavaStics,
+  usm = usm_name
+)
 usm_details <-
   get_param_xml(file.path(javastics, "example", "usms.xml"),
-                select="usm", select_value=usm_name)[[1]]
+    select = "usm", select_value = usm_name
+  )[[1]]
 ```
 
 ```{r, echo=FALSE}
@@ -150,18 +154,22 @@ usm_details
 
 ```{r, eval=params$eval_auto_vignette}
 ## TODO: include this function in SticsRFiles
-get_usm_years <- function(workspace, usmSelVal, usmsFile="usms.xml"){
-  stopifnot(dir.exists(workspace),
-            length(usmSelVal) == 1,
-            length(usmsFile) == 1,
-            file.exists(file.path(workspace, usmsFile)))
+get_usm_years <- function(workspace, usmSelVal, usmsFile = "usms.xml") {
+  stopifnot(
+    dir.exists(workspace),
+    length(usmSelVal) == 1,
+    length(usmsFile) == 1,
+    file.exists(file.path(workspace, usmsFile))
+  )
 
-  out <- c("year1"=NA, "year2"=NA)
+  out <- c("year1" = NA, "year2" = NA)
 
-  fclim1 <- get_param_xml(file=file.path(workspace, usmsFile),
-                          param="fclim1", select="usm",
-                          select_value=usmSelVal)[[1]]$fclim1
-  line1 <- readLines(file.path(workspace, fclim1), n=1)
+  fclim1 <- get_param_xml(
+    file = file.path(workspace, usmsFile),
+    param = "fclim1", select = "usm",
+    select_value = usmSelVal
+  )[[1]]$fclim1
+  line1 <- readLines(file.path(workspace, fclim1), n = 1)
   tmp <- strsplit(line1, "\\s+")[[1]]
   out["year1"] <- as.numeric(tmp[2])
   out["year2"] <- out["year1"] + 1
@@ -211,8 +219,9 @@ knitr::kable(get_param_info("iamf"))
 As you can see above in the "file" column, this parameter value can be found in the management file ("tec"):
 ```{r, eval=params$eval_vignette == "run"}
 form_pheno_stages <- get_param_xml(file.path(workspace, usm_details$ftec[1]),
-                                   select="formalisme",
-                                   select_value="phenological stages")
+  select = "formalisme",
+  select_value = "phenological stages"
+)
 ```
 
 ```{r, echo=FALSE}
@@ -234,7 +243,7 @@ precomputed <- get_or_assign_var("iamf", precomputed, params$eval_vignette, envi
 
 ```{r}
 iamf
-compute_date_from_day(day=iamf, start_year=years["year1"])
+compute_date_from_day(day = iamf, start_year = years["year1"])
 ```
 
 ## Convert XML into TXT
@@ -293,20 +302,25 @@ For instance, if you are used to conduct field trials, you may want variables th
 It is also the occasion to add more variables you are interested in and that STICS will simulate (variables already in the default list will not be added twice).
 
 ```{r}
-devPars <- c("iplt", "iger", "ilev", "iamf", "ilax",
-             "iflo","idrp","ilan","imat","irec")
+devPars <- c(
+  "iplt", "iger", "ilev", "iamf", "ilax",
+  "iflo", "idrp", "ilan", "imat", "irec"
+)
 devVars <- paste0(devPars, "s")
-varsToAdd <- c(devVars,
-               "lai_n", "leai", "hauteur", "masec_n", "mafruit",
-               "mafeuil", "mafeuilverte",
-               "matigestruc")
+varsToAdd <- c(
+  devVars,
+  "lai_n", "leai", "hauteur", "masec_n", "mafruit",
+  "mafeuil", "mafeuilverte",
+  "matigestruc"
+)
 ```
 
 ```{r, eval=params$eval_vignette == "run"}
 gen_varmod(workspace,
-           var = varsToAdd,
-           file_name = file.path(usm_name, "var.mod"),
-           append = TRUE)
+  var = varsToAdd,
+  file_name = file.path(usm_name, "var.mod"),
+  append = TRUE
+)
 ```
 
 
@@ -332,7 +346,7 @@ obs <- get_obs(workspace, usm = usm_name)
 ```
 
 ```{r, echo=FALSE}
-precomputed <- get_or_assign_var(c("sim","obs"), precomputed, params$eval_vignette, environment())
+precomputed <- get_or_assign_var(c("sim", "obs"), precomputed, params$eval_vignette, environment())
 ```
 
 ```{r}
@@ -343,7 +357,7 @@ str(obs)
 ## Plot observed and simulated data
 
 ```{r}
-for(out_var in c("masec_n", "hauteur", "lai_n")){
+for (out_var in c("masec_n", "hauteur", "lai_n")) {
   p <- plot(sim, var = out_var, obs = obs)[[usm_name]] +
     theme_bw()
   print(p)
@@ -355,47 +369,56 @@ for(out_var in c("masec_n", "hauteur", "lai_n")){
 First we need to retrieve the dates of the developmental stages we are interested in:
 ```{r, eval=params$eval_auto_vignette}
 ## TODO: include this function in SticsRFiles
-get_dev_stages <- function(sim, devVars=c("iplts", "igers", "ilevs", "iamfs",
-                                        "ilaxs", "iflos", "idrps", "ilans",
-                                        "imats", "irecs"),
-                         usm=NULL){
-  stopifnot(is.list(sim),
-            ! is.null(names(sim)))
+get_dev_stages <- function(sim, devVars = c(
+                             "iplts", "igers", "ilevs", "iamfs",
+                             "ilaxs", "iflos", "idrps", "ilans",
+                             "imats", "irecs"
+                           ),
+                           usm = NULL) {
+  stopifnot(
+    is.list(sim),
+    !is.null(names(sim))
+  )
 
   out <- list()
 
-  if(is.null(usm))
+  if (is.null(usm)) {
     usm <- names(sim)
+  }
   stopifnot(all(usm %in% names(sim)))
 
-  for(usm_name in usm){
+  for (usm_name in usm) {
     dat <- sim[[usm_name]]
-    firstYear <- as.integer(sort(unique(format(dat$Date, format="%Y")))[1])
-    out_usm <- data.frame(var=devVars,
-                          day=NA,
-                          date="")
-    for(i in 1:nrow(out_usm)){
+    firstYear <- as.integer(sort(unique(format(dat$Date, format = "%Y")))[1])
+    out_usm <- data.frame(
+      var = devVars,
+      day = NA,
+      date = ""
+    )
+    for (i in 1:nrow(out_usm)) {
       devVar <- devVars[i]
-      if(! devVar %in% colnames(dat)){
+      if (!devVar %in% colnames(dat)) {
         msg <- paste0("'", devVar, "' not found")
         warning(msg, immediate. = TRUE)
         next
       }
       tmp <- table(dat[[devVar]])
-      if(length(tmp) == 1){ # ex. iplts
+      if (length(tmp) == 1) { # ex. iplts
         out_usm$day[i] <- as.integer(names(tmp)[1])
-      } else if(length(tmp) == 2){
+      } else if (length(tmp) == 2) {
         stopifnot(names(tmp)[1] == "0")
         out_usm$day[i] <- as.integer(names(tmp)[2])
-      } else
+      } else {
         stop(paste0(devVar, " has more than three values"))
+      }
       out_usm$date[i] <- as.character(compute_date_from_day(out_usm$day[i], firstYear))
     }
     out_usm$date <- as.Date(out_usm$date)
     out_usm$Date <- as.POSIXct(out_usm$date) # required to plot with CroPlotR
     out_usm$var <- factor(out_usm$var,
-                          levels=out_usm$var[order(out_usm$day)],
-                          ordered=TRUE)
+      levels = out_usm$var[order(out_usm$day)],
+      ordered = TRUE
+    )
     out[[usm_name]] <- out_usm
   }
 
@@ -407,9 +430,9 @@ get_dev_stages <- function(sim, devVars=c("iplts", "igers", "ilevs", "iamfs",
 
 And then we can add them to the plot:
 ```{r, eval=params$eval_auto_vignette}
-for(out_var in c("masec_n", "hauteur", "lai_n")){
+for (out_var in c("masec_n", "hauteur", "lai_n")) {
   p <- plot(sim, var = out_var, obs = obs)[[usm_name]] +
-    geom_vline(data=devStages[[usm_name]], aes(xintercept=Date, color=var)) +
+    geom_vline(data = devStages[[usm_name]], aes(xintercept = Date, color = var)) +
     theme_bw()
   print(p)
 }
@@ -422,7 +445,7 @@ for(out_var in c("masec_n", "hauteur", "lai_n")){
 ## Change the sowing density
 
 ```{r}
-get_param_info(keyword="sowing density")
+get_param_info(keyword = "sowing density")
 ```
 
 As indicated in the "file" column, the "tec" file needs to be modified.
@@ -433,8 +456,9 @@ We will explore the range of possible sowing densities, and make an USM for each
 output_dir_path <- file.path(getwd(), "..", "inst", "extdata")
 stopifnot(dir.exists(output_dir_path))
 output_file_path <- file.path(output_dir_path, params$precomputedFile)
-if (file.exists(output_file_path))
+if (file.exists(output_file_path)) {
   tmp <- file.remove(output_file_path)
+}
 saveRDS(precomputed, output_file_path)
 ```
 
@@ -444,45 +468,55 @@ knitr::knit_exit()
 
 
 ```{r}
-newSowingDensities <- c(seq(5, 50, by=5),
-                        seq(50, 1000, by=25),
-                        seq(1000, 2000, by=100))
+newSowingDensities <- c(
+  seq(5, 50, by = 5),
+  seq(50, 1000, by = 25),
+  seq(1000, 2000, by = 100)
+)
 newSowingDensities <- unique(newSowingDensities)
 
 get_param_xml(file.path(workspace, usm_details$ftec[1]), "densitesem")
-if(FALSE){
-prefix <- tools::file_path_sans_ext(usm_details$ftec[1])
-prefix <- gsub("_tec", "", prefix)
-for(newSowDens in newSowingDensities){
-  outF <- file.path(workspace, usm_name, paste0(prefix, "_densitesem", newSowDens, "_tec.xml")) # compulsory to end by _tec.xml
-  if(file.exists(outF))
-    file.remove(outF)
-  set_param_xml(file.path(workspace, usm_name, usm_details$ftec[1]),
-                "densitesem", newSowDens,
-                outF)
-}
+if (FALSE) {
+  prefix <- tools::file_path_sans_ext(usm_details$ftec[1])
+  prefix <- gsub("_tec", "", prefix)
+  for (newSowDens in newSowingDensities) {
+    outF <- file.path(workspace, usm_name, paste0(prefix, "_densitesem", newSowDens, "_tec.xml")) # compulsory to end by _tec.xml
+    if (file.exists(outF)) {
+      file.remove(outF)
+    }
+    set_param_xml(
+      file.path(workspace, usm_name, usm_details$ftec[1]),
+      "densitesem", newSowDens,
+      outF
+    )
+  }
 
-(tmp <- get_param_xml(file.path(workspace, "usms.xml"),
-                      select="usm", select_value=usm_name))
-pars <- list()
-for(newSowDens in newSowingDensities){
-  new_usm <- paste0(usm_name, "_densitesem", newSowDens)
-  param_df <- data.frame(usm_name=new_usm)
-  for(i in seq_along(tmp[[1]]))
-    if(length(tmp[[1]][[i]]) == 1){
-      param_df[[names(tmp[[1]])[i]]] <- tmp[[1]][i][[1]][1]
-    } else if(length(tmp[[1]][[i]]) == 2){
-      param_df[[paste0(names(tmp[[1]])[i], "_1")]] <- tmp[[1]][[i]][1]
-      param_df[[paste0(names(tmp[[1]])[i], "_2")]] <- tmp[[1]][[i]][2]
-    } else
-      stop(paste0("error: more than 2 values at i=", i))
-  param_df$ftec_1 <- paste0(prefix, "_densitesem", newSowDens, "_tec.xml") # compulsory to end by _tec.xml
-  pars[[as.character(newSowDens)]] <- param_df
-}
-param_df <- do.call(rbind, pars)
-gen_usms_xml(file.path(workspace, "usms.xml"),
-             param_df)
-get_usms_list(file.path(workspace, "usms.xml"))
+  (tmp <- get_param_xml(file.path(workspace, "usms.xml"),
+    select = "usm", select_value = usm_name
+  ))
+  pars <- list()
+  for (newSowDens in newSowingDensities) {
+    new_usm <- paste0(usm_name, "_densitesem", newSowDens)
+    param_df <- data.frame(usm_name = new_usm)
+    for (i in seq_along(tmp[[1]])) {
+      if (length(tmp[[1]][[i]]) == 1) {
+        param_df[[names(tmp[[1]])[i]]] <- tmp[[1]][i][[1]][1]
+      } else if (length(tmp[[1]][[i]]) == 2) {
+        param_df[[paste0(names(tmp[[1]])[i], "_1")]] <- tmp[[1]][[i]][1]
+        param_df[[paste0(names(tmp[[1]])[i], "_2")]] <- tmp[[1]][[i]][2]
+      } else {
+        stop(paste0("error: more than 2 values at i=", i))
+      }
+    }
+    param_df$ftec_1 <- paste0(prefix, "_densitesem", newSowDens, "_tec.xml") # compulsory to end by _tec.xml
+    pars[[as.character(newSowDens)]] <- param_df
+  }
+  param_df <- do.call(rbind, pars)
+  gen_usms_xml(
+    file.path(workspace, "usms.xml"),
+    param_df
+  )
+  get_usms_list(file.path(workspace, "usms.xml"))
 }
 ```
 
@@ -502,9 +536,9 @@ knitr::knit_exit()
 
 ```{r, echo=FALSE}
 var_name <- ""
-if (params$eval_vignette == "run"){
+if (params$eval_vignette == "run") {
   precomputed[[var_name]] <- get(var_name)
-} else if (params$eval_vignette == "load"){
+} else if (params$eval_vignette == "load") {
   assign(var_name, precomputed[[var_name]])
 }
 ```
@@ -513,8 +547,9 @@ if (params$eval_vignette == "run"){
 output_dir_path <- file.path(getwd(), "..", "inst", "extdata")
 stopifnot(dir.exists(output_dir_path))
 output_file_path <- file.path(output_dir_path, params$precomputedFile)
-if (file.exists(output_file_path))
+if (file.exists(output_file_path)) {
   file.remove(output_file_path)
+}
 saveRDS(precomputed, output_file_path)
 ```
 
