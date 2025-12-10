@@ -1,0 +1,523 @@
+---
+title: "STICS example in R"
+author: "Timothée Flutre"
+affiliation: "INRAE - GQE"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 5
+    toc_float: true
+    number_sections: TRUE
+    code_folding: show
+vignette: >
+  %\VignetteIndexEntry{STICS example in R}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+params:
+  eval_vignette: "load" # "run" means "(re-)run everything" / "load" means "load precomputed variables"
+  path_to_JavaStics: "/home/tflutre/Documents/travail/src_ext/STICS/JavaSTICS-10.5.0-STICS-10.5.0"
+  result_path: "/home/tflutre/Documents/travail/src/SticsRPacks/vignettes"
+  precomputedFile: "STICS-example_precomputed.rds"
+---
+
+<!--
+Steps to deploy this vignette:
+1) set "eval_vignette" to "run" when editing the vignette so that any new precomputed variable
+  is indeed saved into the rds file in inst/extdata
+2) keep it like that for R CMD build and INSTALL
+3) set "eval_vignette" to "load" and check that the vignette compiles properly
+-->
+
+```{r, eval=TRUE, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = FALSE,
+  comment = "#>"
+)
+
+precomputed <- list()
+if (params$eval_vignette == "load") {
+  file_path <- system.file(file.path("extdata", params$precomputedFile),
+                           package = "SticsRPacks")
+  stopifnot(file.exists(file_path))
+  precomputed <- readRDS(file_path)
+}
+
+javastics <- params$path_to_JavaStics
+
+## Useful function to work with params$eval_vignette:
+#' @param var_names character vector of variable names
+#' @param precomputed list of precomputed variables
+#' @param eval_vignette use get() if "run", assign() if "load"
+get_or_assign_var <- function(var_names, precomputed, eval_vignette, envir){
+  stopifnot(eval_vignette %in% c("run", "load"))
+  for(var_name in var_names){
+    if (eval_vignette == "run"){
+      precomputed[[var_name]] <- get(var_name, envir = envir)
+    } else if (eval_vignette == "load"){
+      assign(var_name, precomputed[[var_name]], envir = envir)
+    }
+  }
+  return(precomputed)
+}
+```
+
+```{r}
+library(SticsRPacks)
+library(ggplot2)
+```
+
+
+# Overview
+
+As explained in the documentation available on the main [website](https://stics.inrae.fr/eng), the STICS acronym stands for "Scientific, Technical and Interdisciplinary simulator of soil-Crop System functioning".
+More specifically, STICS is a generic soil-crop to support agro-ecosystem analysis, evaluation and design.
+It runs at a daily time-step and uses input variables related to climate, soil and the cropping system and its management.
+It can be described as a deterministic process-based model as well as a cropping system model.
+
+The model equations are implemented in Fortran, and a graphical interface named JavaSTICS is coded in Java.
+Both software are freely available for [download](https://stics.inrae.fr/eng/download) on the main website (after registration).
+Moreover, to ease the programmatic use of STICS, a set of R packages, named [SticsRPacks](https://sticsrpacks.github.io/SticsRPacks/), has been developped.
+
+The goal of this vignette is to **show how a new user, interested in STICS from an agronomic perspective, can quickly get familizarized with the model**, its required inputs and what outputs it can provide, **thanks to the functionalities from SticsRPacks**.
+However, by no means should you think that following this vignette can dispense of reading the STICS book as well as JavaSTICS and SticsRPacks documentation... ;-)
+
+
+
+# Set up the simulation
+
+Concretely, this vignette will take a single example among all of those provided in the JavaSTICS "example" directory.
+Below the "wheat" example is chosen, but feel free to copy-paste the code to another script and choose another example.
+
+## Choose a USM
+
+The USM acronym stands for "unit of simulation".
+
+Let us list all the example USMs provided with JavaSTICS:
+
+```{r, eval=params$eval_vignette == "run"}
+allUsmsFile <- file.path(javastics, "example", "usms.xml")
+usm_names <- get_usms_list(allUsmsFile)
+```
+
+```{r, echo=FALSE}
+precomputed <- get_or_assign_var("usm_names", precomputed, params$eval_vignette, environment())
+```
+
+```{r}
+length(usm_names)
+usm_names
+usm_name <- "wheat" # as a user, you may wish to choose another one, e.g., pea
+stopifnot(usm_name %in% usm_names)
+```
+
+## Prepare the working directory
+
+It is a good habit to start working from a new, clean directory, called a `workspace` in SticsRPacks.
+
+```{r, eval=params$eval_vignette == "run"}
+workspace <- file.path(tempdir(), paste0("vignette-STICS-example_", usm_name))
+if (dir.exists(workspace)) {
+  unlink(workspace, recursive = TRUE)
+}
+```
+
+The inputs required for STICS are often available in the XML format.
+All necessary XML files are listed and described in section 2.3 of the JavaSTICS documentation.
+
+Here they will be retrieved from the JavaStics example directory:
+```{r, eval=params$eval_vignette == "run"}
+extract_workspace(from_workspace = file.path(javastics, "example"),
+                  to_workspace = workspace,
+                  javastics = params$path_to_JavaStics,
+                  usm = usm_name)
+usm_details <-
+  get_param_xml(file.path(javastics, "example", "usms.xml"),
+                select="usm", select_value=usm_name)[[1]]
+```
+
+```{r, echo=FALSE}
+precomputed <- get_or_assign_var("usm_details", precomputed, params$eval_vignette, environment())
+```
+
+```{r}
+usm_details
+```
+
+## Explore the input files
+
+### Years
+
+```{r, eval=params$eval_auto_vignette}
+## TODO: include this function in SticsRFiles
+get_usm_years <- function(workspace, usmSelVal, usmsFile="usms.xml"){
+  stopifnot(dir.exists(workspace),
+            length(usmSelVal) == 1,
+            length(usmsFile) == 1,
+            file.exists(file.path(workspace, usmsFile)))
+
+  out <- c("year1"=NA, "year2"=NA)
+
+  fclim1 <- get_param_xml(file=file.path(workspace, usmsFile),
+                          param="fclim1", select="usm",
+                          select_value=usmSelVal)[[1]]$fclim1
+  line1 <- readLines(file.path(workspace, fclim1), n=1)
+  tmp <- strsplit(line1, "\\s+")[[1]]
+  out["year1"] <- as.numeric(tmp[2])
+  out["year2"] <- out["year1"] + 1
+
+  return(out)
+}
+```
+
+```{r, eval=params$eval_vignette == "run"}
+years <- get_usm_years(workspace, usm_name)
+```
+
+```{r, echo=FALSE}
+precomputed <- get_or_assign_var("years", precomputed, params$eval_vignette, environment())
+```
+
+```{r}
+years
+```
+
+### Management
+
+```{r, eval=params$eval_auto_vignette}
+## TODO
+```
+
+### Phenology
+
+An important phenological stage for small-grain cereals is called "IAMF" in STICS, that corresponds to the "one-centimeter ear" stage (BBCH 30).
+
+In STICS, it can be a variable, in which case its value will be simulated:
+```{r, eval=FALSE}
+get_var_info("iamf")
+```
+```{r, echo=FALSE}
+knitr::kable(get_var_info("iamf"))
+```
+
+But it can also be a parameter, in which case its value needs to be given before the simulation:
+```{r, eval=FALSE}
+get_param_info("iamf")
+```
+```{r, echo=FALSE}
+knitr::kable(get_param_info("iamf"))
+```
+
+As you can see above in the "file" column, this parameter value can be found in the management file ("tec"):
+```{r, eval=params$eval_vignette == "run"}
+form_pheno_stages <- get_param_xml(file.path(workspace, usm_details$ftec[1]),
+                                   select="formalisme",
+                                   select_value="phenological stages")
+```
+
+```{r, echo=FALSE}
+precomputed <- get_or_assign_var("form_pheno_stages", precomputed, params$eval_vignette, environment())
+```
+
+```{r}
+unlist(form_pheno_stages)
+```
+
+The value can be directly retrieved (as a Julian day) and further converted into a calendar date:
+```{r, eval=params$eval_vignette == "run"}
+iamf <- unlist(get_param_xml(file.path(workspace, usm_details$ftec[1]), "iamf"))
+```
+
+```{r, echo=FALSE}
+precomputed <- get_or_assign_var("iamf", precomputed, params$eval_vignette, environment())
+```
+
+```{r}
+iamf
+compute_date_from_day(day=iamf, start_year=years["year1"])
+```
+
+## Convert XML into TXT
+
+The last step before running the simulation consists in converting the input XML files used by JavaSTICS into text files that STICS can use.
+
+Currently, the workspace contains several files as well as a single directory, named `"plant"`, that with the species and genotype-specific parameters:
+```{r, eval=params$eval_vignette == "run"}
+list_wksp_0 <- list.files(workspace, recursive = TRUE)
+```
+
+```{r, echo=FALSE}
+precomputed <- get_or_assign_var("list_wksp_0", precomputed, params$eval_vignette, environment())
+```
+
+```{r}
+list_wksp_0
+```
+
+The following function will convert the XML files into their text equivalent:
+```{r, eval=params$eval_vignette == "run"}
+gen_usms_xml2txt(javastics, workspace, usm = usm_name)
+```
+
+As you can see below, the workspace now contains a new directory, named by the USM, which only contains text files:
+```{r, eval=params$eval_vignette == "run"}
+list_wksp_1 <- list.files(workspace, recursive = TRUE)
+```
+
+```{r, echo=FALSE}
+precomputed <- get_or_assign_var("list_wksp_1", precomputed, params$eval_vignette, environment())
+```
+
+```{r}
+list_wksp_1
+```
+
+## Choose output variables
+
+In the conversion process, a file (compulsorily named `"var.mod"`) was also generated.
+It contains a default list of variables that will be saved by STICS during the simulation.
+```{r, eval=params$eval_vignette == "run"}
+var_mod_0 <- readLines(file.path(workspace, usm_name, "var.mod"))
+```
+
+```{r, echo=FALSE}
+precomputed <- get_or_assign_var("var_mod_0", precomputed, params$eval_vignette, environment())
+```
+
+```{r}
+var_mod_0
+```
+
+If you are interested in other variables not included in this default list, you need to append them to this file.
+For instance, if you are used to conduct field trials, you may want variables that are commonly phenotyped, such as several important developmental stages, as well as LAI/GAI, height, above-ground biomass and grain weight.
+It is also the occasion to add more variables you are interested in and that STICS will simulate (variables already in the default list will not be added twice).
+
+```{r}
+devPars <- c("iplt", "iger", "ilev", "iamf", "ilax",
+             "iflo","idrp","ilan","imat","irec")
+devVars <- paste0(devPars, "s")
+varsToAdd <- c(devVars,
+               "lai_n", "leai", "hauteur", "masec_n", "mafruit",
+               "mafeuil", "mafeuilverte",
+               "matigestruc")
+```
+
+```{r, eval=params$eval_vignette == "run"}
+gen_varmod(workspace,
+           var = varsToAdd,
+           file_name = file.path(usm_name, "var.mod"),
+           append = TRUE)
+```
+
+
+
+# Run the simulation
+
+```{r, eval=params$eval_vignette == "run"}
+wrapper_options <- stics_wrapper_options(javastics, workspace = workspace, parallel = FALSE)
+wrap <- stics_wrapper(wrapper_options)
+```
+
+
+
+# Explore the outputs
+
+## Retrieve observed and simulated data
+
+The simulation outputs will be saved as a list of data frame, one per USM (here, there is a single one).
+The observations, if any, can be retrieved in a similar way.
+```{r, eval=params$eval_vignette == "run"}
+sim <- get_sim(workspace, usm = usm_name)
+obs <- get_obs(workspace, usm = usm_name)
+```
+
+```{r, echo=FALSE}
+precomputed <- get_or_assign_var(c("sim","obs"), precomputed, params$eval_vignette, environment())
+```
+
+```{r}
+str(sim, list.len = 10)
+str(obs)
+```
+
+## Plot observed and simulated data
+
+```{r}
+for(out_var in c("masec_n", "hauteur", "lai_n")){
+  p <- plot(sim, var = out_var, obs = obs)[[usm_name]] +
+    theme_bw()
+  print(p)
+}
+```
+
+## Add developmental stages
+
+First we need to retrieve the dates of the developmental stages we are interested in:
+```{r, eval=params$eval_auto_vignette}
+## TODO: include this function in SticsRFiles
+get_dev_stages <- function(sim, devVars=c("iplts", "igers", "ilevs", "iamfs",
+                                        "ilaxs", "iflos", "idrps", "ilans",
+                                        "imats", "irecs"),
+                         usm=NULL){
+  stopifnot(is.list(sim),
+            ! is.null(names(sim)))
+
+  out <- list()
+
+  if(is.null(usm))
+    usm <- names(sim)
+  stopifnot(all(usm %in% names(sim)))
+
+  for(usm_name in usm){
+    dat <- sim[[usm_name]]
+    firstYear <- as.integer(sort(unique(format(dat$Date, format="%Y")))[1])
+    out_usm <- data.frame(var=devVars,
+                          day=NA,
+                          date="")
+    for(i in 1:nrow(out_usm)){
+      devVar <- devVars[i]
+      if(! devVar %in% colnames(dat)){
+        msg <- paste0("'", devVar, "' not found")
+        warning(msg, immediate. = TRUE)
+        next
+      }
+      tmp <- table(dat[[devVar]])
+      if(length(tmp) == 1){ # ex. iplts
+        out_usm$day[i] <- as.integer(names(tmp)[1])
+      } else if(length(tmp) == 2){
+        stopifnot(names(tmp)[1] == "0")
+        out_usm$day[i] <- as.integer(names(tmp)[2])
+      } else
+        stop(paste0(devVar, " has more than three values"))
+      out_usm$date[i] <- as.character(compute_date_from_day(out_usm$day[i], firstYear))
+    }
+    out_usm$date <- as.Date(out_usm$date)
+    out_usm$Date <- as.POSIXct(out_usm$date) # required to plot with CroPlotR
+    out_usm$var <- factor(out_usm$var,
+                          levels=out_usm$var[order(out_usm$day)],
+                          ordered=TRUE)
+    out[[usm_name]] <- out_usm
+  }
+
+  return(out)
+}
+
+(devStages <- get_dev_stages(sim, devVars))
+```
+
+And then we can add them to the plot:
+```{r, eval=params$eval_auto_vignette}
+for(out_var in c("masec_n", "hauteur", "lai_n")){
+  p <- plot(sim, var = out_var, obs = obs)[[usm_name]] +
+    geom_vline(data=devStages[[usm_name]], aes(xintercept=Date, color=var)) +
+    theme_bw()
+  print(p)
+}
+```
+
+
+
+# Play with the inputs
+
+## Change the sowing density
+
+```{r}
+get_param_info(keyword="sowing density")
+```
+
+As indicated in the "file" column, the "tec" file needs to be modified.
+We will explore the range of possible sowing densities, and make an USM for each.
+
+
+```{r, eval=params$eval_vignette == "run", echo=FALSE}
+output_dir_path <- file.path(getwd(), "..", "inst", "extdata")
+stopifnot(dir.exists(output_dir_path))
+output_file_path <- file.path(output_dir_path, params$precomputedFile)
+if (file.exists(output_file_path))
+  tmp <- file.remove(output_file_path)
+saveRDS(precomputed, output_file_path)
+```
+
+```{r, echo=FALSE}
+knitr::knit_exit()
+```
+
+
+```{r}
+newSowingDensities <- c(seq(5, 50, by=5),
+                        seq(50, 1000, by=25),
+                        seq(1000, 2000, by=100))
+newSowingDensities <- unique(newSowingDensities)
+
+get_param_xml(file.path(workspace, usm_details$ftec[1]), "densitesem")
+if(FALSE){
+prefix <- tools::file_path_sans_ext(usm_details$ftec[1])
+prefix <- gsub("_tec", "", prefix)
+for(newSowDens in newSowingDensities){
+  outF <- file.path(workspace, usm_name, paste0(prefix, "_densitesem", newSowDens, "_tec.xml")) # compulsory to end by _tec.xml
+  if(file.exists(outF))
+    file.remove(outF)
+  set_param_xml(file.path(workspace, usm_name, usm_details$ftec[1]),
+                "densitesem", newSowDens,
+                outF)
+}
+
+(tmp <- get_param_xml(file.path(workspace, "usms.xml"),
+                      select="usm", select_value=usm_name))
+pars <- list()
+for(newSowDens in newSowingDensities){
+  new_usm <- paste0(usm_name, "_densitesem", newSowDens)
+  param_df <- data.frame(usm_name=new_usm)
+  for(i in seq_along(tmp[[1]]))
+    if(length(tmp[[1]][[i]]) == 1){
+      param_df[[names(tmp[[1]])[i]]] <- tmp[[1]][i][[1]][1]
+    } else if(length(tmp[[1]][[i]]) == 2){
+      param_df[[paste0(names(tmp[[1]])[i], "_1")]] <- tmp[[1]][[i]][1]
+      param_df[[paste0(names(tmp[[1]])[i], "_2")]] <- tmp[[1]][[i]][2]
+    } else
+      stop(paste0("error: more than 2 values at i=", i))
+  param_df$ftec_1 <- paste0(prefix, "_densitesem", newSowDens, "_tec.xml") # compulsory to end by _tec.xml
+  pars[[as.character(newSowDens)]] <- param_df
+}
+param_df <- do.call(rbind, pars)
+gen_usms_xml(file.path(workspace, "usms.xml"),
+             param_df)
+get_usms_list(file.path(workspace, "usms.xml"))
+}
+```
+
+## Change the nitrogen fertilization
+
+```{r, eval=params$eval_auto_vignette}
+## TODO
+```
+
+
+
+
+
+```{r, echo=FALSE}
+knitr::knit_exit()
+```
+
+```{r, echo=FALSE}
+var_name <- ""
+if (params$eval_vignette == "run"){
+  precomputed[[var_name]] <- get(var_name)
+} else if (params$eval_vignette == "load"){
+  assign(var_name, precomputed[[var_name]])
+}
+```
+
+```{r save_list_of_precomputed_variables, eval=params$eval_vignette == "run", echo=FALSE}
+output_dir_path <- file.path(getwd(), "..", "inst", "extdata")
+stopifnot(dir.exists(output_dir_path))
+output_file_path <- file.path(output_dir_path, params$precomputedFile)
+if (file.exists(output_file_path))
+  file.remove(output_file_path)
+saveRDS(precomputed, output_file_path)
+```
+
+```{r, echo=FALSE}
+knitr::knit_exit()
+```
