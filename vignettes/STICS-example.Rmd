@@ -38,7 +38,8 @@ knitr::opts_chunk$set(
 precomputed <- list()
 if (params$eval_vignette == "load") {
   file_path <- system.file(file.path("extdata", params$precomputedFile),
-                           package = "SticsRPacks")
+    package = "SticsRPacks"
+  )
   stopifnot(file.exists(file_path))
   precomputed <- readRDS(file_path)
 }
@@ -49,12 +50,12 @@ javastics <- params$path_to_JavaStics
 #' @param var_names character vector of variable names
 #' @param precomputed list of precomputed variables
 #' @param eval_vignette use get() if "run", assign() if "load"
-get_or_assign_var <- function(var_names, precomputed, eval_vignette, envir){
+get_or_assign_var <- function(var_names, precomputed, eval_vignette, envir) {
   stopifnot(eval_vignette %in% c("run", "load"))
-  for(var_name in var_names){
-    if (eval_vignette == "run"){
+  for (var_name in var_names) {
+    if (eval_vignette == "run") {
       precomputed[[var_name]] <- get(var_name, envir = envir)
-    } else if (eval_vignette == "load"){
+    } else if (eval_vignette == "load") {
       assign(var_name, precomputed[[var_name]], envir = envir)
     }
   }
@@ -127,13 +128,16 @@ All necessary XML files are listed and described in section 2.3 of the JavaSTICS
 
 Here they will be retrieved from the JavaStics example directory:
 ```{r, eval=params$eval_vignette == "run"}
-extract_workspace(from_workspace = file.path(javastics, "example"),
-                  to_workspace = workspace,
-                  javastics = params$path_to_JavaStics,
-                  usm = usm_name)
+extract_workspace(
+  from_workspace = file.path(javastics, "example"),
+  to_workspace = workspace,
+  javastics = params$path_to_JavaStics,
+  usm = usm_name
+)
 usm_details <-
   get_param_xml(file.path(javastics, "example", "usms.xml"),
-                select="usm", select_value=usm_name)[[1]]
+    select = "usm", select_value = usm_name
+  )[[1]]
 ```
 
 ```{r, echo=FALSE}
@@ -150,18 +154,22 @@ usm_details
 
 ```{r, eval=params$eval_auto_vignette}
 ## TODO: include this function in SticsRFiles
-get_usm_years <- function(workspace, usmSelVal, usmsFile="usms.xml"){
-  stopifnot(dir.exists(workspace),
-            length(usmSelVal) == 1,
-            length(usmsFile) == 1,
-            file.exists(file.path(workspace, usmsFile)))
+get_usm_years <- function(workspace, usmSelVal, usmsFile = "usms.xml") {
+  stopifnot(
+    dir.exists(workspace),
+    length(usmSelVal) == 1,
+    length(usmsFile) == 1,
+    file.exists(file.path(workspace, usmsFile))
+  )
 
-  out <- c("year1"=NA, "year2"=NA)
+  out <- c("year1" = NA, "year2" = NA)
 
-  fclim1 <- get_param_xml(file=file.path(workspace, usmsFile),
-                          param="fclim1", select="usm",
-                          select_value=usmSelVal)[[1]]$fclim1
-  line1 <- readLines(file.path(workspace, fclim1), n=1)
+  fclim1 <- get_param_xml(
+    file = file.path(workspace, usmsFile),
+    param = "fclim1", select = "usm",
+    select_value = usmSelVal
+  )[[1]]$fclim1
+  line1 <- readLines(file.path(workspace, fclim1), n = 1)
   tmp <- strsplit(line1, "\\s+")[[1]]
   out["year1"] <- as.numeric(tmp[2])
   out["year2"] <- out["year1"] + 1
@@ -213,8 +221,9 @@ knitr::kable(get_param_info("iamf"))
 As you can see above in the "file" column, this parameter value can be found in the management file ("tec"):
 ```{r, eval=params$eval_vignette == "run"}
 form_pheno_stages <- get_param_xml(file.path(workspace, usm_details$ftec[1]),
-                                   select="formalisme",
-                                   select_value="phenological stages")
+  select = "formalisme",
+  select_value = "phenological stages"
+)
 ```
 
 ```{r, echo=FALSE}
@@ -236,7 +245,7 @@ precomputed <- get_or_assign_var("iamf", precomputed, params$eval_vignette, envi
 
 ```{r}
 iamf
-compute_date_from_day(day=iamf, start_year=years["year1"])
+compute_date_from_day(day = iamf, start_year = years["year1"])
 ```
 
 ## Convert XML into TXT
@@ -306,9 +315,10 @@ varsToAdd <- c(dev_vars,
 
 ```{r, eval=params$eval_vignette == "run"}
 gen_varmod(workspace,
-           var = varsToAdd,
-           file_name = file.path(usm_name, "var.mod"),
-           append = TRUE)
+  var = varsToAdd,
+  file_name = file.path(usm_name, "var.mod"),
+  append = TRUE
+)
 ```
 
 
@@ -334,7 +344,7 @@ obs <- get_obs(workspace, usm = usm_name)
 ```
 
 ```{r, echo=FALSE}
-precomputed <- get_or_assign_var(c("sim","obs"), precomputed, params$eval_vignette, environment())
+precomputed <- get_or_assign_var(c("sim", "obs"), precomputed, params$eval_vignette, environment())
 ```
 
 ```{r}
@@ -345,7 +355,7 @@ str(obs)
 ## Plot observed and simulated data
 
 ```{r}
-for(out_var in c("masec_n", "hauteur", "lai_n")){
+for (out_var in c("masec_n", "hauteur", "lai_n")) {
   p <- plot(sim, var = out_var, obs = obs)[[usm_name]] +
     theme_bw()
   print(p)
@@ -369,11 +379,12 @@ get_dev_stages <- function(sim,
 
   out <- list()
 
-  if(is.null(usm))
+  if (is.null(usm)) {
     usm <- names(sim)
+  }
   stopifnot(all(usm %in% names(sim)))
 
-  for(usm_name in usm){
+  for (usm_name in usm) {
     dat <- sim[[usm_name]]
     firstYear <- as.integer(sort(unique(format(dat$Date, format="%Y")))[1])
     out_usm <- data.frame(var=dev_vars,
@@ -389,7 +400,7 @@ get_dev_stages <- function(sim,
       tmp <- table(dat[[dev_var]])
       if(length(tmp) == 1){ # ex. iplts
         out_usm$day[i] <- as.integer(names(tmp)[1])
-      } else if(length(tmp) == 2){
+      } else if (length(tmp) == 2) {
         stopifnot(names(tmp)[1] == "0")
         out_usm$day[i] <- as.integer(names(tmp)[2])
       } else
@@ -399,8 +410,9 @@ get_dev_stages <- function(sim,
     out_usm$date <- as.Date(out_usm$date)
     out_usm$Date <- as.POSIXct(out_usm$date) # required to plot with CroPlotR
     out_usm$var <- factor(out_usm$var,
-                          levels=out_usm$var[order(out_usm$day)],
-                          ordered=TRUE)
+      levels = out_usm$var[order(out_usm$day)],
+      ordered = TRUE
+    )
     out[[usm_name]] <- out_usm
   }
 
@@ -414,7 +426,7 @@ get_dev_stages <- function(sim,
 
 And then we can add them to the plot:
 ```{r, eval=params$eval_auto_vignette}
-for(out_var in c("masec_n", "hauteur", "lai_n")){
+for (out_var in c("masec_n", "hauteur", "lai_n")) {
   p <- plot(sim, var = out_var, obs = obs)[[usm_name]] +
     geom_vline(data=dev_stages[[usm_name]], aes(xintercept=Date, color=var)) +
     theme_bw()
@@ -431,7 +443,7 @@ for(out_var in c("masec_n", "hauteur", "lai_n")){
 ### Run the simulations
 
 ```{r}
-get_param_info(keyword="sowing density")
+get_param_info(keyword = "sowing density")
 ```
 
 As indicated in the "file" column, the "tec" file needs to be modified.
@@ -492,8 +504,9 @@ ggplot(datCFY) +
 output_dir_path <- file.path(getwd(), "..", "inst", "extdata")
 stopifnot(dir.exists(output_dir_path))
 output_file_path <- file.path(output_dir_path, params$precomputedFile)
-if (file.exists(output_file_path))
+if (file.exists(output_file_path)) {
   tmp <- file.remove(output_file_path)
+}
 saveRDS(precomputed, output_file_path)
 ```
 
