@@ -304,13 +304,17 @@ For instance, if you are used to conduct field trials, you may want variables th
 It is also the occasion to add more variables you are interested in and that STICS will simulate (variables already in the default list will not be added twice).
 
 ```{r}
-devPars <- c("iplt", "iger", "ilev", "iamf", "ilax",
-             "iflo","idrp","ilan","imat","irec")
+devPars <- c(
+  "iplt", "iger", "ilev", "iamf", "ilax",
+  "iflo", "idrp", "ilan", "imat", "irec"
+)
 dev_vars <- paste0(devPars, "s")
-varsToAdd <- c(dev_vars,
-               "lai_n", "leai", "hauteur", "masec_n", "mafruit",
-               "mafeuil", "mafeuilverte",
-               "matigestruc")
+varsToAdd <- c(
+  dev_vars,
+  "lai_n", "leai", "hauteur", "masec_n", "mafruit",
+  "mafeuil", "mafeuilverte",
+  "matigestruc"
+)
 ```
 
 ```{r, eval=params$eval_vignette == "run"}
@@ -368,14 +372,18 @@ First we need to retrieve the dates of the developmental stages we are intereste
 ```{r, eval=params$eval_auto_vignette}
 ## TODO: see issue to include this function in SticsRFiles
 get_dev_stages <- function(sim,
-                           dev_vars=c("iplts", "igers", "ilevs", "iamfs",
-                                      "ilaxs", "iflos", "idrps", "ilans",
-                                      "imats", "irecs"),
-                           usm=NULL){
-  #get_var_info(keyword="date")
+                           dev_vars = c(
+                             "iplts", "igers", "ilevs", "iamfs",
+                             "ilaxs", "iflos", "idrps", "ilans",
+                             "imats", "irecs"
+                           ),
+                           usm = NULL) {
+  # get_var_info(keyword="date")
 
-  stopifnot(is.list(sim),
-            ! is.null(names(sim)))
+  stopifnot(
+    is.list(sim),
+    !is.null(names(sim))
+  )
 
   out <- list()
 
@@ -386,25 +394,28 @@ get_dev_stages <- function(sim,
 
   for (usm_name in usm) {
     dat <- sim[[usm_name]]
-    firstYear <- as.integer(sort(unique(format(dat$Date, format="%Y")))[1])
-    out_usm <- data.frame(var=dev_vars,
-                          day=NA,
-                          date="")
-    for(i in 1:nrow(out_usm)){
+    firstYear <- as.integer(sort(unique(format(dat$Date, format = "%Y")))[1])
+    out_usm <- data.frame(
+      var = dev_vars,
+      day = NA,
+      date = ""
+    )
+    for (i in 1:nrow(out_usm)) {
       dev_var <- dev_vars[i]
-      if(! dev_var %in% colnames(dat)){
+      if (!dev_var %in% colnames(dat)) {
         msg <- paste0("'", dev_var, "' not found")
         warning(msg, immediate. = TRUE)
         next
       }
       tmp <- table(dat[[dev_var]])
-      if(length(tmp) == 1){ # ex. iplts
+      if (length(tmp) == 1) { # ex. iplts
         out_usm$day[i] <- as.integer(names(tmp)[1])
       } else if (length(tmp) == 2) {
         stopifnot(names(tmp)[1] == "0")
         out_usm$day[i] <- as.integer(names(tmp)[2])
-      } else
+      } else {
         stop(paste0(dev_var, " has more than three values"))
+      }
       out_usm$date[i] <- as.character(compute_date_from_day(out_usm$day[i], firstYear))
     }
     out_usm$date <- as.Date(out_usm$date)
@@ -428,7 +439,7 @@ And then we can add them to the plot:
 ```{r, eval=params$eval_auto_vignette}
 for (out_var in c("masec_n", "hauteur", "lai_n")) {
   p <- plot(sim, var = out_var, obs = obs)[[usm_name]] +
-    geom_vline(data=dev_stages[[usm_name]], aes(xintercept=Date, color=var)) +
+    geom_vline(data = dev_stages[[usm_name]], aes(xintercept = Date, color = var)) +
     theme_bw()
   print(p)
 }
@@ -450,19 +461,23 @@ As indicated in the "file" column, the "tec" file needs to be modified.
 We will explore the range of possible sowing densities, and run STICS for each of them.
 
 ```{r}
-new_densities <- unique(c(seq(5, 50, by=5),
-                          seq(50, 1000, by=25))) #, seq(1000, 2000, by=100)))
-param_values <- data.frame(densitesem = new_densities)#[1:10,,drop=F]))
+new_densities <- unique(c(
+  seq(5, 50, by = 5),
+  seq(50, 1000, by = 25)
+)) # , seq(1000, 2000, by=100)))
+param_values <- data.frame(densitesem = new_densities) # [1:10,,drop=F]))
 ```
 
 ```{r, eval=params$eval_vignette == "run"}
 wrapper_options <- stics_wrapper_options(javastics, workspace = workspace)
 system.time(
-    wrap_densitesem <- stics_wrapper(wrapper_options, param_values))
+  wrap_densitesem <- stics_wrapper(wrapper_options, param_values)
+)
 ## TODO: la commande ci-dessous va evoluer, issue en cours
-wrap_densitesem$sim_list[[usm_name]]$densitesem <- 
+wrap_densitesem$sim_list[[usm_name]]$densitesem <-
   rep(param_values$densitesem,
-      each = length(unique(wrap_densitesem$sim_list[[usm_name]]$Date)))
+    each = length(unique(wrap_densitesem$sim_list[[usm_name]]$Date))
+  )
 ```
 
 ```{r, echo=FALSE}
@@ -472,16 +487,18 @@ precomputed <- get_or_assign_var("wrap_densitesem", precomputed, params$eval_vig
 ### Extract the biomass at harvest
 
 ```{r}
-colsToKeep <-  c("densitesem", "Date", "irecs", "masec_n", "mafruit")
+colsToKeep <- c("densitesem", "Date", "irecs", "masec_n", "mafruit")
 datCFY <- wrap_densitesem$sim_list[[usm_name]][, colsToKeep]
 rowsToKeep <- c()
-for(densitesem in unique(sort(datCFY$densitesem))){
+for (densitesem in unique(sort(datCFY$densitesem))) {
   is_densitesem <- (datCFY$densitesem == densitesem)
   harvest_Julian <- as.integer(names(table(datCFY[is_densitesem, "irecs"]))[2])
-  rowsToKeep <- c(rowsToKeep,
-                  which(is_densitesem & datCFY$irecs == harvest_Julian)[1])
+  rowsToKeep <- c(
+    rowsToKeep,
+    which(is_densitesem & datCFY$irecs == harvest_Julian)[1]
+  )
 }
-datCFY <- datCFY[rowsToKeep,]
+datCFY <- datCFY[rowsToKeep, ]
 rownames(datCFY) <- NULL
 head(datCFY)
 ```
@@ -490,11 +507,11 @@ head(datCFY)
 
 ```{r, fig.width=12}
 ggplot(datCFY) +
-  aes(x=densitesem, y=masec_n) +
-  geom_smooth(formula=y~x, method="loess", span=0.4) +
-  geom_point(size=2) +
-  scale_x_continuous(breaks=seq(0, 2000, by=100)) +
-  labs(title=usm_name) +
+  aes(x = densitesem, y = masec_n) +
+  geom_smooth(formula = y ~ x, method = "loess", span = 0.4) +
+  geom_point(size = 2) +
+  scale_x_continuous(breaks = seq(0, 2000, by = 100)) +
+  labs(title = usm_name) +
   theme_bw()
 ```
 
