@@ -172,6 +172,8 @@ get_usm_years <- function(workspace, usmSelVal, usmsFile="usms.xml"){
 
 ```{r, eval=params$eval_vignette == "run"}
 years <- get_usm_years(workspace, usm_name)
+# if(packageVersion("SticsRFiles") >= "1.7.0")
+#   years <- get_years(workspace, "usms.xml", usm_name) # as.vector(years[usm_name,])
 ```
 
 ```{r, echo=FALSE}
@@ -295,8 +297,8 @@ It is also the occasion to add more variables you are interested in and that STI
 ```{r}
 devPars <- c("iplt", "iger", "ilev", "iamf", "ilax",
              "iflo","idrp","ilan","imat","irec")
-devVars <- paste0(devPars, "s")
-varsToAdd <- c(devVars,
+dev_vars <- paste0(devPars, "s")
+varsToAdd <- c(dev_vars,
                "lai_n", "leai", "hauteur", "masec_n", "mafruit",
                "mafeuil", "mafeuilverte",
                "matigestruc")
@@ -354,11 +356,14 @@ for(out_var in c("masec_n", "hauteur", "lai_n")){
 
 First we need to retrieve the dates of the developmental stages we are interested in:
 ```{r, eval=params$eval_auto_vignette}
-## TODO: include this function in SticsRFiles
-get_dev_stages <- function(sim, devVars=c("iplts", "igers", "ilevs", "iamfs",
-                                        "ilaxs", "iflos", "idrps", "ilans",
-                                        "imats", "irecs"),
-                         usm=NULL){
+## TODO: see issue to include this function in SticsRFiles
+get_dev_stages <- function(sim,
+                           dev_vars=c("iplts", "igers", "ilevs", "iamfs",
+                                      "ilaxs", "iflos", "idrps", "ilans",
+                                      "imats", "irecs"),
+                           usm=NULL){
+  #get_var_info(keyword="date")
+
   stopifnot(is.list(sim),
             ! is.null(names(sim)))
 
@@ -371,24 +376,24 @@ get_dev_stages <- function(sim, devVars=c("iplts", "igers", "ilevs", "iamfs",
   for(usm_name in usm){
     dat <- sim[[usm_name]]
     firstYear <- as.integer(sort(unique(format(dat$Date, format="%Y")))[1])
-    out_usm <- data.frame(var=devVars,
+    out_usm <- data.frame(var=dev_vars,
                           day=NA,
                           date="")
     for(i in 1:nrow(out_usm)){
-      devVar <- devVars[i]
-      if(! devVar %in% colnames(dat)){
-        msg <- paste0("'", devVar, "' not found")
+      dev_var <- dev_vars[i]
+      if(! dev_var %in% colnames(dat)){
+        msg <- paste0("'", dev_var, "' not found")
         warning(msg, immediate. = TRUE)
         next
       }
-      tmp <- table(dat[[devVar]])
+      tmp <- table(dat[[dev_var]])
       if(length(tmp) == 1){ # ex. iplts
         out_usm$day[i] <- as.integer(names(tmp)[1])
       } else if(length(tmp) == 2){
         stopifnot(names(tmp)[1] == "0")
         out_usm$day[i] <- as.integer(names(tmp)[2])
       } else
-        stop(paste0(devVar, " has more than three values"))
+        stop(paste0(dev_var, " has more than three values"))
       out_usm$date[i] <- as.character(compute_date_from_day(out_usm$day[i], firstYear))
     }
     out_usm$date <- as.Date(out_usm$date)
@@ -402,14 +407,16 @@ get_dev_stages <- function(sim, devVars=c("iplts", "igers", "ilevs", "iamfs",
   return(out)
 }
 
-(devStages <- get_dev_stages(sim, devVars))
+(dev_stages <- get_dev_stages(sim, dev_vars))
+# if(packageVersion("SticsRFiles") >= "1.7.0")
+#   dev_stages <- get_dev_stages(workspace, "usms.xml", usm_name)[[usm_name]]
 ```
 
 And then we can add them to the plot:
 ```{r, eval=params$eval_auto_vignette}
 for(out_var in c("masec_n", "hauteur", "lai_n")){
   p <- plot(sim, var = out_var, obs = obs)[[usm_name]] +
-    geom_vline(data=devStages[[usm_name]], aes(xintercept=Date, color=var)) +
+    geom_vline(data=dev_stages[[usm_name]], aes(xintercept=Date, color=var)) +
     theme_bw()
   print(p)
 }
@@ -421,12 +428,64 @@ for(out_var in c("masec_n", "hauteur", "lai_n")){
 
 ## Change the sowing density
 
+### Run the simulations
+
 ```{r}
 get_param_info(keyword="sowing density")
 ```
 
 As indicated in the "file" column, the "tec" file needs to be modified.
-We will explore the range of possible sowing densities, and make an USM for each.
+We will explore the range of possible sowing densities, and run STICS for each of them.
+
+```{r}
+new_densities <- unique(c(seq(5, 50, by=5),
+                          seq(50, 1000, by=25))) #, seq(1000, 2000, by=100)))
+param_values <- data.frame(densitesem = new_densities)#[1:10,,drop=F]))
+```
+
+```{r, eval=params$eval_vignette == "run"}
+wrapper_options <- stics_wrapper_options(javastics, workspace = workspace)
+system.time(
+    wrap_densitesem <- stics_wrapper(wrapper_options, param_values))
+## TODO: la commande ci-dessous va evoluer, issue en cours
+wrap_densitesem$sim_list[[usm_name]]$densitesem <- 
+  rep(param_values$densitesem,
+      each = length(unique(wrap_densitesem$sim_list[[usm_name]]$Date)))
+```
+
+```{r, echo=FALSE}
+precomputed <- get_or_assign_var("wrap_densitesem", precomputed, params$eval_vignette, environment())
+```
+
+### Extract the biomass at harvest
+
+```{r}
+colsToKeep <-  c("densitesem", "Date", "irecs", "masec_n", "mafruit")
+datCFY <- wrap_densitesem$sim_list[[usm_name]][, colsToKeep]
+rowsToKeep <- c()
+for(densitesem in unique(sort(datCFY$densitesem))){
+  is_densitesem <- (datCFY$densitesem == densitesem)
+  harvest_Julian <- as.integer(names(table(datCFY[is_densitesem, "irecs"]))[2])
+  rowsToKeep <- c(rowsToKeep,
+                  which(is_densitesem & datCFY$irecs == harvest_Julian)[1])
+}
+datCFY <- datCFY[rowsToKeep,]
+rownames(datCFY) <- NULL
+head(datCFY)
+```
+
+### Plot the "law" of constant final yield
+
+```{r, fig.width=12}
+ggplot(datCFY) +
+  aes(x=densitesem, y=masec_n) +
+  geom_smooth(formula=y~x, method="loess", span=0.4) +
+  geom_point(size=2) +
+  scale_x_continuous(breaks=seq(0, 2000, by=100)) +
+  labs(title=usm_name) +
+  theme_bw()
+```
+
 
 
 ```{r, eval=params$eval_vignette == "run", echo=FALSE}
@@ -443,81 +502,9 @@ knitr::knit_exit()
 ```
 
 
-```{r}
-newSowingDensities <- c(seq(5, 50, by=5),
-                        seq(50, 1000, by=25),
-                        seq(1000, 2000, by=100))
-newSowingDensities <- unique(newSowingDensities)
-
-get_param_xml(file.path(workspace, usm_details$ftec[1]), "densitesem")
-if(FALSE){
-prefix <- tools::file_path_sans_ext(usm_details$ftec[1])
-prefix <- gsub("_tec", "", prefix)
-for(newSowDens in newSowingDensities){
-  outF <- file.path(workspace, usm_name, paste0(prefix, "_densitesem", newSowDens, "_tec.xml")) # compulsory to end by _tec.xml
-  if(file.exists(outF))
-    file.remove(outF)
-  set_param_xml(file.path(workspace, usm_name, usm_details$ftec[1]),
-                "densitesem", newSowDens,
-                outF)
-}
-
-(tmp <- get_param_xml(file.path(workspace, "usms.xml"),
-                      select="usm", select_value=usm_name))
-pars <- list()
-for(newSowDens in newSowingDensities){
-  new_usm <- paste0(usm_name, "_densitesem", newSowDens)
-  param_df <- data.frame(usm_name=new_usm)
-  for(i in seq_along(tmp[[1]]))
-    if(length(tmp[[1]][[i]]) == 1){
-      param_df[[names(tmp[[1]])[i]]] <- tmp[[1]][i][[1]][1]
-    } else if(length(tmp[[1]][[i]]) == 2){
-      param_df[[paste0(names(tmp[[1]])[i], "_1")]] <- tmp[[1]][[i]][1]
-      param_df[[paste0(names(tmp[[1]])[i], "_2")]] <- tmp[[1]][[i]][2]
-    } else
-      stop(paste0("error: more than 2 values at i=", i))
-  param_df$ftec_1 <- paste0(prefix, "_densitesem", newSowDens, "_tec.xml") # compulsory to end by _tec.xml
-  pars[[as.character(newSowDens)]] <- param_df
-}
-param_df <- do.call(rbind, pars)
-gen_usms_xml(file.path(workspace, "usms.xml"),
-             param_df)
-get_usms_list(file.path(workspace, "usms.xml"))
-}
-```
 
 ## Change the nitrogen fertilization
 
-```{r, eval=params$eval_auto_vignette}
+```{r}
 ## TODO
-```
-
-
-
-
-
-```{r, echo=FALSE}
-knitr::knit_exit()
-```
-
-```{r, echo=FALSE}
-var_name <- ""
-if (params$eval_vignette == "run"){
-  precomputed[[var_name]] <- get(var_name)
-} else if (params$eval_vignette == "load"){
-  assign(var_name, precomputed[[var_name]])
-}
-```
-
-```{r save_list_of_precomputed_variables, eval=params$eval_vignette == "run", echo=FALSE}
-output_dir_path <- file.path(getwd(), "..", "inst", "extdata")
-stopifnot(dir.exists(output_dir_path))
-output_file_path <- file.path(output_dir_path, params$precomputedFile)
-if (file.exists(output_file_path))
-  file.remove(output_file_path)
-saveRDS(precomputed, output_file_path)
-```
-
-```{r, echo=FALSE}
-knitr::knit_exit()
 ```
