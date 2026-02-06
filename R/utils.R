@@ -72,7 +72,8 @@ get_forge_userpass <- function(type = "public") {
 }
 
 download_javastics <- function(download_url, output_dir = tempdir()) {
-  javastics_dir <- list.files(output_dir,
+  javastics_dir <- list.files(
+    output_dir,
     recursive = FALSE,
     full.names = FALSE,
     pattern = "^JavaSTICS"
@@ -97,10 +98,8 @@ download_javastics <- function(download_url, output_dir = tempdir()) {
     if (file.exists(zip_path)) unlink(zip_path)
   }
 
-
   # javastics_dir <-  gsub(pattern = "(.*)/(.*)\\.zip$",
   #                        x = download_url, replacement = "\\2")
-
 
   # zip_path <- file.path(output_dir, paste0(javastics_dir, ".zip"))
   # output_path <- file.path(output_dir, javastics_dir)
@@ -110,7 +109,8 @@ download_javastics <- function(download_url, output_dir = tempdir()) {
 
   # if (file.exists(zip_path)) unlink(zip_path)
 
-  javastics_dir <- list.files(output_dir,
+  javastics_dir <- list.files(
+    output_dir,
     recursive = FALSE,
     full.names = FALSE,
     pattern = "^JavaSTICS"
@@ -181,20 +181,23 @@ check_java_version <- function(java_target) {
   java_version <- get_java_version(cmd = java)
 
   if (is.null(java_version)) {
-    stop("A java version 11 must be installed")
+    stop("A java version ", java_version, " must be installed")
   }
-
 
   if (java_version < as.numeric(java_target)) {
     stop(
       "The default system java virtual machine is ",
-      system(paste(java, "-version 2>&1"),
-        intern = TRUE
-      )[1],
-      "\nA java ", java_target, " version installation is needed for running JavaSTICS, \n",
+      system(paste(java, "-version 2>&1"), intern = TRUE)[1],
+      "\nA java ",
+      java_target,
+      " version installation is needed for running JavaSTICS, \n",
       "or as an alternate version and the java path can be set\n",
       "in the .Renviron file, as for example: \n",
-      paste0("JAVA=\"/usr/lib/jvm/java-", java_target, "-openjdk-amd64/bin/java\"")
+      paste0(
+        "JAVA=\"/usr/lib/jvm/java-",
+        java_target,
+        "-openjdk-amd64/bin/java\""
+      )
     )
   }
 
