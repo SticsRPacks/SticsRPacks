@@ -72,8 +72,8 @@ have loaded:
 ``` r
 library(SticsRPacks)
 #> ── Attaching packages ───────────────────────────────────── SticsRPacks 0.9.0 ──
-#> ✔ SticsRFiles 1.6.0      ✔ SticsOnR    1.3.0 
-#> ✔ CroptimizR  0.7.0      ✔ CroPlotR    0.10.0
+#> ✔ SticsRFiles 1.6.0     ✔ SticsOnR    1.3.0
+#> ✔ CroptimizR  1.0.0     ✔ CroPlotR    1.0.0
 #> ── Conflicts ──────────────────────────────────────── SticsRPacks_conflicts() ──
 #> ✖ CroptimizR::AIC()    masks stats::AIC()
 #> ✖ CroptimizR::BIC()    masks stats::BIC()
