@@ -1,3 +1,7 @@
+# SticsRPacks 0.10.0
+
+Updated the tutorial to download latest JavaSTICS version (10.5.0).
+
 # SticsRPacks 0.9.0
 Tutorial updates:
   * fix: getting STICS version string
