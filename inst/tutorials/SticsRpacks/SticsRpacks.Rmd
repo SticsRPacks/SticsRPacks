@@ -41,6 +41,8 @@ get_stics_version <- function(version_string) {
     x = version_string, replacement = "\\2"
   )
 }
+# for simplifying use
+get_version_num <- SticsRFiles:::get_version_num
 
 # removing warnings in chunks
 knitr::opts_chunk$set(warning = FALSE)
@@ -160,19 +162,19 @@ if (!local_javastics) {
   # Checking if the version is compatible with
   # Stopping if Stics is older than version 9.2
   # or an unsupported version (i.e. > of the latest standard version)
-  if (stics_version_num < 9) {
+  if (stics_version_num < get_version_num(9)) {
     stop(
       "The JavaSTICS distribution ",
       basename(javastics_path),
       "is too old and not supported in this tutorial"
     )
-  } else if (stics_version_num < 10) {
+  } else if (stics_version_num < get_version_num(10)) {
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V9.2"
     java_target <- "8"
-  } else if (stics_version_num < 10.1) {
+  } else if (stics_version_num < get_version_num(10.1)) {
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10"
     java_target <- "11"
-  } else if (stics_version_num < 11) {
+  } else if (stics_version_num < get_version_num(11)) {
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10"
     java_target <- "17"
   } else {
