@@ -227,7 +227,7 @@ check_java_version <- function(java_target) {
   java_version <- get_java_version(cmd = java)
 
   if (is.null(java_version)) {
-    stop("A java version 11 must be installed")
+    stop("A java version ", java_version, " must be installed")
   }
 
   if (java_version < as.numeric(java_target)) {
