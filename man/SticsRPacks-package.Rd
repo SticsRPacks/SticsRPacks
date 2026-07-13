@@ -24,6 +24,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Remi Vezy \email{remi.vezy@cirad.fr} (\href{https://orcid.org/0000-0002-0808-1461}{ORCID})
   \item Samuel Buis \email{samuel.buis@inrae.fr} (\href{https://orcid.org/0000-0002-8676-5447}{ORCID})
   \item Patrice Lecharpentier \email{patrice.lecharpentier@inrae.fr} (\href{https://orcid.org/0000-0002-4044-4322}{ORCID})
   \item Michel Giner \email{michel.giner@cirad.fr} (\href{https://orcid.org/0000-0002-9310-2377}{ORCID})
