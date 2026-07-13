@@ -25,7 +25,8 @@ text_col <- function(x) {
 
 #' List all packages in SticsRPacks
 #'
-#' @param include_self Include SticsRPacks in the list?
+#' @param include_self Logical, TRUE to include the SticsRPacks package
+#' FALSE otherwise
 #' @export
 #' @examples
 #' SticsRPacks_packages()
@@ -71,52 +72,97 @@ get_forge_userpass <- function(type = "public") {
   }
 }
 
-download_javastics <- function(download_url, output_dir = tempdir()) {
-  javastics_dir <- list.files(output_dir,
-    recursive = FALSE,
-    full.names = FALSE,
-    pattern = "^JavaSTICS"
+#' Installing a JavaStics folder to a temporary folder
+#'
+#' @param download_url Url of the JavaStics to download
+#' @param output_dir Target directory where to install Javatics folder
+#'
+#' @returns Th full path of the JavaStics folder
+#'
+#' @keywords internal
+#' @noRd
+#'
+#'
+download_javastics <- function(download_url, output_dir) {
+  words <- strsplit(download_url, split = "/")[[1]]
+  zip_name <- words[length(words)]
+  zip_path <- file.path(tempdir(), zip_name)
+  arch_name <- gsub(
+    pattern = "(.*)\\.zip",
+    zip_name,
+    replacement = "\\1"
   )
-  if (length(javastics_dir) == 0) {
-    # get javastics lastest version
-    s <- strsplit(download_url, split = "/")[[1]]
-    zip_name <- s[length(s)]
-    zip_path <- file.path(output_dir, zip_name)
-    user_passwd <- get_forge_userpass("public")
-    system(paste0(
-      "curl -u ",
-      user_passwd,
-      " ",
-      "-k ",
-      download_url,
-      " --output ",
-      zip_path
-    ))
-    utils::unzip(zip_path, exdir = output_dir)
 
-    if (file.exists(zip_path)) unlink(zip_path)
+  # javastics installation dir
+  javastics_install_dir <- file.path(
+    output_dir,
+    arch_name
+  )
+
+  # the extracted zip does not contain a root directory named arch_name
+  if (!dir.exists(javastics_install_dir)) dir.create(javastics_install_dir)
+
+  # check content
+  # if files/directories exist the install directory
+  # has been preserved and prevent dowloading the zip again
+  # ly return
+  # creating the install dir, if needed
+
+  if (length(list.files(javastics_install_dir)) > 0)
+    return(javastics_install_dir)
+
+  # going on downloading and installing javastics
+  if (!dir.exists(output_dir)) dir.create(output_dir)
+
+  javastics_tmp <- file.path(tempdir(), "javastics_tmp")
+  if (dir.exists(javastics_tmp))
+    unlink(javastics_tmp, recursive = TRUE, force = TRUE)
+
+  # get javastics distribution
+  user_passwd <- get_forge_userpass("public")
+  system(paste0(
+    "curl -u ",
+    user_passwd,
+    " ",
+    "-k ",
+    download_url,
+    " --output ",
+    zip_path
+  ))
+
+  utils::unzip(zip_path, exdir = javastics_tmp)
+
+  unlink(zip_path)
+
+  tmp_path <- file.path(javastics_tmp, arch_name)
+  # The zip archive has not been downloaded previously and cached
+  if (!dir.exists(tmp_path)) {
+    # copying files/dirs from the javastics_tmp dir to the install directory
+    # basename == javastics archive name
+    src_path <- javastics_tmp
+    file.copy(
+      from = list.files(javastics_tmp, full.names = TRUE),
+      javastics_install_dir,
+      recursive = TRUE,
+      overwrite = TRUE,
+      copy.mode = TRUE
+    )
+  } else {
+    # the javastics dir == javastics archive name is copied
+    # into the install directory
+    src_path <- tmp_path
   }
-
-
-  # javastics_dir <-  gsub(pattern = "(.*)/(.*)\\.zip$",
-  #                        x = download_url, replacement = "\\2")
-
-
-  # zip_path <- file.path(output_dir, paste0(javastics_dir, ".zip"))
-  # output_path <- file.path(output_dir, javastics_dir)
-  # if (!dir.exists(file.path(output_dir, javastics_dir))) {
-  #
-  # }
-
-  # if (file.exists(zip_path)) unlink(zip_path)
-
-  javastics_dir <- list.files(output_dir,
-    recursive = FALSE,
-    full.names = FALSE,
-    pattern = "^JavaSTICS"
+  # Copying either files in a javastics subdir or the javastics directory
+  file.copy(
+    from = list.files(src_path, full.names = TRUE),
+    javastics_install_dir,
+    recursive = TRUE,
+    overwrite = TRUE,
+    copy.mode = TRUE
   )
+  if (dir.exists(tmp_path)) unlink(tmp_path, recursive = TRUE, force = TRUE)
 
-  return(file.path(output_dir, javastics_dir))
+  javastics_install_dir
 }
 
 get_java_version <- function(cmd = "java") {
@@ -184,20 +230,23 @@ check_java_version <- function(java_target) {
     stop("A java version 11 must be installed")
   }
 
-
   if (java_version < as.numeric(java_target)) {
     stop(
       "The default system java virtual machine is ",
-      system(paste(java, "-version 2>&1"),
-        intern = TRUE
-      )[1],
-      "\nA java ", java_target, " version installation is needed for running JavaSTICS, \n",
+      system(paste(java, "-version 2>&1"), intern = TRUE)[1],
+      "\nA java ",
+      java_target,
+      " version installation is needed for running JavaSTICS, \n",
       "or as an alternate version and the java path can be set\n",
       "in the .Renviron file, as for example: \n",
-      paste0("JAVA=\"/usr/lib/jvm/java-", java_target, "-openjdk-amd64/bin/java\"")
+      paste0(
+        "JAVA=\"/usr/lib/jvm/java-",
+        java_target,
+        "-openjdk-amd64/bin/java\""
+      )
     )
   }
 
   # returning java command
-  return(java)
+  java
 }
