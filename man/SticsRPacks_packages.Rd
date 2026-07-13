@@ -7,7 +7,8 @@
 SticsRPacks_packages(include_self = TRUE)
 }
 \arguments{
-\item{include_self}{Include SticsRPacks in the list?}
+\item{include_self}{Logical, TRUE to include the SticsRPacks package
+FALSE otherwise}
 }
 \description{
 List all packages in SticsRPacks

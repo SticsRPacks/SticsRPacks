@@ -46,7 +46,7 @@ Remotes:
     github::SticsRPacks/CroptimizR@*release,
     github::SticsRPacks/CroPlotR@*release
 Encoding: UTF-8
-RoxygenNote: 7.3.3
 Suggests: 
     knitr,
     testthat
+Config/roxygen2/version: 8.0.0
