@@ -108,15 +108,17 @@ download_javastics <- function(download_url, output_dir) {
   # ly return
   # creating the install dir, if needed
 
-  if (length(list.files(javastics_install_dir)) > 0)
+  if (length(list.files(javastics_install_dir)) > 0) {
     return(javastics_install_dir)
+  }
 
   # going on downloading and installing javastics
   if (!dir.exists(output_dir)) dir.create(output_dir)
 
   javastics_tmp <- file.path(tempdir(), "javastics_tmp")
-  if (dir.exists(javastics_tmp))
+  if (dir.exists(javastics_tmp)) {
     unlink(javastics_tmp, recursive = TRUE, force = TRUE)
+  }
 
   # get javastics distribution
   user_passwd <- get_forge_userpass("public")
