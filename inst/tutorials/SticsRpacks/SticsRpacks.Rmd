@@ -108,7 +108,9 @@ if (!local_javastics) {
     download_url = download_url,
     output_dir = work_dir
   )
-
+  
+  stics_exe_path <- file.path(javastics_path, "bin", "stics_modulo")
+  
   workspace_path <- file.path(javastics_path, "example", fsep = "/")
 
   workspace_PW1 <- "tutorials/SticsRpacks/PW1_V11"
@@ -131,11 +133,14 @@ if (!local_javastics) {
 
   # Getting exe name
   stics_exe_name <- SticsOnR:::list_stics_exe(javastics_path)[[2]][[1]]
+  
+  stics_exe_path <- file.path(javastics_path, "bin", stics_exe_name)
+  
 
   # Getting executable version
   check <- try(
     SticsOnR:::check_stics_exe(
-      file.path(javastics_path, "bin", stics_exe_name),
+      stics_exe_path,
       version = TRUE
     ),
     silent = TRUE
@@ -192,6 +197,10 @@ if (!local_javastics) {
   workspace_path <- file.path(javastics_in_path, "example")
 }
 
+ # Set the file executable just in case for other OS than windows
+  if (linux) {
+    system(paste("chmod +x",stics_exe_path))
+  }
 
 # Checking the consistency of the Java version
 # according to the embedded version in JavaStics
