@@ -151,13 +151,13 @@ if (!local_javastics) {
   check <- try(
     SticsOnR:::check_stics_exe(
       stics_exe_path,
-      version = TRUE
+      add_version = TRUE
     ),
     silent = TRUE
   )
 
   # Stopping the tutorial when the executable is not found
-  if (class(check) == "try-error") {
+  if (inherits(check, "try-error")) {
     stop(
       "The Stics executable (",
       stics_exe_name,
