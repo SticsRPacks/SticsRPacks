@@ -41,12 +41,12 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: r-hub/actions/setup-r-sysreqs@v1
         with:
           type: full
 
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@v5.6.0
         with:
           distribution: "zulu"
           java-version: "17"
