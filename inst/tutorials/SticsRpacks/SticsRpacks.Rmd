@@ -24,6 +24,7 @@ library(SticsRPacks)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(semver)
 
 # function for displaying functions help
 display_help <- function(subject, pkg = NULL) {
@@ -209,7 +210,7 @@ if (!local_javastics) {
 
 # Checking the consistency of the Java version
 # according to the embedded version in JavaStics
-if (linux) {
+if (linux & Sys.getenv("GITHUB_ACTIONS") == "true") {
   java <- SticsRPacks:::check_java_version(java_target)
 } else {
   java <- "java"
