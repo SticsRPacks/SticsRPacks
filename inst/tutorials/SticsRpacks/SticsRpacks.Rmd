@@ -210,7 +210,7 @@ if (!local_javastics) {
 
 # Checking the consistency of the Java version
 # according to the embedded version in JavaStics
-if (linux & Sys.getenv("GITHUB_ACTIONS") == "false") {
+if (linux & Sys.getenv("CI") == "") {
   java <- SticsRPacks:::check_java_version(java_target)
 } else {
   java <- "java"
