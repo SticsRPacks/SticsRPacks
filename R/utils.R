@@ -84,23 +84,22 @@ get_forge_userpass <- function(type = "public") {
 #'
 #'
 download_javastics <- function(download_url, output_dir) {
-  # going on downloading and installing javastics
   if (!dir.exists(output_dir)) dir.create(output_dir)
 
   # creating a temporary javastics directory
   javastics_tmp <- file.path(tempdir(), "javastics_tmp")
 
+  if (dir.exists(javastics_tmp)) {
+    unlink(javastics_tmp, recursive = TRUE, force = TRUE)
+  }
+  dir.create(javastics_tmp)
+
+  # Getting the archive name from the url
   words <- strsplit(download_url, split = "/")[[1]]
   zip_name <- words[length(words)]
   zip_path <- file.path(tempdir(), zip_name)
 
-  if (dir.exists(javastics_tmp)) {
-    unlink(javastics_tmp, recursive = TRUE, force = TRUE)
-  }
-
-  dir.create(javastics_tmp)
-
-  # get javastics distribution
+  # downloading and uncompressing the javastics distribution
   user_passwd <- get_forge_userpass("public")
   system(paste0(
     "curl -u ",
