@@ -147,7 +147,9 @@ download_javastics <- function(download_url, output_dir) {
     install_dir %in%
       list.dirs(output_dir, recursive = FALSE, full.names = FALSE)
   ) {
-    if (length(list.files(javastics_path)) > 0) return(javastics_path)
+    if (length(list.files(javastics_path)) > 0) {
+      return(javastics_path)
+    }
   }
 
   # moving files to the install target
