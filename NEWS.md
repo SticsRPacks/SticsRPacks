@@ -1,3 +1,12 @@
+# SticsRPacks 0.11.0
+
+Updated the tutorial to download latest JavaSTICS version (11.0.0).
+Fixes:
+  * Disabled testing the java version in Github actions context
+  * Managing 2 kinds of JavaSTICS archives (with or without a sub-directory)
+  for installing JavaSTICS for the tutorial
+  * Github actions: some fixes and updates
+
 # SticsRPacks 0.10.0
 
 Updated the tutorial to download latest JavaSTICS version (10.5.0).

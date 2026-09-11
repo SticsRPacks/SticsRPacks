@@ -71,9 +71,9 @@ have loaded:
 
 ``` r
 library(SticsRPacks)
-#> ── Attaching packages ───────────────────────────────────── SticsRPacks 0.9.0 ──
-#> ✔ SticsRFiles 1.6.0     ✔ SticsOnR    1.3.0
-#> ✔ CroptimizR  1.0.0     ✔ CroPlotR    1.0.0
+#> ── Attaching packages ──────────────────────────────────── SticsRPacks 0.10.0 ──
+#> ✔ SticsRFiles 1.7.0     ✔ SticsOnR    1.3.0
+#> ✔ CroptimizR  1.0.0     ✔ CroPlotR    1.0.1
 #> ── Conflicts ──────────────────────────────────────── SticsRPacks_conflicts() ──
 #> ✖ CroptimizR::AIC()    masks stats::AIC()
 #> ✖ CroptimizR::BIC()    masks stats::BIC()
@@ -152,8 +152,8 @@ running the command:
 
 The first time it is started, the tutorial takes a few minutes to
 initialize in order to download all the materials and run the solutions.
-Subsequent runs do not need this steps, the tutorial will thus start
-almost immediately from the second run.
+For subsequent runs, the tutorial will thus start almost immediately
+from the second run.
 
 ### Using the tutorial online
 
@@ -162,7 +162,7 @@ using a virtual environment running a RStudio server in which all the
 needed applications and libraries are pre-installed.
 
 It can be accessed just by clicking
-[here](https://mybinder.org/v2/git/https%3A%2F%2Fforge.inrae.fr%2Fstics-formation%2Fsticsrpacks-binder.git/v0.9.0?urlpath=rstudio),
+[here](https://mybinder.org/v2/git/https%3A%2F%2Fforge.inrae.fr%2Fstics-formation%2Fsticsrpacks-binder.git/v0.11.0?urlpath=rstudio),
 thanks to [@eric.casellas](https://forge.inrae.fr/eric.casellas).
 
 ## Getting help
