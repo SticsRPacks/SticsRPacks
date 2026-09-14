@@ -138,9 +138,10 @@ if (!local_javastics) {
   javastics_path <- javastics_in_path
 
   # Getting exe name
-  stics_exe_name <- SticsOnR:::list_stics_exe(javastics_path)[[2]][[1]]
+  #stics_exe_name <- SticsOnR:::list_stics_exe(javastics_path)[[2]][[1]]
   
-  stics_exe_path <- file.path(javastics_path, "bin", stics_exe_name)
+  #stics_exe_path <- file.path(javastics_path, "bin", stics_exe_name)
+  stics_exe_path <- file.path(javastics_path, "bin", "stics_modulo")
   
 
   # Set the file executable just in case for other OS than windows
