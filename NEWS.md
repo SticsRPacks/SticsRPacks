@@ -1,3 +1,9 @@
+
+# SticsRPacks 0.11.1
+
+Fixes:
+  * fix: force exe name to stics_modulo - #116
+
 # SticsRPacks 0.11.0
 
 Updated the tutorial to download latest JavaSTICS version (11.0.0).
