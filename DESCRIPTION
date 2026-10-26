@@ -39,7 +39,8 @@ Imports:
     nloptr,
     lhs,
     tictoc,
-    lifecycle
+    lifecycle,
+    semver
 Remotes:
     github::SticsRPacks/SticsRFiles@*release,
     github::SticsRPacks/SticsOnR@*release,
