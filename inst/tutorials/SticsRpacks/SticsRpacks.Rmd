@@ -42,6 +42,14 @@ get_stics_version <- function(version_string) {
     x = version_string, replacement = "\\2"
   )
 }
+
+get_exe_name <- function() {
+  base_name <- "stics_modulo"
+  if (SticsRFiles::is_unix() | SticsRFiles::is_windows()) return(base_name)
+  if (SticsRFiles::is_mac())
+    return(paste0(base_name, "_mac"))
+}
+
 # for simplifying use
 get_version_num <- SticsRFiles:::get_version_num
 
@@ -53,8 +61,8 @@ options(stringsAsFactors = FALSE)
 tutorial_options(exercise.lines = 5, exercise.timelimit = 300)
 
 # OS specific parameters
-linux <- SticsRFiles:::is_unix()
-attributes(linux) <- NULL
+not_windows <- SticsRFiles:::is_unix() | SticsRFiles:::is_mac()
+attributes(not_windows) <- NULL
 
 #--------------------------------------------------------------------------
 # Prior to getting this environment variable put it in
@@ -80,7 +88,7 @@ tmp_dir <- file.path(work_dir, "tmp")
 
 # For avoiding problems under windows
 # with spaces in user dir path
-if (.Platform$OS.type == "windows") {
+if (SticsRFiles:::is_windows()) {
   work_dir <- shortPathName(work_dir)
 }
 # Replacing Windows double backslash file separator with slash
@@ -103,17 +111,17 @@ if (!dir.exists(tmp_dir)) {
 
 if (!local_javastics) {
   stics_version <- "latest"
-  download_url <- "https://w3.avignon.inrae.fr/forge/attachments/download/3713/JavaSTICS-latest.zip"
+  download_url <- "https://w3.avignon.inrae.fr/forge/attachments/download/3727/JavaSTICS-latest.zip"
 
   javastics_path <- SticsRPacks:::download_javastics(
     download_url = download_url,
     output_dir = work_dir
   )
   
-  stics_exe_path <- file.path(javastics_path, "bin", "stics_modulo")
+  stics_exe_path <- file.path(javastics_path, "bin", get_exe_name())
   
   # Set the file executable just in case for other OS than windows
-  if (linux) {
+  if (not_windows) {
     system(paste("chmod +x",stics_exe_path))
   }
   
@@ -121,7 +129,7 @@ if (!local_javastics) {
 
   workspace_PW1 <- "tutorials/SticsRpacks/PW1_V11"
 
-  # getting java version from jre embedded in JavaSTICS
+  # Getting java version from jre embedded in JavaSTICS
   java_target <- SticsRPacks:::get_javastics_java_version(javastics_path)
 } else {
   # Check JavaStics in path, got from javastics_path env. variable
@@ -138,14 +146,11 @@ if (!local_javastics) {
   javastics_path <- javastics_in_path
 
   # Getting exe name
-  #stics_exe_name <- SticsOnR:::list_stics_exe(javastics_path)[[2]][[1]]
-  
-  #stics_exe_path <- file.path(javastics_path, "bin", stics_exe_name)
-  stics_exe_path <- file.path(javastics_path, "bin", "stics_modulo")
+  stics_exe_path <- file.path(javastics_path, "bin", get_exe_name())
   
 
   # Set the file executable just in case for other OS than windows
-  if (linux) {
+  if (not_windows) {
     system(paste("chmod +x",stics_exe_path))
   }
 
@@ -162,40 +167,39 @@ if (!local_javastics) {
   if (inherits(check, "try-error")) {
     stop(
       "The Stics executable (",
-      stics_exe_name,
+      stics_exe_path,
       ") was not found in JavaStics bin directory: ",
       javastics_path
     )
   }
 
   # getting the STICS numerical version
-  stics_version_string <- attr(check, "version")
-  stics_version <- get_stics_version(stics_version_string)
+  stics_version <- get_stics_version(attr(check, "version"))
   
   stics_version_num <- SticsRFiles:::get_version_num(
     stics_version
   )
 
-   # Checking if the version is compatible with
+  # Checking if the version is compatible with
   # Stopping if Stics is older than version 9.2
   # or an unsupported version (i.e. > of the latest standard version)
-  major_num <- (render_version(stics_version_num)[[1]])$major
-  if (major_num < (render_version(get_version_num(9))[[1]])$major) {
+  major_num <- (semver::render_version(stics_version_num)[[1]])$major
+  if (major_num < (semver::render_version(get_version_num(9))[[1]])$major) {
     stop(
       "The JavaSTICS distribution ",
       basename(javastics_path),
       "is too old and not supported in this tutorial"
     )
-  } else if (major_num < (render_version(get_version_num(10))[[1]])$major) {
+  } else if (major_num < (semver::render_version(get_version_num(10))[[1]])$major) {
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V9.2"
     java_target <- "8"
-  } else if (major_num < (render_version(get_version_num(10.1))[[1]])$major) {
+  } else if (major_num < (semver::render_version(get_version_num(10.1))[[1]])$major) {
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10"
     java_target <- "11"
-  } else if (major_num < (render_version(get_version_num(11))[[1]])$major) {
+  } else if (major_num < (semver::render_version(get_version_num(11))[[1]])$major) {
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V10"
     java_target <- "17"
-  } else if (major_num < (render_version(get_version_num(12))[[1]])$major) {
+  } else if (major_num < (semver::render_version(get_version_num(12))[[1]])$major) {
     workspace_PW1 <- "tutorials/SticsRpacks/PW1_V11"
     java_target <- "17"
   } else {
@@ -211,7 +215,7 @@ if (!local_javastics) {
 
 # Checking the consistency of the Java version
 # according to the embedded version in JavaStics
-if (linux & Sys.getenv("CI") == "") {
+if (not_windows & Sys.getenv("CI") == "") {
   java <- SticsRPacks:::check_java_version(java_target)
 } else {
   java <- "java"
@@ -221,8 +225,8 @@ if (linux & Sys.getenv("CI") == "") {
 knitr::opts_chunk$set(
   echo = FALSE,
   java_cmd = java,
-  linux = linux,
-  windows = !linux,
+  not_windows = not_windows,
+  windows = !not_windows,
   stics_version = stics_version
 )
 
@@ -319,7 +323,7 @@ This can be done:
 
 or 
 
-* by defining this environment variable in your .Renviron file: edit this file (located in your Home directory - linux OS, or Document folder - Windows OS, can be edited also using `usethis::edit_r_environ()`), and add a new line javastics_path="path_to_JavaSTICS”.
+* by defining this environment variable in your .Renviron file: edit this file (located in your Home directory - linux OS and Mac OS, or Document folder - Windows OS, can be edited also using `usethis::edit_r_environ()`), and add a new line javastics_path="path_to_JavaSTICS”.
 
 
 Your R session must then be restarted in any case (in RStudio: menu Session-> Restart R).
@@ -380,7 +384,7 @@ wrapper_options <- stics_wrapper_options(
 gen_usms_xml2txt(javastics_path, workspace_PW1, usm = usm_name)
 ```
 
-```{r PW1-linux-setup, echo=FALSE, eval=knitr::opts_chunk$get("linux"), message=FALSE}
+```{r PW1-linux-mac-setup, echo=FALSE, eval=knitr::opts_chunk$get("not_windows"), message=FALSE}
 
 # Let's define the USM and variables of interest to use in this example
 usm_name <- "maize_ref_2013"
