@@ -45,7 +45,7 @@ get_stics_version <- function(version_string) {
 
 get_exe_name <- function() {
   base_name <- "stics_modulo"
-  if (SticsRFiles::is_unix() & SticsRFiles::is_windows()) return(base_name)
+  if (SticsRFiles::is_unix() | SticsRFiles::is_windows()) return(base_name)
   if (SticsRFiles::is_mac())
     return(paste0(base_name, "_mac"))
 }
