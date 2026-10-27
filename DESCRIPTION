@@ -39,7 +39,8 @@ Imports:
     nloptr,
     lhs,
     tictoc,
-    lifecycle
+    lifecycle,
+    semver
 Remotes:
     github::SticsRPacks/SticsRFiles@*release,
     github::SticsRPacks/SticsOnR@*release,
@@ -49,4 +50,4 @@ Encoding: UTF-8
 Suggests: 
     knitr,
     testthat
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.1

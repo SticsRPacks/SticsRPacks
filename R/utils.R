@@ -160,7 +160,7 @@ download_javastics <- function(download_url, output_dir) {
 
 get_java_version <- function(cmd = "java") {
   version <- NULL
-  if (SticsRFiles:::is_unix()) {
+  if (SticsRFiles:::is_unix() | SticsRFiles:::is_mac()) {
     version_str <-
       suppressWarnings(
         system(
